@@ -39,7 +39,7 @@ status = True
 def 메뉴선택():
     print("1. 새로운 예약 보기")
     print("2. 회원 전화번호 ")
-    print("3. 메시지 보내기")
+    print("3. 마지막 회원 성함은?")
     print("4. 프로그램 종료")
     print("\n\n")
 
@@ -66,7 +66,10 @@ while status:
         find_num=input("찾을 화원번호 입력하세요")
         get_num(find_num)
     elif answer == "3":
-        print("어떤 회원에게 보낼까?\n")
+        column_data = worksheet.col_values(1)
+
+        cell_data = worksheet.acell("d"+str(len(column_data))).value
+        print(cell_data)
     elif answer == "4":
         print("프로그램을 종료합니다.\n")
         break
