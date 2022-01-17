@@ -35,6 +35,11 @@ def get_num(cell):
 
 status = True
 
+def last_regi():
+    column_data = worksheet.col_values(1)
+
+    cell_data = worksheet.acell("d" + str(len(column_data))).value
+    print(cell_data)
 
 def 메뉴선택():
     print("1. 새로운 예약 보기")
@@ -51,25 +56,23 @@ def 예약목록():
     i = 0
     for data in column_data:
         i = i + 1
-        print(i, "'"+ data +"' |", end=" ")
+        print(i, "'" + data + "' |", end=" ")
     print()
 
 
-while status:
-    print("===============")
-    메뉴선택()
-    answer = input("메뉴를 선택하세요. >")
-    if answer == "1":
-        예약목록()
-    elif answer == "2":
-        print("찾으실 회원 번호를 입력하세요.\n")
-        find_num=input("찾을 화원번호 입력하세요")
-        get_num(find_num)
-    elif answer == "3":
-        column_data = worksheet.col_values(1)
-
-        cell_data = worksheet.acell("d"+str(len(column_data))).value
-        print(cell_data)
-    elif answer == "4":
-        print("프로그램을 종료합니다.\n")
-        break
+def start():
+    while status:
+        print("===============")
+        메뉴선택()
+        answer = input("메뉴를 선택하세요. >")
+        if answer == "1":
+            예약목록()
+        elif answer == "2":
+            print("찾으실 회원 번호를 입력하세요.\n")
+            find_num = input("찾을 화원번호 입력하세요")
+            get_num(find_num)
+        elif answer == "3":
+            print("3번 입력함")
+        elif answer == "4":
+            print("프로그램을 종료합니다.\n")
+            break
