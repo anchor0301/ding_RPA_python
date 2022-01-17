@@ -19,12 +19,12 @@ cell_data = worksheet.acell("d8").value
 
 start_date = worksheet.acell("g8").value
 end_date = worksheet.acell("h8").value
-day =int(start_date)-int(end_date)
 
 예약_완료=cell_data+"님 예약이 완료 되었습니다."
-print(day)
 print(예약_완료)
 
 #행 데이터 가져오기
 column_data = worksheet.row_values(2)
 print(column_data)
+
+#연락처 가져오기
