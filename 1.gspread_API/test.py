@@ -63,6 +63,8 @@ while status:
         예약목록()
     elif answer == "2":
         print("찾으실 회원 번호를 입력하세요.\n")
+        find_num=input("찾을 화원번호 입력하세요")
+        get_num(find_num)
     elif answer == "3":
         print("어떤 회원에게 보낼까?\n")
     elif answer == "4":
