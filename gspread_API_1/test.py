@@ -1,4 +1,6 @@
 import gspread
+import re
+from datetime import datetime
 from oauth2client.service_account import ServiceAccountCredentials
 
 scope = [
@@ -35,18 +37,36 @@ def get_num(cell):
 
 status = True
 
-def last_regi():
-    column_data = worksheet.col_values(1)
+column_data = worksheet.col_values(1)
 
+
+# 제일 마지막 회원 이름
+def last_name():
     cell_data = worksheet.acell("d" + str(len(column_data))).value
     print(cell_data)
+    return cell_data
 
-def 메뉴선택():
-    print("1. 새로운 예약 보기")
-    print("2. 회원 전화번호 ")
-    print("3. 마지막 회원 성함은?")
-    print("4. 프로그램 종료")
-    print("\n\n")
+
+#  i 애견이름/j 견종/a 서비스/f 전화번호
+def last_info():
+    dog_name = worksheet.acell("i" + str(len(column_data))).value
+    dog_breed = worksheet.acell("j" + str(len(column_data))).value
+    service = worksheet.acell("a" + str(len(column_data))).value
+    phone_numbers = worksheet.acell("f" + str(len(column_data))).value
+
+    # 서비스 첫글자
+    # 괄호안의 글자 삭제
+    rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)
+    # 출력
+    print_last_info = f"{dog_name}/{rm_breed.rstrip()}/{service[0]}/{phone_numbers[7:]}"
+    return print_last_info
+
+
+# 제일 마지막 회원 전화번호
+def last_num():
+    cell_data = worksheet.acell("f" + str(len(column_data))).value
+    print(cell_data)
+    return cell_data
 
 
 def 예약목록():
@@ -60,19 +80,39 @@ def 예약목록():
     print()
 
 
-def start():
-    while status:
-        print("===============")
-        메뉴선택()
-        answer = input("메뉴를 선택하세요. >")
-        if answer == "1":
-            예약목록()
-        elif answer == "2":
-            print("찾으실 회원 번호를 입력하세요.\n")
-            find_num = input("찾을 화원번호 입력하세요")
-            get_num(find_num)
-        elif answer == "3":
-            print("3번 입력함")
-        elif answer == "4":
-            print("프로그램을 종료합니다.\n")
-            break
+# 머릿말 출력
+def header_info():
+    members_info(worksheet.row_values("1"))
+
+
+# 정보 출력
+def members_info(info):
+    import_info = info[0], info[3], info[5], info[6:7], info[8:12]
+    print(import_info)
+
+
+# 마지막 5명의 회원 정보 출력
+def get_5_last_members():
+    first_member = len(column_data) - 4
+    last_member = len(column_data) + 1
+
+    for i in range(first_member, last_member):
+        info = worksheet.row_values(i)
+        members_info(info)
+
+
+# 현재 날짜
+now = datetime.now()
+
+# 현재 시간기준으로 24시간동안 예약한 사람 목록
+def before_24_time_members():
+    print("24시간 이후 예약 목록입니다.")
+    for i in range(len(column_data)):
+
+        info = worksheet.row_values(i)
+        # 등록날짜 b
+        if info[1]>now.day-1:
+            members_info(info)
+
+print(worksheet.acell("b2").value)
+print(last_info())
