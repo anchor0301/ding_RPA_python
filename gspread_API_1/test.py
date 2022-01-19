@@ -172,6 +172,4 @@ def before_24_time_members_v3():
                 members_info(info)
 
 
-
-print(before_24_time_members_v2())
 print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
