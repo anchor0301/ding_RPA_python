@@ -3,7 +3,7 @@ import re
 import time
 from datetime import datetime, date, timedelta
 from oauth2client.service_account import ServiceAccountCredentials
-
+print("프로그램 스타트")
 start = time.time()  ################## 기록시작
 scope = [
     'https://spreadsheets.google.com/feeds',
@@ -49,6 +49,7 @@ def last_name():
 
 #  i 애견이름/j 견종/a 서비스/f 전화번호
 def last_info():
+
     dog_name = worksheet.acell("i" + str(len(column_data))).value
     dog_breed = worksheet.acell("j" + str(len(column_data))).value
     service = worksheet.acell("a" + str(len(column_data))).value
@@ -59,6 +60,8 @@ def last_info():
     rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)
     # 출력
     print_last_info = f"{dog_name}/{rm_breed.rstrip()}/{service[0]}/{phone_numbers[7:]}"
+    print("마지막 회원 정보입니다.")
+    print(print_last_info)
     return print_last_info
 
 
@@ -88,7 +91,7 @@ def header_info():
 # 정보 출력
 def members_info(info):
     import_info = info[0], info[3], info[5], info[6:7], info[8:12]
-    print(import_info)
+    return import_info
 
 
 # 마지막 5명의 회원 정보 출력
@@ -127,7 +130,7 @@ def before_24_time_members():
 # 현재 시간기준으로 24시간동안 예약한 사람 목록
 def before_24_time_members_v2():
     print("24시간 이후 예약 목록v2 입니다.")
-
+    members = []
     num = 0
     while True:
         member_number = len(column_data) - num
@@ -137,41 +140,16 @@ def before_24_time_members_v2():
         # ormatted_date1 = 오늘
         # ormatted_date2 = 어제
         # 만약 오늘 날짜랑 예약 날자가 같으면
+
         if (times == today) | (times == yesterday):
+            print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
             info = worksheet.row_values(member_number)
-            members_info(info)
+            print(members_info(info))
+
             num += 1
         # 예약 날자가 어제보다 전이라면
         elif times < yesterday:
             break
 
-# 현재 시간기준으로 24시간동안 예약한 사람 목록
-def before_24_time_members_v3():
-    print("24시간 이후 예약 목록v3 입니다.")
-    num = 0
-    while True:
-        member_number = len(column_data) + num
-        # 등록일b 의 시간을 가져온뒤 날짜형으로 변환
-        times = time.strptime(worksheet.acell("b" + str(member_number)).value.strip(), '%y-%m-%d')
 
-        if (times == today) | (times == yesterday):
-            info = worksheet.row_values(member_number)
-            members_info(info)
-            num -= 1
-        # 예약 날자가 어제보다 전이라면
-        elif times < yesterday:
-            break
-        if (times >= yesterday) & (times <= today):
-            for i in range(2, len(column_data) + 1):
-                # 등록일b 의 시간을 뽑아옵니다.
-                before_times = worksheet.acell("b" + str(i)).value.strip()
-                # 날짜형으로 변환
-                times = time.strptime(before_times, '%y-%m-%d')
-                info = worksheet.row_values(i)
-
-                members_info(info)
-
-
-
-print(before_24_time_members_v2())
-print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
+print("time :", time.time() - start)  #현재시각 - 시작시간 = 실행 시간

@@ -7,6 +7,7 @@ gsp.before_24_time_members_v2
 sele.reg_profile(gsp.last_info())
 #최신 고객의 전화번호 등록
 sele.reg_numbers(gsp.last_num())
-print("등록 완료")
+
 #등록하기
-#sele.registers()
+sele.registers()
+print("등록 완료")
