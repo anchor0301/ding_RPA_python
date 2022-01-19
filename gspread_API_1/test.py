@@ -12,7 +12,7 @@ scope = [
 json_file_name = 'puppyhome-8c729ebcba62.json'
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
 gc = gspread.authorize(credentials)
-spreadsheet_url = 'https://docs.google.com/spreadsheets/d/1npWlDUeHFClI2An3MYrCTJipUX3dXJpRemZUKL31BAw/edit#gid=0'
+spreadsheet_url = 'https://docs.google.com/spreadsheets/d/12BZajvryk9dE6cVQ0wwbXaKvK22xLCXFeEWTptfXkfY/edit?usp=sharing'
 # 스프레스시트 문서 가져오기
 doc = gc.open_by_url(spreadsheet_url)
 # 시트 선택하기
@@ -37,7 +37,7 @@ def get_num(cell):
     print(name + "회원님의 전화번호는 [" + num + "] 입니다.")
 
 
-column_data = worksheet.col_values(1)
+column_data = worksheet.col_values(6)
 
 
 # 제일 마지막 회원 이름
@@ -65,9 +65,12 @@ def last_info():
 # 제일 마지막 회원 전화번호
 def last_num():
     cell_data = worksheet.acell("f" + str(len(column_data))).value
-    print(cell_data)
     return cell_data
 
+def numbers():
+    numbers = worksheet.row_values(5)
+    print(numbers)
+    return numbers
 
 def 예약목록():
     print("새로운 예약 목록 입니다.\n")
@@ -171,5 +174,4 @@ def before_24_time_members_v3():
 
                 members_info(info)
 
-
-print("time :", time.time() - start)  # 현재시각 - 시작시간 = 실행 시간
+numbers()
