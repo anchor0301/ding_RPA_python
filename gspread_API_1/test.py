@@ -68,8 +68,7 @@ def last_num():
     return cell_data
 
 def numbers():
-    numbers = worksheet.row_values(5)
-    print(numbers)
+    numbers = worksheet.col_values(6)
     return numbers
 
 def 예약목록():
@@ -173,5 +172,3 @@ def before_24_time_members_v3():
                 info = worksheet.row_values(i)
 
                 members_info(info)
-
-numbers()
