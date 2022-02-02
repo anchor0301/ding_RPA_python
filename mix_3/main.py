@@ -120,8 +120,10 @@ while True:
         if new_n not in last_n:
             # regster()
             print("주소록 등록을 시작합니다")
+            print(new_n)
             last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
         else:
             print("중복된 연락처가 있습니다.\n")
+            print(new_n)
             last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
 print("끝")
