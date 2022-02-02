@@ -117,12 +117,12 @@ while True:
         new_n = last_num  # 새로운 휴대폰 번호 불러온다
         # 모든 전화번호와 비교
 
-        if new_n not in last_n:
+        if new_n not in last_n: #1. 추가된다면 작동
             # regster()
             print("주소록 등록을 시작합니다")
             print(new_n)
             last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
-        else:
+        else: #2. 중복된 전화번호가 있다면
             print("중복된 연락처가 있습니다.\n")
             print(new_n)
             last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
