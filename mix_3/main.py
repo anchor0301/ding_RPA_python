@@ -1,4 +1,5 @@
-
+#v2022.02.02.
+#연락처 자동 추가 프로그램
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from oauth2client.service_account import ServiceAccountCredentials
@@ -7,9 +8,15 @@ import re
 import gspread
 import time
 import chromedriver_autoinstaller
+from line_notify import LineNotify
 
 start = time.time()  ################## 기록시작
 print("기록을 시작합니다.")
+
+###############################    라인 코드   ################################################
+ACCESS_TOKEN = "dWjAqgCfy7xE7lDyj2EYL3v1VZ1tr2z0miLWlle7s4r"
+notify = LineNotify(ACCESS_TOKEN)
+
 
 ###############################    셀리니움 코드    ################################################
 
@@ -105,6 +112,9 @@ last_n = worksheet.col_values(6)
 last_a = len(last_n)  # 마지막 열번호
 
 print(last_n)
+
+
+######################추가 감지 ###################
 while True:
 
     time.sleep(2)
@@ -120,10 +130,30 @@ while True:
         if new_n not in last_n: #1. 추가된다면 작동
             # regster()
             print("주소록 등록을 시작합니다")
+            new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
+            start_day = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
+            end_day = worksheet.acell("h" + str(len(worksheet.col_values(6)))).value
+            notify.send(f"노션을 확인해주세요"
+                        f"새로운 연락처가 추가됨. \n"
+                        f"\n이름 : {new_name} "
+                        f"\n연락처 : {new_n}"
+                        f"\n시작일 : {start_day}"
+                        f"\n종료일 : {end_day}")
+
+
+
             print(new_n)
             last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
         else: #2. 중복된 전화번호가 있다면
-            print("중복된 연락처가 있습니다.\n")
-            print(new_n)
+            print(f"중복된 연락처가 있습니다.\n{new_n}")
+
+            new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
+            start_day = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
+            end_day = worksheet.acell("h" + str(len(worksheet.col_values(6)))).value
+            notify.send(f"노션을 확인해주세요. \n"
+                        f"\n이름 : {new_name} "
+                        f"\n연락처 : {new_n}"
+                        f"\n시작일 : {start_day}"
+                        f"\n종료일 : {end_day}")
             last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
 print("끝")
