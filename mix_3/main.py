@@ -1,8 +1,10 @@
-#v2022.02.02.
+#v2022.02.03.
 #연락처 자동 추가 프로그램
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from oauth2client.service_account import ServiceAccountCredentials
+from dateutil.parser import parse
+import datetime as dt
 
 import re
 import gspread
@@ -56,11 +58,7 @@ def registers():
     register.click()
 
 ###############################    gpread코드    ##############################################################
-# 연락처 가져오기
-def get_num(cell):
-    num = worksheet.acell("f" + cell).value
-    name = worksheet.acell("d" + cell).value
-    print(name + "회원님의 전화번호는 [" + num + "] 입니다.")
+
 scope = [
     'https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive',
@@ -77,6 +75,13 @@ worksheet = doc.worksheet('시트1')
 column_data = worksheet.col_values(6)
 
 
+# 연락처 가져오기
+def get_num(cell):
+    num = worksheet.acell("f" + cell).value
+    name = worksheet.acell("d" + cell).value
+    print(name + "회원님의 전화번호는 [" + num + "] 입니다.")
+
+
 # 제일 마지막 회원 이름
 def last_name():
     cell_data = worksheet.acell("d" + str(len(column_data))).value
@@ -84,35 +89,35 @@ def last_name():
     return cell_data
 
 
-#  i 애견이름/j 견종/a 서비스/f 전화번호
+#  i 애견이름/l 견종/d 서비스/f 전화번호
 def last_info():
-    dog_name = worksheet.acell("i" + str(len(column_data))).value
-    dog_breed = worksheet.acell("j" + str(len(column_data))).value
-    service = worksheet.acell("a" + str(len(column_data))).value
-    phone_numbers = worksheet.acell("f" + str(len(column_data))).value
+    dog_name = worksheet.acell("i" + str(len(worksheet.col_values(6)))).value
+    dog_breed = worksheet.acell("l" + str(len(worksheet.col_values(6)))).value
+    service = worksheet.acell("d" + str(len(worksheet.col_values(6)))).value
+    phone_numbers = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
 
     # 서비스 첫글자
     # 괄호안의 글자 삭제
     rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)
     # 출력
     print_last_info = f"{dog_name}/{rm_breed.rstrip()}/{service[0]}/{phone_numbers[7:]}"
+
     return print_last_info
 
 
 # 제일 마지막 회원 전화번호
-def last_num():
-    cell_data = worksheet.acell("f" + str(len(column_data))).value
-    return cell_data
 
 
-def regster():
+
+def regster(new_n):
     # 최신 고객의 이름등록
     reg_profile(last_info())
     # 최신 고객의 전화번호 등록
-    reg_numbers(last_num())
+    time.sleep(0.1)  # 0.5초 기다림
+    reg_numbers(new_n)
     print("등록 완료")
     # 등록하기
-    # sele.registers()
+    # registers()
 
 
 
@@ -120,34 +125,54 @@ last_n = worksheet.col_values(6)
 last_a = len(last_n)  # 마지막 열번호
 
 print(last_n)
+############################## 몇박 몇일 계산####################
+def count_day():
+    start_day = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
+    end_day = worksheet.acell("h" + str(len(worksheet.col_values(6)))).value
 
+    start_day = parse(start_day[:12])
+    end_day = parse(end_day[:12])
+
+    #박 계산
+    night=end_day-start_day
+
+
+    #일계산
+    next_time = start_day + dt.timedelta(days=-1)
+    day=end_day-next_time
+    return  f"총 {night.days}박 {(day.days)}일 예약"
 
 ######################추가 감지 ###################
+
 while True:
 
     time.sleep(2)
     new_a = len(worksheet.col_values(6))
     # 마지막 열번호와 새로운 열가 다르면
     if last_a != new_a:
+
+
         # 마지막 열번호는 새로운 열 번호로 바꿈
         last_a = new_a
         last_num=worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
         new_n = last_num  # 새로운 휴대폰 번호 불러온다
-        # 모든 전화번호와 비교
 
+        # 모든 전화번호와 비교
         if new_n not in last_n: #1. 추가된다면 작동
-            # regster()
+
             print("주소록 등록을 시작합니다")
+            regster(new_n)
             new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
-            start_day = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
-            end_day = worksheet.acell("h" + str(len(worksheet.col_values(6)))).value
+            start_day =parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
+            end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
+
             notify.send(f"노션을 확인해주세요"
-                        f"새로운 연락처가 추가됨. \n"
+                        f"\n새로운 연락처가 추가됨. \n"
                         f"\n이름 : {new_name} "
                         f"\n연락처 : {new_n}"
                         f"\n시작일 : {start_day}"
-                        f"\n종료일 : {end_day}")
-
+                        f"\n종료일 : {end_day}"
+                        f"\n\n{count_day()}")
 
 
             print(new_n)
@@ -156,12 +181,18 @@ while True:
             print(f"중복된 연락처가 있습니다.\n{new_n}")
 
             new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
-            start_day = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
-            end_day = worksheet.acell("h" + str(len(worksheet.col_values(6)))).value
-            notify.send(f"노션을 확인해주세요. \n"
+            start_day =parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
+            end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
+
+            notify.send(f"이미 등록된 번호입니다."
+                        f"\n노션을 확인해주세요. \n"
                         f"\n이름 : {new_name} "
                         f"\n연락처 : {new_n}"
                         f"\n시작일 : {start_day}"
-                        f"\n종료일 : {end_day}")
+                        f"\n종료일 : {end_day}"
+                        f"\n\n{count_day()}")
+
+
             last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
+
 print("끝")
