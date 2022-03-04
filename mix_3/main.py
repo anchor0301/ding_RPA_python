@@ -1,26 +1,31 @@
-# v2022.02.03.
+# v2022.03.04.
+# 예외처리 등록
 # 연락처 자동 추가 프로그램
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
-from oauth2client.service_account import ServiceAccountCredentials
-from dateutil.parser import parse
 import datetime as dt
-
 import re
 import gspread
 import time
 import chromedriver_autoinstaller
+
+from selenium import webdriver
+from selenium.webdriver.chrome.options import Options
+from oauth2client.service_account import ServiceAccountCredentials
+from dateutil.parser import parse
 from line_notify import LineNotify
+
 
 #########################################################
 #    필  독
-#   1. 크롬 디버깅모드를 실행한다.
+#   1. debug_mode.bat 을 실행
 #   2. 딩굴댕굴 계정으로 로그인을 한다.
 #   3. 파이썬 계속 실행시킨다.
 #
 ##########################################################
 
 print("프로그램 정상 실행.")
+
+#############크롬 디버깅 모드 실행
+
 
 ###############################    라인 코드   ################################################
 ACCESS_TOKEN = "guoQ2ORudnGk0b2FVuRAxcO6BhFiEwsohEMBvmPivag"
@@ -111,19 +116,14 @@ def regster(new_n):
     # 최신 고객의 이름등록
     reg_profile(last_info())
     # 최신 고객의 전화번호 등록
-    time.sleep(0.2)  # 0.5초 기다림
+    time.sleep(0.3)  # 0.5초 기다림
     reg_numbers(new_n)
 
-    time.sleep(0.2)  # 0.5초 기다림
-    print("등록 완료")
+    time.sleep(0.3)  # 0.5초 기다림
+
     # 등록하기
     registers()
-
-
-last_n = worksheet.col_values(6)
-last_a = len(last_n)  # 마지막 열번호
-
-print(last_n)
+    print("등록 완료")
 
 
 ############################## 몇박 몇일 계산####################
@@ -154,9 +154,10 @@ def count_day():
             "\n" \
             "\n🌈아이가 호텔에 있는 동안 편안할 수 있게 준비물 2가지 부탁드릴게요💕" \
             "\n" \
-            "\n1⃣평소 급여하던 사료! 간식!" \
+            "\n1⃣ " \
+            "\n평소 급여하던 사료! 간식!" \
             "\n2⃣" \
-            "\n남자견: 메너 벨트 기저귀(1일기준3매)" \
+            "\n남자견: 매너 벨트 기저귀(1일기준3매)" \
             "\n여자견: 배변패드!(1일 기준 3장 정도)" \
             "\n꼭 준비해 주세요" \
             "\n※ 미 지참시 현장 구입후 입실 가능 합니다" \
@@ -176,56 +177,65 @@ def count_day():
 
     return 안내메시지
 
+last_n = worksheet.col_values(6)
+last_a = len(last_n)  # 마지막 열번호
 
-######################추가 감지 ###################
+print(last_n)
+print("준비 완료")
+print("__________________")
 
-while True:
+######################연락처 등록 감지 ######################
+try:
+    while True:
 
-    time.sleep(2)
-    new_a = len(worksheet.col_values(6))
-    # 마지막 열번호와 새로운 열가 다르면
-    if last_a != new_a:
+        time.sleep(5)
+        new_a = len(worksheet.col_values(6))
+        # 마지막 열번호와 새로운 열가 다르면
+        if last_a != new_a:
+            # 마지막 열번호는 새로운 열 번호로 바꿈
+            last_a = new_a
+            last_num = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
+            new_n = last_num  # 새로운 휴대폰 번호 불러온다
 
-        # 마지막 열번호는 새로운 열 번호로 바꿈
-        last_a = new_a
-        last_num = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
-        new_n = last_num  # 새로운 휴대폰 번호 불러온다
+            if new_n not in last_n:  # 1. 추가된다면 작동
+                print(f"주소록 등록을 시작합니다")
+                regster(new_n)
+                new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
+                start_day = parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
+                end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
 
-        # 모든 전화번호와 비교
-        if new_n not in last_n:  # 1. 추가된다면 작동
+                print(new_n)
+                print(last_info())
+                print("__________________")
+                notify.send(f"노션을 확인해주세요"
+                            f"\n새로운 연락처가 추가됨. \n"
+                            f"\n이름 : {new_name} "
+                            f"\n연락처 : {new_n}"
+                            f"\n시작일 : {start_day}"
+                            f"\n종료일 : {end_day}")
+                notify.send(count_day())
 
-            print("주소록 등록을 시작합니다")
-            regster(new_n)
-            new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
-            start_day = parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
-            end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
+                last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
 
-            notify.send(f"노션을 확인해주세요"
-                        f"\n새로운 연락처가 추가됨. \n"
-                        f"\n이름 : {new_name} "
-                        f"\n연락처 : {new_n}"
-                        f"\n시작일 : {start_day}"
-                        f"\n종료일 : {end_day}")
-            notify.send(count_day())
+            else:  # 2. 중복된 전화번호가 있다면
+                print(f"중복된 연락처가 있습니다.\n{new_n}")
 
-            print(new_n)
-            last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
+                new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
+                start_day = parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
+                end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
 
-        else:  # 2. 중복된 전화번호가 있다면
-            print(f"중복된 연락처가 있습니다.\n{new_n}")
+                print(last_info())
+                print("__________________")
+                notify.send(f"이미 등록된 번호입니다."
+                            f"\n노션을 확인해주세요. \n"
+                            f"\n이름 : {new_name} "
+                            f"\n연락처 : {new_n}"
+                            f"\n시작일 : {start_day}"
+                            f"\n종료일 : {end_day}")
+                notify.send(count_day())
 
-            new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
-            start_day = parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
-            end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
+                last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
 
-            notify.send(f"이미 등록된 번호입니다."
-                        f"\n노션을 확인해주세요. \n"
-                        f"\n이름 : {new_name} "
-                        f"\n연락처 : {new_n}"
-                        f"\n시작일 : {start_day}"
-                        f"\n종료일 : {end_day}")
-            notify.send(count_day())
-
-            last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
-
-print("끝")
+except:
+    print("비정상 종료")
+    notify.send("프로그램이 비정상적으로 종료됨")
