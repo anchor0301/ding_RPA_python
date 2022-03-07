@@ -22,8 +22,7 @@ from line_notify import LineNotify
 #
 ##########################################################
 
-print("프로그램 정상 실행.")
-
+print("프로그램 준비중")
 #############크롬 디버깅 모드 실행
 
 
@@ -67,7 +66,7 @@ scope = [
     'https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive',
 ]
-json_file_name = 'puppyhome-8c729ebcba62.json'
+json_file_name = 'ding.json'
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
 gc = gspread.authorize(credentials)
 spreadsheet_url = 'https://docs.google.com/spreadsheets/d/12BZajvryk9dE6cVQ0wwbXaKvK22xLCXFeEWTptfXkfY/edit?usp=sharing'
@@ -188,7 +187,8 @@ print("__________________")
 try:
     while True:
 
-        time.sleep(5)
+        time.sleep(5)  #5초마다
+        #열의 갯수를 저장
         new_a = len(worksheet.col_values(6))
         # 마지막 열번호와 새로운 열가 다르면
         if last_a != new_a:
