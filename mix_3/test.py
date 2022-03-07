@@ -1,12 +1,6 @@
 # v2022.03.04.
 # 예외처리 등록
-# 연락처 자동 추가 프로그램
-
-from import_code import *
-import time
-from line_notify import LineNotify
-
-
+# 연락처 자동 추가 프로그램#
 #########################################################
 #    필  독
 #   1. debug_mode.bat 을 실행
@@ -15,65 +9,61 @@ from line_notify import LineNotify
 #
 ##########################################################
 
+from code_line import *
+from code_gspread import *
+
 print("프로그램 준비중")
 
-###############################    라인 코드   ################################################
-ACCESS_TOKEN = "guoQ2ORudnGk0b2FVuRAxcO6BhFiEwsohEMBvmPivag"
-notify = LineNotify(ACCESS_TOKEN)
-
-gs
-worksheet = gsdoc.worksheet('시트1')
-
-column_data = worksheet.col_values(6)
-
 last_n = worksheet.col_values(6)
-last_a = len(last_n)  # 마지막 열번호
+last_a = len(last_n)  # 초기 끝 번호를 저장한다
 
+# 초기 저장된 번호들을 출력
 print(last_n)
 print("준비 완료")
 print("__________________")
 
 ######################연락처 등록 감지 ######################
-try:
 
-    while True:
 
-        time.sleep(5)  #5초마다
-        #열의 갯수를 저장
+while True:
+    try:
+        # 5초마다 마지막 열과 새로 등록된 열의 갯수를 비교한다.
+        time.sleep(5)
+        # 새로 등록된 번호
         new_a = len(worksheet.col_values(6))
-        # 마지막 열번호와 새로운 열가 다르면
+    except Exception as e:
+        print("실시간 감지중 프로그램 정지")
+        error_notify.send("error code : 1")
+    # 끝 번호와 새로 등록된 번호가 다르면 프로그램실행
+    else:
         if last_a != new_a:
-            # 마지막 열번호는 새로운 열 번호로 바꿈
+            # 끝 번호는 새로 등록된 번호로 바꾼다
             last_a = new_a
-            last_num = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
-            new_n = last_num  # 새로운 휴대폰 번호 불러온다
+            # 새로 등록된 번호를 끝 번호로 지정
+            new_n = last_col_info("f")  # 새로운 휴대폰 번호 불러온다
 
-            if new_n not in last_n:  # 1. 추가된다면 작동
-                print(f"주소록 등록을 시작합니다")
-                regster(new_n)
-                new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
-                start_day = parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
-                end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
+            if new_n not in last_n:  # 1. 기존 연락처 중 새로 등록된 번호가 없으면
+                try:
+                    print(f"주소록 등록을 시작합니다")
+                    print(new_n)
+                    # 새로 등록된 번호를 추가한다.
+                    regster(new_n)
 
-                print(new_n)
-                print(last_info())
-                print("__________________")
+                    # 등록상태
+                    # 0 : 미등록
+                    last_n = new_contact_info(0)  # 새로운 번호를 끝 번호로 지정
+                except Exception as e:
+                    print("새로운 연락처 추가중 프로그램 정지")
+                    error_notify.send("error code : 2")
 
-
-                last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
 
             else:  # 2. 중복된 전화번호가 있다면
-                print(f"중복된 연락처가 있습니다.\n{new_n}")
-
-                new_name = worksheet.acell("e" + str(len(worksheet.col_values(6)))).value
-                start_day = parse(worksheet.acell("g" + str(len(worksheet.col_values(6)))).value)
-                end_day = parse(worksheet.acell("h" + str(len(worksheet.col_values(6)))).value)
-
-                print(last_info())
-                print("__________________")
-
-
-                last_n = worksheet.col_values(6)  # 전화번호 열 새로고침
-
-except:
-    print("비정상 종료")
+                try:
+                    print(f"중복된 연락처가 있습니다.")
+                    print(new_n)
+                    # 등록상태
+                    # 1 : 미등록
+                    last_n = new_contact_info(1)  # 새로운 번호를 끝 번호로 지정
+                except Exception as e:
+                    print("중복된 연락처 추가중 프로그램 정지")
+                    error_notify.send("error code : 3")

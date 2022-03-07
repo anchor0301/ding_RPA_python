@@ -1,63 +1,14 @@
-import time
-import re
-import gspread
-import selenium_code
-import datetime as dt
-
-from dateutil.parser import parse
-from oauth2client.service_account import ServiceAccountCredentials
-
-
+from line_notify import LineNotify
+from code_gspread import *
+from test import *
+###############################    라인 코드   ################################################
+ACCESS_TOKEN = "guoQ2ORudnGk0b2FVuRAxcO6BhFiEwsohEMBvmPivag" # 딩굴댕굴
+ERROR_TOKEN="LoRFWtQxndakmcniVZIymNCNKcqKitRy5Aqd0dy5G0A" #에러 코드
+notify = LineNotify(ACCESS_TOKEN)
+error_notify= LineNotify(ERROR_TOKEN)
 
 
-###############################    gpread코드    ##############################################################
-
-scope = [
-    'https://spreadsheets.google.com/feeds',
-    'https://www.googleapis.com/auth/drive',
-]
-json_file_name = 'ding.json'
-credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scope)
-gc = gspread.authorize(credentials)
-spreadsheet_url = 'https://docs.google.com/spreadsheets/d/12BZajvryk9dE6cVQ0wwbXaKvK22xLCXFeEWTptfXkfY/edit?usp=sharing'
-# 스프레스시트 문서 가져오기
-doc = gc.open_by_url(spreadsheet_url)
-# 시트 선택하기
-
-
-
-
-# 연락처 가져오기
-def get_num(cell):
-    num = worksheet.acell("f" + cell).value
-    name = worksheet.acell("d" + cell).value
-    print(name + "회원님의 전화번호는 [" + num + "] 입니다.")
-
-
-# 제일 마지막 회원 이름
-def last_name():
-    cell_data = worksheet.acell("d" + str(len(column_data))).value
-    print(cell_data)
-    return cell_data
-
-
-#  i 애견이름/l 견종/d 서비스/f 전화번호
-def last_info():
-    dog_name = worksheet.acell("i" + str(len(worksheet.col_values(6)))).value
-    dog_breed = worksheet.acell("l" + str(len(worksheet.col_values(6)))).value
-    service = worksheet.acell("d" + str(len(worksheet.col_values(6)))).value
-    phone_numbers = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
-
-    # 서비스 첫글자
-    # 괄호안의 글자 삭제
-    rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)
-    # 출력
-    print_last_info = f"{dog_name}/{rm_breed.rstrip()}/{service[0]}/{phone_numbers[7:]}"
-
-    return print_last_info
-
-
-# 제일 마지막 회원 전화번호
+############################## 몇박 몇일 계산####################
 def count_day():
     start_day = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
     end_day = worksheet.acell("h" + str(len(worksheet.col_values(6)))).value
@@ -108,17 +59,36 @@ def count_day():
 
     return 안내메시지
 
-def regster(new_n):
-    # 최신 고객의 이름등록
-    selenium_code.reg_profile(last_info())
-    # 최신 고객의 전화번호 등록
-    time.sleep(0.3)  # 0.5초 기다림
-    selenium_code.reg_numbers(new_n)
 
-    time.sleep(0.3)  # 0.5초 기다림
+def new_contact_info(registered_state):
+    # 등록상태
+    # 0 : 아직 미등록
+    # 1 : 이미 등록됨
 
-    # 등록하기
-    #registers()
-    print("등록 완료")
+    new_name = last_col_info("e")  # 견주 성함
+    start_day = parse(last_col_info("g"))  # 시작일
+    end_day = parse(last_col_info("h"))  # 퇴실일
 
+    if registered_state:
+        print(last_info())
+        print("__________________")
+        notify.send(f"이미 등록된 번호입니다."
+                    f"\n노션을 확인해주세요. \n"
+                    f"\n이름 : {new_name} "
+                    f"\n연락처 : {new_n}"
+                    f"\n시작일 : {start_day}"
+                    f"\n종료일 : {end_day}")
+        notify.send(count_day())
+    else:
 
+        print(last_info())
+        print("__________________")
+        notify.send(f"노션을 확인해주세요"
+                    f"\n새로운 연락처가 추가됨. \n"
+                    f"\n이름 : {new_name} "
+                    f"\n연락처 : {new_n}"
+                    f"\n시작일 : {start_day}"
+                    f"\n종료일 : {end_day}")
+        notify.send(count_day())
+
+    return worksheet.col_values(6)
