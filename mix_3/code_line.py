@@ -1,11 +1,13 @@
 from line_notify import LineNotify
 from code_gspread import *
-from test import *
+import datetime as dt
+
+from dateutil.parser import parse
 ###############################    라인 코드   ################################################
-ACCESS_TOKEN = "guoQ2ORudnGk0b2FVuRAxcO6BhFiEwsohEMBvmPivag" # 딩굴댕굴
-ERROR_TOKEN="LoRFWtQxndakmcniVZIymNCNKcqKitRy5Aqd0dy5G0A" #에러 코드
+ACCESS_TOKEN = "guoQ2ORudnGk0b2FVuRAxcO6BhFiEwsohEMBvmPivag"  # 딩굴댕굴
+ERROR_TOKEN = "LoRFWtQxndakmcniVZIymNCNKcqKitRy5Aqd0dy5G0A"  # 에러 코드
 notify = LineNotify(ACCESS_TOKEN)
-error_notify= LineNotify(ERROR_TOKEN)
+error_notify = LineNotify(ERROR_TOKEN)
 
 
 ############################## 몇박 몇일 계산####################
@@ -58,6 +60,9 @@ def count_day():
             f"\n {month.month}월{month.day}일 부터 총{night.days}박 {day.days}일 예약되셨습니다. "
 
     return 안내메시지
+
+
+new_n = last_col_info("f")
 
 
 def new_contact_info(registered_state):
