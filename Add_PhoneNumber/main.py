@@ -32,24 +32,22 @@ def main():
     try:
         while True:
 
-            # 5초마다 마지막 열과 새로 등록된 열의 갯수를 비교한다.
-            time.sleep(5)
-            # 새로 등록된 번호
-            new_a = len(worksheet.col_values(6))
-            # 끝 번호와 새로 등록된 번호가 다르면 프로그램실행
-            if last_a != new_a:
-                # 끝 번호는 새로 등록된 번호로 바꾼다
-                last_a = new_a
-                # 새로 등록된 번호를 끝 번호로 지정
+            time.sleep(10)  # 10초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
+
+            new_a = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 new_a로 저장
+
+            if last_a != new_a:  # 끝 번호와 새로 등록된 번호가 다르면 프로그램실행
+
+                last_a = new_a  # 끝 번호는 새로 등록된 번호로 바꾼다
+
                 new_n = last_col_info("f")  # 새로운 휴대폰 번호 불러온다.
 
-                # 1. 기존 연락처 중 새로 등록된 번호가 없으면
-                if new_n not in last_n:
+                if new_n not in last_n:  # 1. 기존 연락처 중 새로 등록된 번호가 없으면
                     try:
                         print(f"주소록 등록을 시작합니다")
                         print(new_n)
-                        # 새로 등록된 번호를 추가한다.
-                        creat_a_google_contact()
+
+                        creat_a_google_contact()  # 새로 등록된 번호를 구글주소록에서 추가한다.
 
                         # 등록상태
                         # 0 : 미등록
@@ -60,8 +58,8 @@ def main():
                                           "새로운 연락처 추가중 프로그램 정지")
 
 
-                # 2. 중복된 전화번호가 있다면
-                else:
+
+                else:  # 2. 중복된 전화번호가 있다면
                     try:
                         print(f"중복된 연락처가 있습니다.")
                         print(new_n)
