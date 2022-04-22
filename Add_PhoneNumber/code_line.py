@@ -79,6 +79,7 @@ def new_contact_info(registered_state):
         print("__________________")
         notify.send(f"이미 등록된 번호입니다."
                     f"\n노션을 확인해주세요. \n"
+                    f"\n{last_info}"
                     f"\n이름 : {new_name} "
                     f"\n연락처 : {new_n}"
                     f"\n시작일 : {start_day}"
@@ -90,6 +91,7 @@ def new_contact_info(registered_state):
         print("__________________")
         notify.send(f"노션을 확인해주세요"
                     f"\n새로운 연락처가 추가됨. \n"
+                    f"\n{last_info}"
                     f"\n이름 : {new_name} "
                     f"\n연락처 : {new_n}"
                     f"\n시작일 : {start_day}"
