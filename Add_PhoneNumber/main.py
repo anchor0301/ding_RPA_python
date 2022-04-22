@@ -41,18 +41,18 @@ def main():
 
                 new_n = last_col_info("f")  # 새로운 휴대폰 번호 불러온다.
 
-                for i in reversed(range(0, new_a - last_a)):
+                for add_number in reversed(range(0, new_a - last_a)):
 
                     if new_n not in last_n:  # 1. 기존 연락처 중 새로 등록된 번호가 없으면
                         try:
                             print(f"주소록 등록을 시작합니다")
                             print(new_n)
 
-                            creat_a_google_contact(i)  # 새로 등록된 번호를 구글주소록에서 추가한다.
+                            creat_a_google_contact(add_number)  # 새로 등록된 번호를 구글주소록에서 추가한다.
 
                             # 등록상태
                             # 0 : 미등록
-                            last_n = new_contact_info(0,i)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            last_n = new_contact_info(0,add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
                         except Exception:
                             print("새로운 연락처 추가중 프로그램 정지")
                             error_notify.send("error code : 2\n"
@@ -66,7 +66,7 @@ def main():
                             print(new_n)
                             # 등록상태
                             # 1 : 미등록
-                            last_n = new_contact_info(1,i)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            last_n = new_contact_info(1,add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
                         except Exception:
                             print("중복된 연락처 추가중 프로그램 정지")
                             pass

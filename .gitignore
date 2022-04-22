@@ -155,7 +155,7 @@ MANIFEST
 pip-log.txt
 pip-delete-this-directory.txt
 
-# Unit test / coverage reports
+# Unit test.py / coverage reports
 htmlcov/
 .tox/
 .nox/
@@ -271,3 +271,6 @@ cython_debug/
 #.idea/
 
 # End of https://www.toptal.com/developers/gitignore/api/python,pycharm
+Add_PhoneNumber/.credentials/aaaa.json
+
+*.json

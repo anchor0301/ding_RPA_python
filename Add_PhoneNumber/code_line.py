@@ -62,7 +62,7 @@ def count_day(i):
     return 안내메시지
 
 
-new_n = last_col_info("f")
+new_n = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
 
 
 def new_contact_info(registered_state,i):
