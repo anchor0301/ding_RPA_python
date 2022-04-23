@@ -70,30 +70,30 @@ def new_contact_info(registered_state,i):
     # 0 : 아직 미등록
     # 1 : 이미 등록됨
 
+    new_n = last_col_info("f",i)  # 견주 성함
     new_name = last_col_info("e",i)  # 견주 성함
     start_day = parse(last_col_info("g",i))  # 시작일
     end_day = parse(last_col_info("h",i))  # 퇴실일
 
     if registered_state:
-        print(last_info())
         print("__________________")
         notify.send(f"이미 등록된 번호입니다."
                     f"\n노션을 확인해주세요. \n"
+                    f"\n{last_info(i)}"
                     f"\n이름 : {new_name} "
                     f"\n연락처 : {new_n}"
                     f"\n시작일 : {start_day}"
                     f"\n종료일 : {end_day}")
-        notify.send(count_day())
+        notify.send(count_day(i))
     else:
-
-        print(last_info())
         print("__________________")
         notify.send(f"노션을 확인해주세요"
                     f"\n새로운 연락처가 추가됨. \n"
+                    f"\n{last_info(i)}"
                     f"\n이름 : {new_name} "
                     f"\n연락처 : {new_n}"
                     f"\n시작일 : {start_day}"
                     f"\n종료일 : {end_day}")
-        notify.send(count_day())
+        notify.send(count_day(i))
 
-    return worksheet.col_values(6)
+    return worksheet.get("f1:f"+str(i))

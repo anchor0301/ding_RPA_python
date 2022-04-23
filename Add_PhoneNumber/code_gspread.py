@@ -115,4 +115,3 @@ def creat_a_google_contact(i): #구글 주소록에 연락처를 추가하는 ap
     print("등록 완료")
 
 
-
