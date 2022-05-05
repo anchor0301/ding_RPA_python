@@ -4,10 +4,9 @@ import datetime as dt
 
 from dateutil.parser import parse
 ###############################    라인 코드   ################################################
-ACCESS_TOKEN = "guoQ2ORudnGk0b2FVuRAxcO6BhFiEwsohEMBvmPivag"  # 딩굴댕굴
-ERROR_TOKEN = "LoRFWtQxndakmcniVZIymNCNKcqKitRy5Aqd0dy5G0A"  # 에러 코드
-notify = LineNotify(ACCESS_TOKEN)
-error_notify = LineNotify(ERROR_TOKEN)
+
+notify = LineNotify(hide_api.ACCESS_TOKEN)
+error_notify = LineNotify(hide_api.ERROR_TOKEN)
 
 
 ############################## 몇박 몇일 계산####################

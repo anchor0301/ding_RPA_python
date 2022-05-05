@@ -1,16 +1,15 @@
-from __future__ import print_function
 import re
 import gspread
-from oauth2client.service_account import ServiceAccountCredentials
-
-
+import hide_api
 import httplib2
 import os
 
+from __future__ import print_function
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
+from oauth2client.service_account import ServiceAccountCredentials
 
 try:
     import argparse
@@ -65,15 +64,15 @@ scopee = [
 json_file_name = 'ding.json'
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scopee)
 gc = gspread.authorize(credentials)
-spreadsheet_url = 'https://docs.google.com/spreadsheets/d/12BZajvryk9dE6cVQ0wwbXaKvK22xLCXFeEWTptfXkfY/edit?usp=sharing'
+
 # 스프레스시트 문서 가져오기
-doc = gc.open_by_url(spreadsheet_url)
+doc = gc.open_by_url(hide_api.spreadsheet_url)
 # 시트 선택하기
 worksheet = doc.worksheet('시트1')
 
 
 # 현재 스프레드시트의 행의 갯수를 출력한다.
-def last_col_info(row_number,i):
+def last_col_info(row_number, i):
     return worksheet.acell(row_number + str(i)).value
 
 
@@ -94,9 +93,8 @@ def last_info(add_number):
     return print_last_info
 
 
-
-def creat_a_google_contact(i): #구글 주소록에 연락처를 추가하는 api 입니다.
-    print(i,"번 행의 연락처가 등록됨")
+def creat_a_google_contact(i):  # 구글 주소록에 연락처를 추가하는 api 입니다.
+    print(i, "번 행의 연락처가 등록됨")
     service = discovery.build('people', 'v1', http=http,
                               discoveryServiceUrl='https://people.googleapis.com/$discovery/rest')
     service.people().createContact(body={
@@ -107,11 +105,9 @@ def creat_a_google_contact(i): #구글 주소록에 연락처를 추가하는 ap
         ],
         "phoneNumbers": [
             {
-                'value': f"{last_col_info('f',i)}"
+                'value': f"{last_col_info('f', i)}"
             }
         ]
     }).execute()
 
     print("등록 완료")
-
-
