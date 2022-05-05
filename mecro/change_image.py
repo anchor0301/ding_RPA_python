@@ -2,17 +2,19 @@ from PIL import Image
 from PIL import ImageGrab
 from PIL import ImageChops
 from PIL import ImageStat
+import pyautogui
+import keyboard
+import time
 
 from line_notify import LineNotify
 ERROR_TOKEN = "LoRFWtQxndakmcniVZIymNCNKcqKitRy5Aqd0dy5G0A"  # 에러 코드
 error_notify = LineNotify(ERROR_TOKEN)
 
 
-from key_mecro import *
 import time
 
-
 def PixelCheck(x1, y1, x2, y2):
+    time.sleep(1)
     im1 = ImageGrab.grab((x1, y1, x2, y2))
     # Take a snapshot of the screen. The pixels inside the bounding box are returned as an “RGB” image
     # on Windows or “RGBA” on macOS. If the bounding box is omitted, the entire screen is copied.
@@ -21,7 +23,7 @@ def PixelCheck(x1, y1, x2, y2):
 
         pyautogui.hotkey('ctrl', 'r')  # ctrl 키를 누릅니다.
 
-        time.sleep(2.6)
+        time.sleep(10)
         im2 = ImageGrab.grab((x1, y1, x2, y2))
         im = ImageChops.difference(im1, im2)
         # Returns the absolute value of the pixel-by-pixel difference between the two images.
@@ -37,10 +39,11 @@ def PixelCheck(x1, y1, x2, y2):
             return
 
 
-x1, y1, x2, y2 = map(int, input("Enter x1, y1, x2, y2 values: ").split())  # 추적할 영역의 좌상단, 우하단 좌표
-PixelCheck(x1, y1, x2, y2)
+#x1, y1, x2, y2 = map(int, input("Enter x1, y1, x2, y2 values: ").split())  # 추적할 영역의 좌상단, 우하단 좌표
+PixelCheck(863, 803, 1182, 986)
 # x1, y1, x2, y2 = input("Enter x1, y1, x2, y2 values: ").split()
 # x1 = int(x1)
 # y1 = int(y1)
 # x2 = int(x2)
 # y2 = int(y2)
+
