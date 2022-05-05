@@ -78,11 +78,11 @@ def last_col_info(row_number,i):
 
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
-def last_info(i):
-    dog_name = last_col_info("i",i)  # i 애견이름
-    dog_breed = last_col_info("l",i)  # l 견종
-    service = last_col_info("d",i)  # d 서비스
-    phone_numbers = last_col_info("f",i)  # f 전화번호
+def last_info(add_number):
+    dog_name = last_col_info("i", add_number)  # i 애견이름
+    dog_breed = last_col_info("l", add_number)  # l 견종
+    service = last_col_info("d", add_number)  # d 서비스
+    phone_numbers = last_col_info("f", add_number)  # f 전화번호
 
     # 견종 중 괄호안의 글자 삭제
     rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)

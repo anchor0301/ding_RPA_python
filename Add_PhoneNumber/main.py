@@ -48,6 +48,7 @@ def main():
                     if [new_n] not in last_n:  # 1. 기존 연락처 중 새로 등록된 번호가 없으면
                         try:
                             print(f"주소록 등록을 시작합니다")
+                            print(last_info(add_number))
                             print(new_n)
 
                             creat_a_google_contact(new_a-add_number)  # 새로 등록된 번호를 구글주소록에서 추가한다.
@@ -67,6 +68,7 @@ def main():
                     else:  # 2. 중복된 전화번호가 있다면
                         try:
                             print(f"중복된 연락처가 있습니다.")
+                            print(last_info(add_number))
                             print(new_n)
                             # 등록상태
                             # 1 : 미등록
