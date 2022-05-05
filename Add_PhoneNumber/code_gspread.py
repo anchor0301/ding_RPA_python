@@ -72,17 +72,17 @@ doc = gc.open_by_url(spreadsheet_url)
 worksheet = doc.worksheet('시트1')
 
 
-# 현재 열의 갯수
-def last_col_info(row_number):
-    return worksheet.acell(row_number + str(len(worksheet.col_values(6)))).value
+# 현재 스프레드시트의 행의 갯수를 출력한다.
+def last_col_info(row_number,i):
+    return worksheet.acell(row_number + str(i)).value
 
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
-def last_info():
-    dog_name = last_col_info("i")  # i 애견이름
-    dog_breed = last_col_info("l")  # l 견종
-    service = last_col_info("d")  # d 서비스
-    phone_numbers = last_col_info("f")  # f 전화번호
+def last_info(add_number):
+    dog_name = last_col_info("i", add_number)  # i 애견이름
+    dog_breed = last_col_info("l", add_number)  # l 견종
+    service = last_col_info("d", add_number)  # d 서비스
+    phone_numbers = last_col_info("f", add_number)  # f 전화번호
 
     # 견종 중 괄호안의 글자 삭제
     rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)
@@ -95,25 +95,23 @@ def last_info():
 
 
 
-def creat_a_google_contact():
+def creat_a_google_contact(i): #구글 주소록에 연락처를 추가하는 api 입니다.
+    print(i,"번 행의 연락처가 등록됨")
     service = discovery.build('people', 'v1', http=http,
                               discoveryServiceUrl='https://people.googleapis.com/$discovery/rest')
     service.people().createContact(body={
         "names": [
             {
-                'givenName': f"{last_info()}"
+                'givenName': f"{last_info(i)}"
             }
         ],
         "phoneNumbers": [
             {
-                'value': f"{last_col_info('f')}"
+                'value': f"{last_col_info('f',i)}"
             }
         ]
     }).execute()
 
     print("등록 완료")
-
-creat_a_google_contact()
-
 
 

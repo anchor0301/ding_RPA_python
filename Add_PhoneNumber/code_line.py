@@ -11,9 +11,9 @@ error_notify = LineNotify(ERROR_TOKEN)
 
 
 ############################## 몇박 몇일 계산####################
-def count_day():
-    start_day = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
-    end_day = worksheet.acell("h" + str(len(worksheet.col_values(6)))).value
+def count_day(i):
+    start_day = worksheet.acell("g" + str(i)).value
+    end_day = worksheet.acell("h" + str(i)).value
 
     start_day = parse(start_day[:12])
     end_day = parse(end_day[:12])
@@ -25,7 +25,7 @@ def count_day():
     next_time = start_day + dt.timedelta(days=-1)
     day = end_day - next_time
 
-    month = worksheet.acell("g" + str(len(worksheet.col_values(6)))).value
+    month = worksheet.acell("g" + str(i)).value
     month = parse(month[:12])
     안내메시지 = "견주님 안녕하세요😄딩굴댕굴 애견호텔,유치원 입니다‼\n" \
             "\n" \
@@ -62,40 +62,46 @@ def count_day():
     return 안내메시지
 
 
-new_n = last_col_info("f")
+new_n = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
 
 
-def new_contact_info(registered_state):
+def new_contact_info(registered_state,i):
     # 등록상태
     # 0 : 아직 미등록
     # 1 : 이미 등록됨
 
-    new_name = last_col_info("e")  # 견주 성함
-    start_day = parse(last_col_info("g"))  # 시작일
-    end_day = parse(last_col_info("h"))  # 퇴실일
+    new_n = last_col_info("f",i)  # 견주 성함
+    new_name = last_col_info("e",i)  # 견주 성함
+    start_day = parse(last_col_info("g",i))  # 시작일
+    end_day = parse(last_col_info("h",i))  # 퇴실일
 
     if registered_state:
-        print(last_info())
         print("__________________")
         notify.send(f"이미 등록된 번호입니다."
                     f"\n노션을 확인해주세요. \n"
+<<<<<<< HEAD
                     f"\n{last_info}"
+=======
+                    f"\n{last_info(i)}"
+>>>>>>> for_test
                     f"\n이름 : {new_name} "
                     f"\n연락처 : {new_n}"
                     f"\n시작일 : {start_day}"
                     f"\n종료일 : {end_day}")
-        notify.send(count_day())
+        notify.send(count_day(i))
     else:
-
-        print(last_info())
         print("__________________")
         notify.send(f"노션을 확인해주세요"
                     f"\n새로운 연락처가 추가됨. \n"
+<<<<<<< HEAD
                     f"\n{last_info}"
+=======
+                    f"\n{last_info(i)}"
+>>>>>>> for_test
                     f"\n이름 : {new_name} "
                     f"\n연락처 : {new_n}"
                     f"\n시작일 : {start_day}"
                     f"\n종료일 : {end_day}")
-        notify.send(count_day())
+        notify.send(count_day(i))
 
-    return worksheet.col_values(6)
+    return worksheet.get("f1:f"+str(i))
