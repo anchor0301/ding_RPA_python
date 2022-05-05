@@ -274,6 +274,7 @@ cython_debug/
 <<<<<<< HEAD
 =======
 Add_PhoneNumber/.credentials/aaaa.json
-
+ACCESS_TOKEN = "guoQ2ORudnGk0b2FVuRAxcO6BhFiEwsohEMBvmPivag"  # 딩굴댕굴
+ERROR_TOKEN = "LoRFWtQxndakmcniVZIymNCNKcqKitRy5Aqd0dy5G0A"  # 에러 코드
 >>>>>>> for_test
 *.json
