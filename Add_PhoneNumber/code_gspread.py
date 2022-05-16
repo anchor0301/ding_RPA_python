@@ -1,10 +1,12 @@
+from __future__ import print_function
+
 import re
 import gspread
 import hide_api
 import httplib2
 import os
+import hide_api
 
-from __future__ import print_function
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
