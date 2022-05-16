@@ -4,7 +4,6 @@ import hide_api
 import httplib2
 import os
 
-from __future__ import print_function
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools

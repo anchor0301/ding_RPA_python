@@ -59,8 +59,8 @@ def main():
                         except Exception as e:
                             print("새로운 연락처 추가중 프로그램 정지\n")
                             error_notify.send("error code : 2\n"
-                                              "새로운 연락처 추가중 프로그램 정지"
-                                              ,e)
+                                              "새로운 연락처 추가중 프로그램 정지")
+                            main()
 
 
 
@@ -73,10 +73,10 @@ def main():
 
                         except Exception as e:
                             print("중복된 연락처 추가중 프로그램 정지")
-                            pass
                             error_notify.send("error code : 3 \n"
-                                              "중복된 연락처 추가중 프로그램 정지\n"
-                                              ,e)
+                                              "중복된 연락처 추가중 프로그램 정지\n")
+                            main()
+
 
                 last_a = new_a  # 끝 번호는 새로 등록된 번호로 바꾼다
 
@@ -84,8 +84,8 @@ def main():
     except Exception as e:
         print("실시간 감지중 프로그램 정지")
         error_notify.send("error code : 1\n"
-                          "실시간 감지중 프로그램 정지\n"
-                          ,e)
+                          "실시간 감지중 프로그램 정지\n")
+        main()
 
 
 if __name__ == "__main__":
