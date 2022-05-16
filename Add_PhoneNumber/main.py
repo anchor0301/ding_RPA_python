@@ -16,6 +16,8 @@ import sys
 
 
 def main():
+    global last_a
+    global last_n
     error_notify.send("프로그램 시작")
     print("프로그램 준비중")
 
@@ -56,7 +58,7 @@ def main():
                             # 0 : 미등록
                             last_n = new_contact_info(0,new_a-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
-                        except Exception as e:
+                        except Exception:
                             print("새로운 연락처 추가중 프로그램 정지\n")
                             error_notify.send("error code : 2\n"
                                               "새로운 연락처 추가중 프로그램 정지")
@@ -71,7 +73,7 @@ def main():
                             # 1 : 미등록
                             last_n = new_contact_info(1,new_a-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
-                        except Exception as e:
+                        except Exception:
                             print("중복된 연락처 추가중 프로그램 정지")
                             error_notify.send("error code : 3 \n"
                                               "중복된 연락처 추가중 프로그램 정지\n")
@@ -81,7 +83,7 @@ def main():
                 last_a = new_a  # 끝 번호는 새로 등록된 번호로 바꾼다
 
 
-    except Exception as e:
+    except Exception:
         print("실시간 감지중 프로그램 정지")
         error_notify.send("error code : 1\n"
                           "실시간 감지중 프로그램 정지\n")
@@ -92,11 +94,10 @@ if __name__ == "__main__":
     try:
         main()
         os.execl(sys.executable, sys.executable, *sys.argv)
-    except Exception as e:
+    except Exception:
         print("중지")
         error_notify.send("error code : 4\n"
-                          "강제 중지됨.\n"
-                          ,e)
+                          "강제 중지됨.\n")
     except KeyboardInterrupt:
         print("키보드로 종료됨")
         error_notify.send("error code : 5\n"
