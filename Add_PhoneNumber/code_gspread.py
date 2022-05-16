@@ -96,7 +96,7 @@ def last_info(add_number):
 
 
 def creat_a_google_contact(i):  # 구글 주소록에 연락처를 추가하는 api 입니다.
-    print(i, "번 행의 연락처가 등록됨")
+    print(i, "번 행의 연락처를 등록합니다.")
     service = discovery.build('people', 'v1', http=http,
                               discoveryServiceUrl='https://people.googleapis.com/$discovery/rest')
     service.people().createContact(body={
