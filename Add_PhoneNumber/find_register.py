@@ -68,14 +68,3 @@ def main():
     register()
 
 
-a = "1"
-while True:
-    if a == "1":
-
-        print("성공")
-        main()
-        a = input("")
-    else:
-        print("실패")
-        main()
-        a = input("")

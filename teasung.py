@@ -1,35 +1,22 @@
-def total():
-    global total
-    total = kor + mat + eng + sci
-
-    return print("총점 : ", total)
-
-
-def avg():
-    global avg
-    avg = total / 4
-
-    return print("평균 : ", avg)
-
-
-def gread():
-    if avg >= 90:
-        gread = "A"
-    elif avg >= 80:
-        gread = "B"
-    elif avg >= 70:
-        gread = "D"
-    else:
-        gread = "F"
-
-    return  print("학점 : ", gread)
-
-
-kor = int(input("국어 점수 : "))
-mat = int(input("수학 점수 : "))
-eng = int(input("영어 점수 : "))
-sci = int(input("과학 점수 : "))
-
-total()
-avg()
-gread()
+month=5
+day=26
+days=1
+dayss=2
+print("""견주님 안녕하세요 딩굴댕굴 애견호텔,유치원 입니다😄
+"""
+                + f"\n {month}월{day}일 부터 총{days}박 {dayss}일 예약되셨습니다. "+"""
+    
+입,퇴실 방문전 꼭 연락후 방문 부탁드립니다.
+    
+_________
+    
+💕 아래 준비물 및 주의사항 꼭 확인 부탁드릴게요 💕
+_________
+    
+호텔 이용시간은 24시간 기준으로 하며 그 이후 초과 시간은 놀이방 요금에 준하여 추가 과금 합니다
+    
+궁금하신 사항은 아래 번호로 언제든지 연락주세요😄
+    
+📞 문의사항 : 010-7498-0144
+    
+""")
