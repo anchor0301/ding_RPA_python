@@ -2,7 +2,6 @@ from __future__ import print_function
 
 import re
 import gspread
-import hide_api
 import httplib2
 import os
 import hide_api
@@ -80,10 +79,24 @@ def last_col_info(row_number, i):
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
 def last_info(add_number):
-    dog_name = last_col_info("i", add_number)  # i 애견이름
-    dog_breed = last_col_info("l", add_number)  # l 견종
-    service = last_col_info("d", add_number)  # d 서비스
-    phone_numbers = last_col_info("f", add_number)  # f 전화번호
+    list_of_dicts = worksheet.get_all_records()
+    data_list = {}
+
+    for dic in list_of_dicts[2:3]:  # 튜플 안의 데이터를 하나씩 조회해서
+        data_list = {  # 딕셔너리 형태로
+            # 요소들을 하나씩 넣음
+
+            'dog_name': list(dic.values())[8],
+            'breed': list(dic.values())[9],
+            'service': list(dic.values())[3],
+            'PhoneNumber': "0" + str(list(dic.values())[5])
+
+        }
+
+    dog_name = data_list.get("dog_name")
+    dog_breed = data_list.get("breed")
+    service = data_list.get("service")
+    phone_numbers = data_list.get("PhoneNumber")
 
     # 견종 중 괄호안의 글자 삭제
     rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)
@@ -113,3 +126,6 @@ def creat_a_google_contact(i):  # 구글 주소록에 연락처를 추가하는 
     }).execute()
 
     print("등록 완료")
+
+
+print(last_info(4))

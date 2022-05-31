@@ -16,17 +16,15 @@ import sys
 
 
 def main():
-    global last_a
-    global last_n
+    global existingEndRow
+    global existingEndPhoneNumber
     error_notify.send("프로그램 시작")
     print("프로그램 준비중")
 
-    last_n = worksheet.col_values(6)
-    last_a = len(last_n)  # 초기 끝 번호를 저장한다
+    existingEndPhoneNumber = worksheet.col_values(6)  # 이미 추가된 전화번호들을 전부 나열한다.
+    existingEndRow = len(existingEndPhoneNumber)  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
 
-    values_list = worksheet.get("i1:i" + str(last_a))
-    print(values_list[-5:])
-    # 초기 저장된 번호들을 출력
+
     print("준비 완료")
     print("__________________")
 
@@ -37,27 +35,28 @@ def main():
 
             time.sleep(25)  # 25초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
 
-            new_a = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 new_a로 저장
+            newPhoneNumberLength = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
-            if last_a != new_a:  # 끝 번호와 새로 등록된 번호가 다르면 프로그램실행
+            if existingEndRow != newPhoneNumberLength :  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
 
+                for add_number in reversed(range(0, newPhoneNumberLength - existingEndRow)):  #프로그램 실행중 번호 추가 방지
 
-                for add_number in reversed(range(0, new_a - last_a)):
+                    new_n = last_col_info("f",newPhoneNumberLength-add_number)  # 새로운 휴대폰 번호 불러온다.
 
-                    new_n = last_col_info("f",new_a-add_number)  # 새로운 휴대폰 번호 불러온다.
-                    print("last_n : ",last_n[-5:])
-                    print(last_info(new_a-add_number))
-                    print("추가된 연락처: ",new_n)
-                    if [new_n] not in last_n:
+                    print("등록된 연락처 목록 : ",existingEndPhoneNumber[-5:])
+                    print("새로운 연락처 이름 : ",last_info(newPhoneNumberLength-add_number))
+                    print("추가된 전화번호 : ",new_n)
+
+                    if [new_n] not in existingEndPhoneNumber:
                         try:
 
                             # 등록상태
                             # 1. 기존 연락처 중 새로 등록된 번호가 없으면
                             print(f"예약 등록을 시작합니다")
 
-                            creat_a_google_contact(new_a-add_number)  # 새로 등록된 번호를 구글주소록에서 추가한다.
+                            creat_a_google_contact(newPhoneNumberLength-add_number)  # 새로 등록된 번호를 구글주소록에서 추가한다.
 
-                            last_n = new_contact_info(0,new_a-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            existingEndPhoneNumber = new_contact_info(0,newPhoneNumberLength-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
                         except Exception as e:
                             print("새로운 연락처 추가중 프로그램 정지\n")
@@ -73,7 +72,7 @@ def main():
                             print(f"중복된 연락처가 있습니다.")
                             # 등록상태
                             # 1 : 미등록
-                            last_n = new_contact_info(1,new_a-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            existingEndPhoneNumber = new_contact_info(1,newPhoneNumberLength-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
                         except Exception as e:
                             print("중복된 연락처 추가중 프로그램 정지")
@@ -83,7 +82,7 @@ def main():
                             main()
 
 
-                last_a = new_a  # 끝 번호는 새로 등록된 번호로 바꾼다
+                existingEndRow = newPhoneNumberLength  # 끝 번호는 새로 등록된 번호로 바꾼다
 
 
     except Exception as e:
