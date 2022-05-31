@@ -14,13 +14,13 @@ error_notify = LineNotify(hide_api.ERROR_TOKEN)
 
 def count_day(add_number):
     null = "_"
-    dog_name = last_col_info("i", add_number)  # i 애견이름
-    dog_breed = re.sub(r'\([^)]*\)', '', last_col_info("l", add_number))  # l 견종
-    service = last_col_info("d", add_number)  # d 서비스
-    phone_numbers = last_col_info("f", add_number)  # f 전화번호
+    dog_name = last_col_info(add_number).get('PhoneNumber')  # i 애견이름
+    dog_breed = re.sub(r'\([^)]*\)', '', last_col_info(add_number).get('breed'))  # l 견종
+    service = last_col_info(add_number).get('service')  # d 서비스
+    phone_numbers = last_col_info(add_number).get('PhoneNumber')  # f 전화번호
 
-    start_day = worksheet.acell("g" + str(add_number)).value
-    end_day = worksheet.acell("h" + str(add_number)).value
+    start_day = last_col_info(4).get('start_day')
+    end_day = last_col_info(4).get('end_day')
 
     start_day = parse(start_day[:12])
     end_day = parse(end_day[:12])
@@ -128,3 +128,7 @@ def NEW_CONTACT_INFORMATION(registered_state, i):
         # 카카오톡 알림톡 api 실행
 
     return worksheet.get("f1:f" + str(i))
+
+
+print(start_day)
+print(end_day)
