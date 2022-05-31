@@ -5,7 +5,7 @@ import gspread
 import httplib2
 import os
 import hide_api
-
+import time
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -72,17 +72,18 @@ doc = gc.open_by_url(hide_api.spreadsheet_url)
 worksheet = doc.worksheet('시트1')
 
 
-# 현재 스프레드시트의 행의 갯수를 출력한다.
+# 현재 스프레드시트의 의 갯수를 출력한다.
 def last_col_info(row_number, i):
     return worksheet.acell(row_number + str(i)).value
 
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
 def last_info(add_number):
+
     list_of_dicts = worksheet.get_all_records()
     data_list = {}
 
-    for dic in list_of_dicts[2:3]:  # 튜플 안의 데이터를 하나씩 조회해서
+    for dic in list_of_dicts[add_number-2:add_number-1]:  # 튜플 안의 데이터를 하나씩 조회해서
         data_list = {  # 딕셔너리 형태로
             # 요소들을 하나씩 넣음
 
@@ -90,7 +91,6 @@ def last_info(add_number):
             'breed': list(dic.values())[9],
             'service': list(dic.values())[3],
             'PhoneNumber': "0" + str(list(dic.values())[5])
-
         }
 
     dog_name = data_list.get("dog_name")
@@ -126,6 +126,3 @@ def creat_a_google_contact(i):  # 구글 주소록에 연락처를 추가하는 
     }).execute()
 
     print("등록 완료")
-
-
-print(last_info(4))

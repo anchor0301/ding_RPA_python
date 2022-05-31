@@ -30,7 +30,7 @@ def register():
 
             # 등록상태
             # 0 : 미등록
-            new_contact_info(0, name_list)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+            NEW_CONTACT_INFORMATION(0, name_list)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
         except Exception as e:
             print("새로운 연락처 추가중 프로그램 정지\n")
@@ -45,7 +45,7 @@ def register():
             print(f"중복된 연락처가 있습니다.")
             # 등록상태
             # 1 : 미등록
-            new_contact_info(1, name_list)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+            NEW_CONTACT_INFORMATION(1, name_list)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
         except Exception:
             print("중복된 연락처 추가중 프로그램 정지")
             error_notify.send("error code : 3 \n"

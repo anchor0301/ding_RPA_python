@@ -90,7 +90,7 @@ _______
 new_n = worksheet.acell("f" + str(len(worksheet.col_values(6)))).value
 
 
-def new_contact_info(registered_state, i):
+def NEW_CONTACT_INFORMATION(registered_state, i):
     # 등록상태
     # 0 : 아직 미등록
     # 1 : 이미 등록됨
@@ -113,7 +113,6 @@ def new_contact_info(registered_state, i):
                     f"\n시작일 : {start_day}"
                     f"\n종료일 : {end_day}")
         # 카카오톡 알림톡 api 실행
-
     else:
         print("__________________")
         count_day(i)

@@ -56,7 +56,7 @@ def main():
 
                             creat_a_google_contact(newPhoneNumberLength-add_number)  # 새로 등록된 번호를 구글주소록에서 추가한다.
 
-                            existingEndPhoneNumber = new_contact_info(0,newPhoneNumberLength-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            existingEndPhoneNumber = NEW_CONTACT_INFORMATION(0,newPhoneNumberLength-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
                         except Exception as e:
                             print("새로운 연락처 추가중 프로그램 정지\n")
@@ -72,7 +72,7 @@ def main():
                             print(f"중복된 연락처가 있습니다.")
                             # 등록상태
                             # 1 : 미등록
-                            existingEndPhoneNumber = new_contact_info(1,newPhoneNumberLength-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            existingEndPhoneNumber = NEW_CONTACT_INFORMATION(1,newPhoneNumberLength-add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
                         except Exception as e:
                             print("중복된 연락처 추가중 프로그램 정지")
