@@ -5,7 +5,6 @@ import gspread
 import httplib2
 import os
 import hide_api
-import time
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
@@ -22,7 +21,7 @@ except ImportError:
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/people.googleapis.com-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/contacts'
-CLIENT_SECRET_FILE = 'aaaa.json'
+CLIENT_SECRET_FILE = hide_api.aaaa
 APPLICATION_NAME = 'People API Python Quickstart'
 
 
@@ -62,7 +61,7 @@ scopee = [
     'https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive',
 ]
-json_file_name = 'ding.json'
+json_file_name = "ding.json"
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scopee)
 gc = gspread.authorize(credentials)
 
@@ -73,25 +72,28 @@ worksheet = doc.worksheet('시트1')
 
 
 # 현재 스프레드시트의 의 갯수를 출력한다.
-def last_col_info(row_number, i):
-    return worksheet.acell(row_number + str(i)).value
+def last_col_info(add_number):
+    list_of_dicts = worksheet.get_all_records()
+    for dic in list_of_dicts[add_number - 2:add_number - 1]:  # 튜플 안의 데이터를 하나씩 조회해서
+
+        data_list = {  # 딕셔너리 형태로
+            # 요소들을 하나씩 넣음
+
+            'host_name': list(dic.values())[4],  # 견주이름
+            'dog_name': list(dic.values())[8],  # 애견이름
+            'breed': list(dic.values())[9],  # 견종
+            'service': list(dic.values())[3],  # 서비스
+            'PhoneNumber': "0" + str(list(dic.values())[5]),  # 전화번호
+            'start_day': list(dic.values())[6],
+            'end_day': list(dic.values())[7]
+        }
+
+    return data_list
 
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
 def last_info(add_number):
-
-    list_of_dicts = worksheet.get_all_records()
-    data_list = {}
-
-    for dic in list_of_dicts[add_number-2:add_number-1]:  # 튜플 안의 데이터를 하나씩 조회해서
-        data_list = {  # 딕셔너리 형태로
-            # 요소들을 하나씩 넣음
-
-            'dog_name': list(dic.values())[8],
-            'breed': list(dic.values())[9],
-            'service': list(dic.values())[3],
-            'PhoneNumber': "0" + str(list(dic.values())[5])
-        }
+    data_list=last_col_info(add_number)
 
     dog_name = data_list.get("dog_name")
     dog_breed = data_list.get("breed")
@@ -108,19 +110,19 @@ def last_info(add_number):
     return print_last_info
 
 
-def creat_a_google_contact(i):  # 구글 주소록에 연락처를 추가하는 api 입니다.
-    print(i, "번 행의 연락처를 등록합니다.")
+def creat_a_google_contact(add_number):  # 구글 주소록에 연락처를 추가하는 api 입니다.
+    print(add_number, "번 행의 연락처를 등록합니다.")
     service = discovery.build('people', 'v1', http=http,
                               discoveryServiceUrl='https://people.googleapis.com/$discovery/rest')
     service.people().createContact(body={
         "names": [
             {
-                'givenName': f"{last_info(i)}"
+                'givenName': f"{last_info(add_number)}"
             }
         ],
         "phoneNumbers": [
             {
-                'value': f"{last_col_info('f', i)}"
+                'value': f"{last_col_info(add_number).get('PhoneNumber')}"
             }
         ]
     }).execute()
