@@ -16,7 +16,7 @@ def count_day(add_number):
     null = "_"
 
     new_inform = last_col_info(add_number)
-    dog_name = new_inform.get('PhoneNumber')  # i 애견이름
+    dog_name = new_inform.get("dog_name")  # i 애견이름
     dog_breed = re.sub(r'\([^)]*\)', '', new_inform.get('breed'))  # l 견종
     service = new_inform.get('service')  # d 서비스
     phone_numbers = new_inform.get('PhoneNumber')  # f 전화번호
@@ -105,8 +105,7 @@ def NEW_CONTACT_INFORMATION(registered_state,add_number):
     if registered_state:
         print("__________________")
         count_day(add_number)
-        notify.send(f"이미 등록된 번호입니다."
-                    f"\n노션을 확인해주세요. \n"
+        notify.send(f"\n이미 등록된 번호 \n"
 
                     f"\n{last_info(add_number)}"
 
@@ -118,8 +117,7 @@ def NEW_CONTACT_INFORMATION(registered_state,add_number):
     else:
         print("__________________")
         count_day(add_number)
-        notify.send(f"노션을 확인해주세요"
-                    f"\n새로운 연락처가 추가됨. \n"
+        notify.send(f"\n새로운 연락처가 추가 \n"
 
                     f"\n{last_info(add_number)}"
 
@@ -127,6 +125,7 @@ def NEW_CONTACT_INFORMATION(registered_state,add_number):
                     f"\n연락처 : {phone_numbers}"
                     f"\n시작일 : {start_day}"
                     f"\n종료일 : {end_day}")
+
         # 카카오톡 알림톡 api 실행
 
     return worksheet.get("f1:f" + str(add_number))
