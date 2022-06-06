@@ -78,14 +78,17 @@ def last_col_info(add_number):
 
         data_list = {  # 딕셔너리 형태로
             # 요소들을 하나씩 넣음
-
-            'host_name': list(dic.values())[4],  # 견주이름
-            'dog_name': list(dic.values())[8],  # 애견이름
-            'breed': list(dic.values())[9],  # 견종
             'service': list(dic.values())[3],  # 서비스
+            'host_name': list(dic.values())[4],  # 견주이름
             'PhoneNumber': "0" + str(list(dic.values())[5]),  # 전화번호
-            'start_day': list(dic.values())[6],
-            'end_day': list(dic.values())[7]
+            'start_day': list(dic.values())[6],  # 입실일
+            'end_day': list(dic.values())[7],  # 퇴실일
+            'dog_name': list(dic.values())[8],  # 애견이름
+            'sex': list(dic.values())[9],  # 성별
+            'weight': list(dic.values())[10],  # 몸무게
+            'breed': list(dic.values())[11],  # 견종
+            'Others': list(dic.values())[15]  # 특이사항
+
         }
 
     return data_list
@@ -93,7 +96,7 @@ def last_col_info(add_number):
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
 def last_info(add_number):
-    data_list=last_col_info(add_number)
+    data_list = last_col_info(add_number)
 
     dog_name = data_list.get("dog_name")
     dog_breed = data_list.get("breed")

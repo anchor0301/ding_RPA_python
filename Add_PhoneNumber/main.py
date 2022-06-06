@@ -8,8 +8,10 @@
 #
 ##########################################################
 
-from ding_rest_main import *
-from code_gspread import *
+from ding_rest_main import error_notify, NEW_CONTACT_INFORMATION
+from code_gspread import worksheet, last_info, last_col_info, creat_a_google_contact
+from init import createPage
+from hide_api import notion_databaseId, notion_headers
 import time
 import os
 import sys
@@ -32,7 +34,7 @@ def main():
     try:
         while True:
 
-            time.sleep(20)  # 25초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
+            time.sleep(15)  # 15초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
 
             new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
@@ -40,11 +42,15 @@ def main():
 
                 for add_number in reversed(range(0, new_phone_number_length - existingEndRow)):  # 프로그램 실행중 번호 추가 방지
 
-                    new_number = last_col_info(new_phone_number_length - add_number).get(
+
+                    add_number_row= new_phone_number_length - add_number
+
+
+                    new_number = last_col_info(add_number_row).get(
                         "PhoneNumber")  # 새로운 휴대폰 번호 불러온다.
 
                     print("등록된 연락처 목록 : ", existingEndPhoneNumber[-5:])
-                    print("추가된 연락처 이름 : ", last_info(new_phone_number_length - add_number))
+                    print("추가된 연락처 이름 : ", last_info(add_number_row))
                     print("추가된 전화번호 : ", new_number)
 
                     if new_number not in existingEndPhoneNumber:
@@ -54,12 +60,11 @@ def main():
                             # 1. 기존 연락처 중 새로 등록된 번호가 없으면
                             print(f"새로운 연락처를 추가합니다\n")
 
-                            creat_a_google_contact(new_phone_number_length - add_number)  # 새로 등록된 번호를 구글주소록에서 추가한다.
+                            creat_a_google_contact(add_number_row)  # 새로 등록된 번호를 구글주소록에서 추가한다.
 
-                            NEW_CONTACT_INFORMATION(0,
-                                                    new_phone_number_length - add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-
-                            worksheet.get("f1:f" + str(new_phone_number_length - add_number))
+                            NEW_CONTACT_INFORMATION(0, add_number_row)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            createPage(notion_databaseId, notion_headers, add_number_row)
+                            worksheet.get("f1:f" + str(add_number_row))
                         except Exception as e:
                             print("새로운 연락처 추가중 프로그램 정지\n")
                             print(e)
@@ -74,10 +79,9 @@ def main():
                             print(f"중복된 연락처가 있습니다.\n")
                             # 등록상태
                             # 1 : 미등록
-                            NEW_CONTACT_INFORMATION(1,
-                                                    new_phone_number_length - add_number)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-
-                            existingEndPhoneNumber = worksheet.get("f1:f" + str(new_phone_number_length - add_number))
+                            NEW_CONTACT_INFORMATION(1, add_number_row)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
+                            createPage(notion_databaseId, notion_headers, add_number_row)  #노션 추가
+                            existingEndPhoneNumber = worksheet.get("f1:f" + str(add_number_row))
                         except Exception as e:
                             print("중복된 연락처 추가중 프로그램 정지")
                             print(e)
