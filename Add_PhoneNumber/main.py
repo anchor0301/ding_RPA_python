@@ -34,7 +34,7 @@ def main():
     try:
         while True:
 
-            time.sleep(15)  # 15초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
+            time.sleep(30)  # 30초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
 
             new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
