@@ -151,5 +151,3 @@ def NEW_CONTACT_INFORMATION(registered_state, add_number):
                     f"\n종료일 : {parse(end_day)}")
 
         # 카카오톡 알림톡 api 실행
-
-count_day(17) #테스트

@@ -88,4 +88,4 @@ def createPage(notion_databaseId, headers, add_number):
     print(res.text)
 
 # readDatabase(notion_databaseId,headers) #테이블 읽기
-# createPage(notion_databaseId, notion_headers, 238)  # db 추가
+#createPage(notion_databaseId, notion_headers, 263)  # db 추가
