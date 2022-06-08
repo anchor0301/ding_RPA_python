@@ -34,12 +34,7 @@ def main():
     try:
         while True:
 
-<<<<<<< HEAD
             time.sleep(30)  # 30초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
-=======
-            time.sleep(25)  # 25초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
->>>>>>> master
-
             new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
             if existingEndRow != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
