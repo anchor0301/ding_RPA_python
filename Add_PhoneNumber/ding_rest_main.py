@@ -45,7 +45,7 @@ def count_day(add_number):
         json_object = {
         "service": 2210077160,
         "message":
-f"\n {start_day.strftime('%m월 %d일')} 부터 총{night.days}박 {day.days}일\n\n"
+f"\n {start_day.strftime('%m월 %d일')} 부터 총{night.days}박 {day.days}일\n"
 f"이름: {dog_name}\n"
 f"견종 : {dog_breed}\n"
 f"서비스 : {service}\n"
@@ -71,15 +71,15 @@ f"전화번호 뒷자리 : {phone_numbers[-4:]}" +
         json_object = {
             "service": 2210077160,
             "message":
-                f"{start_day_time}부터 총 {use_time}시간 예약되었습니다. \n\n"
+                f"{start_day_time}부터 {use_time}시간\n\n"
                 f"이름: {dog_name}\n"
                 f"견종 : {dog_breed}\n"
                 f"서비스 : {service}\n"
                 f"전화번호 뒷자리 : {phone_numbers[-4:]}\n"
-                f"\n" +
+                f"\n"
                 f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다. 💕\n"
                 f"\n"
-                f"■ 『최종 확인』 버튼을 눌러주세요‼️‼️\n",
+                f"■ 『최종 확인』 버튼을 눌러주세요‼️",
             "mobile": f"{phone_numbers}",  # 전송받는 전화번호
             "title": "최종 확인을 눌러주세요",  # 타이틀
             "template": "10007",  # 템플릿 코드
@@ -151,3 +151,4 @@ def NEW_CONTACT_INFORMATION(registered_state, add_number):
                     f"\n종료일 : {parse(end_day)}")
 
         # 카카오톡 알림톡 api 실행
+#count_day(17)
