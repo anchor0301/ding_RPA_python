@@ -1,8 +1,11 @@
 from __future__ import print_function
-
+import time
 import re
 import gspread
 import httplib2
+import datetime
+
+from datetime import timedelta
 import os
 import hide_api
 from apiclient import discovery
@@ -10,6 +13,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from oauth2client.service_account import ServiceAccountCredentials
+from puppyInfo import puppyInformation
 
 try:
     import argparse
@@ -73,61 +77,53 @@ worksheet = doc.worksheet('시트1')
 
 # 현재 스프레드시트의 의 갯수를 출력한다.
 def last_col_info(add_number):
-    list_of_dicts = worksheet.get_all_records()
-    for dic in list_of_dicts[add_number - 2:add_number - 1]:  # 튜플 안의 데이터를 하나씩 조회해서
+    list_of_dicts = worksheet.row_values(add_number)
+    data_list = {
+        # 딕셔너리 형태로
+        # 요소들을 하나씩 넣음
 
-        data_list = {  # 딕셔너리 형태로
-            # 요소들을 하나씩 넣음
-            'service': list(dic.values())[3],  # 서비스
-            'host_name': list(dic.values())[4],  # 견주이름
-            'phoneNumber': "0" + str(list(dic.values())[5]),  # 전화번호
-            'start_day': list(dic.values())[6],  # 입실일
-            'end_day': list(dic.values())[7],  # 퇴실일
-            'dog_name': list(dic.values())[8],  # 애견이름
-            'sex':       list(dic.values())[9],  # 성별
-            'weight': list(dic.values())[10],  # 몸무게
-            'breed': list(dic.values())[11],  # 견종
-            'others': list(dic.values())[15]  # 특이사항
+        'service': list_of_dicts[3],  # 서비스
+        'host_name': list_of_dicts[4],  # 견주이름
+        'phoneNumber': list_of_dicts[5],  # 전화번호
+        'start_day': list_of_dicts[6],  # 입실일
+        'end_day': list_of_dicts[7],  # 퇴실일
+        'dog_name': list_of_dicts[8],  # 애견이름
+        'sex': list_of_dicts[9],  # 성별
+        'weight': list_of_dicts[10],  # 몸무게
+        'breed': list_of_dicts[11],  # 견종
+        'others': list_of_dicts[15],  # 특이사항
+        'useTime': list_of_dicts[21]  # 카운트
 
-        }
-
+    }
     return data_list
 
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
-def last_info(add_number):
-    data_list = last_col_info(add_number)
-
-    dog_name = data_list.get("dog_name")
-    dog_breed = data_list.get("breed")
-    service = data_list.get("service")
-    phone_numbers = data_list.get("PhoneNumber")
-
-    # 견종 중 괄호안의 글자 삭제
-    rm_breed = re.sub(r'\([^)]*\)', '', dog_breed)
-
-    # 연락처 이름을 저장한다
-    # ex) 뚱/포메/호/1234
-    print_last_info = f"{dog_name}/{rm_breed.rstrip()}/{service[0]}/{phone_numbers[7:]}"
-
-    return print_last_info
 
 
-def creat_a_google_contact(add_number):  # 구글 주소록에 연락처를 추가하는 api 입니다.
-    print(add_number, "번 행의 연락처를 등록합니다.")
+
+def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
+    print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")
+
+
     service = discovery.build('people', 'v1', http=http,
                               discoveryServiceUrl='https://people.googleapis.com/$discovery/rest')
     service.people().createContact(body={
         "names": [
             {
-                'givenName': f"{last_info(add_number)}"
+                'givenName': f"{dog.Info()}"
             }
         ],
         "phoneNumbers": [
             {
-                'value': f"{last_col_info(add_number).get('PhoneNumber')}"
+                'value': f"{dog.phoneNumber}"
             }
         ]
     }).execute()
 
     print("등록 완료")
+
+
+# 테스트 용
+#print(last_col_info(17))
+#print(creat_a_google_contact(17))

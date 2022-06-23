@@ -1,10 +1,10 @@
 import requests
 import json
 from line_notify import LineNotify
-from code_gspread import last_col_info, worksheet, last_info
+from code_gspread import last_col_info
 import hide_api
 
-from test import puppyInformation
+from puppyInfo import puppyInformation
 
 ###############################    라인 코드
 
@@ -12,17 +12,14 @@ notify = LineNotify(hide_api.ACCESS_TOKEN)
 error_notify = LineNotify(hide_api.ERROR_TOKEN)
 
 
-def count_day(add_number):
-
-    dog = puppyInformation(last_col_info(add_number))
-
+def count_day(dog):
     API_HOST = 'https://talkapi.lgcns.com/'
     headers = hide_api.headers
-    if "놀" not in dog.service:
+    if "호" in dog.service:
         json_object = {
             "service": 2210077160,
             "message":
-                f"{dog.reservationDate()}\n"
+                f"{dog.reservationDate()}\n"  # 호텔 예약
                 f"이름: {dog.dog_name}\n"
                 f"견종 : {dog.breed}\n"
                 f"서비스 : {dog.service}\n"
@@ -42,11 +39,36 @@ def count_day(add_number):
         }
 
         json_string = json.dumps(json_object)
-    else:
+    elif "놀" in dog.service:
         json_object = {
             "service": 2210077160,
             "message":
-                f"{dog.overNight()}"
+                f"{dog.overNight()}"  # 놀이방 예약
+                f"이름: {dog.dog_name}\n"
+                f"견종 : {dog.breed}\n"
+                f"서비스 : {dog.service}\n"
+                f"전화번호 뒷자리 : {dog.backPhoneNumber}\n"
+                f"\n"
+                f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다. 💕\n"
+                f"\n"
+                f"■ 『최종 확인』 버튼을 눌러주세요‼️",
+            "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
+            "title": "최종 확인을 눌러주세요",  # 타이틀
+            "template": "10007",  # 템플릿 코드
+            "buttons": [
+                {"name": "최종 확인", "type": "MD"},
+                {"name": "사이트 이동",
+                 "url": "https://m.map.kakao.com/actions/detailMapView?id=1372380561&refService=place||https://map.kakao.com/?urlX=531668&urlY=926633&urlLevel=2&itemId=1372380561&q=%EB%94%A9%EA%B5%B4%EB%"},
+                {"name": "사이트 이동", "url": "http://3.35.10.42/login||http://3.35.10.42/login"}]
+        }
+        json_string = json.dumps(json_object)
+
+
+    elif "유" in dog.service:
+        json_object = {
+            "service": 2210077160,
+            "message":
+                f"{dog.useTime} 회\n"  # 유치원 예약
                 f"이름: {dog.dog_name}\n"
                 f"견종 : {dog.breed}\n"
                 f"서비스 : {dog.service}\n"
@@ -86,36 +108,30 @@ def count_day(add_number):
     print("---------------------------")
 
 
-def NEW_CONTACT_INFORMATION(registered_state, add_number):
+def NEW_CONTACT_INFORMATION(registered_state, dog):
     # 등록상태
     # 0 : 아직 미등록
     # 1 : 이미 등록됨
-    dog = puppyInformation(last_col_info(add_number))
 
+    # 카카오톡 알림톡 api 실행
+    count_day(dog)
 
-    count_day(add_number)
+    send = ""
     if registered_state:
-        print("__________________")
-
-        notify.send(f"\n이미 등록된 번호 \n"
-
-                    f"\n{last_info(add_number)}\n"
-                    
-                    f"\n이름 : {dog.host_name} "
-                    f"\n연락처 : {dog.phoneNumber}"
-                    f"\n시작일 : {dog.start_day_time}"
-                    f"\n종료일 : {dog.end_day_time}")
-        # 카카오톡 알림톡 api 실행
+        send = f"\n이미 등록된 번호 \n"
     else:
-        print("__________________")
-        notify.send(f"\n새로운 연락처가 추가 \n"
+        send = f"\n새로운 연락처가 추가 \n"
+    notify.send(send +
+                f"\n{dog.Info()}\n"
 
-                    f"\n{last_info(add_number)}\n"
+                f"\n이름 : {dog.host_name} "
+                f"\n연락처 : {dog.phoneNumber}"
+                f"\n시작일 : {dog.start_day_time}"
+                f"\n종료일 : {dog.end_day_time}")
 
-                    f"\n이름 : {dog.host_name} "
-                    f"\n연락처 : {dog.phoneNumber}"
-                    f"\n시작일 : {dog.start_day_time}"
-                    f"\n종료일 : {dog.end_day_time}")
 
-        # 카카오톡 알림톡 api 실행
-count_day(17)
+print("__________________")
+
+# count_day(puppyInformation(last_col_info(17)))
+
+# NEW_CONTACT_INFORMATION(1,17)

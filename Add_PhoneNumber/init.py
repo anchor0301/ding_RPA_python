@@ -2,6 +2,7 @@ import requests, json
 from hide_api import notion_databaseId, notion_headers
 from code_gspread import last_col_info
 from dateutil.parser import parse
+from puppyInfo import puppyInformation
 
 
 def readDatabase(notion_databaseId, headers):
@@ -17,17 +18,7 @@ def readDatabase(notion_databaseId, headers):
         json.dump(data, f, ensure_ascii=False)
 
 
-def createPage(notion_databaseId, headers, add_number):
-    new_inform = last_col_info(add_number)
-
-    dog_name = new_inform.get("dog_name")  # 이름
-    service = new_inform.get("service")  # 서비스
-    start_day = parse(new_inform.get("start_day"))  # 시작 날짜
-    end_day = parse(new_inform.get("end_day"))  # 종료 날짜
-    breed = new_inform.get("breed")  # 견종
-    weight = float(new_inform.get("weight"))  # 몸무게
-    sex = new_inform.get("sex")  # 몸무게
-    others = new_inform.get("Others")  # 특이사항
+def createPage(notion_databaseId, headers, dog):
 
     createUrl = 'https://api.notion.com/v1/pages'
     newPageData = {
@@ -37,40 +28,40 @@ def createPage(notion_databaseId, headers, add_number):
                 "title": [
                     {
                         "text": {
-                            "content": f"{dog_name}"
+                            "content": f"{dog.dog_name}"
                         }
                     }
                 ]
             },
             "서비스": {
                 "type": "select",
-                "select": {"name": f"{service}"}
+                "select": {"name": f"{dog.service}"}
             },
             "날짜": {
                 "type": "date",
-                "date": {"start": f"{start_day}+09:00",
-                         "end": f"{end_day}+09:00"}
+                "date": {"start": f"{dog.start_day}+09:00",
+                         "end": f"{dog.end_day}+09:00"}
             },
             "견종": {
                 "type": "select",
-                "select": {"name": f"{breed}"}
+                "select": {"name": f"{dog.breed}"}
             },
             "몸무게": {
                 "type": "number",
-                "number": weight
+                "number": int(dog.weight)
             },
             "특이사항": {
                 "rich_text": [
                     {
                         "text": {
-                            "content": f"{others}"
+                            "content": f"{dog.Others}"
                         }
                     }
                 ]
             },
             "성별": {
                 "type": "select",
-                "select": {"name": f"{sex}"}
+                "select": {"name": f"{dog.sex}"}
             },
             "입실 여부": {
                 "type": "select",
@@ -88,4 +79,8 @@ def createPage(notion_databaseId, headers, add_number):
     print(res.text)
 
 # readDatabase(notion_databaseId,headers) #테이블 읽기
-#createPage(notion_databaseId, notion_headers, 263)  # db 추가
+
+#dog = puppyInformation(last_col_info(17))
+#createPage(notion_databaseId, notion_headers, dog)  # db 추가
+
+
