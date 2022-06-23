@@ -24,7 +24,7 @@ def main():
     error_notify.send("프로그램 시작")
     print("프로그램 준비중")
 
-    existingEndPhoneNumber = worksheet.col_values(6)  # 이미 추가된 전화번호들을 전부 나열한다.
+    existingEndPhoneNumber = worksheet.col_values(1)  # 이미 추가된 전화번호들을 전부 나열한다.
     existingEndRow = len(existingEndPhoneNumber)  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
 
     print("마지막 전화번호 저장 완료")
@@ -36,16 +36,15 @@ def main():
         while True:
 
             time.sleep(4)  # 30초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
-            new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
+            new_phone_number_length = len(worksheet.col_values(1))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
             if existingEndRow != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
 
                 for add_number in reversed(range(0, new_phone_number_length - existingEndRow)):  # 프로그램 실행중 번호 추가 방지
-                  
+
                     add_number_row= new_phone_number_length - add_number
 
                     dog = puppyInformation(last_col_info(add_number_row))
-
 
                     print("등록된 연락처 목록 : ", existingEndPhoneNumber[-5:])
                     print("추가된 연락처 이름 : ", dog.Info())
@@ -108,11 +107,8 @@ if __name__ == "__main__":
         print("중지")
         error_notify.send("error code : 4\n"
                           "강제 중지됨.\n")
-        main()
     except KeyboardInterrupt:
         print("키보드로 종료됨")
         error_notify.send("error code : 5\n"
                           "키보드로 강제 중지됨.\n")
-
-        main()
 

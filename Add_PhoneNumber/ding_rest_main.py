@@ -27,18 +27,18 @@ def count_day(dog):
                 f"\n"
                 f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다. 💕\n"
                 f"\n"
-                f"■ 『최종 확인』 버튼을 눌러주세요‼️‼️",
+                f"■  『최종 확인』 버튼을 눌러주세요‼️",
             "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
             "title": "최종 확인을 눌러주세요",  # 타이틀
             "template": "10005",  # 템플릿 코드
             "buttons": [
                 {"name": "최종 확인", "type": "MD"},
                 {"name": "사이트 이동",
-                 "url": "https://m.map.kakao.com/actions/detailMapView?id=1372380561&refService=place||https://map.kakao.com/?urlX=531668&urlY=926633&urlLevel=2&itemId=1372380561&q=%EB%94%A9%EA%B5%B4%EB%	"},
+                 "url": "https://m.map.kakao.com/actions/detailMapView?id=1372380561&refService=place||https://map.kakao.com/?urlX=531668&urlY=926633&urlLevel=2&itemId=1372380561&q=%EB%94%A9%EA%B5%B4%EB%"},
                 {"name": "사이트 이동", "url": "http://3.35.10.42/login||http://3.35.10.42/login"}]
         }
-
         json_string = json.dumps(json_object)
+
     elif "놀" in dog.service:
         json_object = {
             "service": 2210077160,
@@ -68,7 +68,7 @@ def count_day(dog):
         json_object = {
             "service": 2210077160,
             "message":
-                f"{dog.useTime} 회\n"  # 유치원 예약
+                f"{dog.reservationDate()}\n"  # 호텔 예약
                 f"이름: {dog.dog_name}\n"
                 f"견종 : {dog.breed}\n"
                 f"서비스 : {dog.service}\n"
@@ -76,10 +76,10 @@ def count_day(dog):
                 f"\n"
                 f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다. 💕\n"
                 f"\n"
-                f"■ 『최종 확인』 버튼을 눌러주세요‼️",
+                f"■  『최종 확인』 버튼을 눌러주세요‼️",
             "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
             "title": "최종 확인을 눌러주세요",  # 타이틀
-            "template": "10007",  # 템플릿 코드
+            "template": "10005",  # 템플릿 코드
             "buttons": [
                 {"name": "최종 확인", "type": "MD"},
                 {"name": "사이트 이동",
@@ -132,6 +132,7 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
 
 print("__________________")
 
-# count_day(puppyInformation(last_col_info(17)))
+#dog = puppyInformation(last_col_info(329))
+#count_day(dog)
 
 # NEW_CONTACT_INFORMATION(1,17)

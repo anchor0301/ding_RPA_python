@@ -4,7 +4,8 @@ import re
 import gspread
 import httplib2
 import datetime
-
+from dateutil.parser import parse
+from datetime import datetime
 from datetime import timedelta
 import os
 import hide_api
@@ -85,26 +86,38 @@ def last_col_info(add_number):
         'service': list_of_dicts[3],  # 서비스
         'host_name': list_of_dicts[4],  # 견주이름
         'phoneNumber': list_of_dicts[5],  # 전화번호
+
         'start_day': list_of_dicts[6],  # 입실일
         'end_day': list_of_dicts[7],  # 퇴실일
+
         'dog_name': list_of_dicts[8],  # 애견이름
         'sex': list_of_dicts[9],  # 성별
         'weight': list_of_dicts[10],  # 몸무게
         'breed': list_of_dicts[11],  # 견종
         'others': list_of_dicts[15],  # 특이사항
-        'useTime': list_of_dicts[21]  # 카운트
 
     }
+    if data_list.get("end_day"):
+        pass
+    else:
+        start = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
+
+        end = (datetime.now() + timedelta(days=1)).strftime('%d-%b-%Y %H:%M:%S')
+        start = str(start)
+        end = str(end)
+        data_list["start_day"] = start
+        data_list["end_day"] = end
+
+        data_list['useTime']: list_of_dicts[21]  # 카운트
+
     return data_list
 
 
 #  i 애견이름/l 견종/d 서비스/f 전화번호
 
 
-
 def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
     print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")
-
 
     service = discovery.build('people', 'v1', http=http,
                               discoveryServiceUrl='https://people.googleapis.com/$discovery/rest')
@@ -125,5 +138,5 @@ def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하�
 
 
 # 테스트 용
-#print(last_col_info(17))
-#print(creat_a_google_contact(17))
+#print(last_col_info(329))
+# print(creat_a_google_contact(17))

@@ -80,7 +80,7 @@ def createPage(notion_databaseId, headers, dog):
 
 # readDatabase(notion_databaseId,headers) #테이블 읽기
 
-#dog = puppyInformation(last_col_info(17))
+#dog = puppyInformation(last_col_info(329))
 #createPage(notion_databaseId, notion_headers, dog)  # db 추가
 
 
