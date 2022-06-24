@@ -60,6 +60,6 @@ class puppyInformation:
         return print_last_info
 
 
-dog = puppyInformation(code_gspread.last_col_info(329))
-print(dog.end_day)
+#dog = puppyInformation(code_gspread.last_col_info(332))
+#print(dog.useTime)
 

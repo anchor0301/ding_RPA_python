@@ -67,7 +67,6 @@ def main():
                             print(e)
                             error_notify.send("error code : 2\n"
                                               "새로운 연락처 추가중 프로그램 정지")
-                            main()
 
 
 
@@ -84,7 +83,6 @@ def main():
                             print(e)
                             error_notify.send("error code : 3 \n"
                                               "중복된 연락처 추가중 프로그램 정지\n")
-                            main()
 
                 existingEndRow = new_phone_number_length  # 끝 번호는 새로 등록된 번호로 바꾼다
 
@@ -94,7 +92,6 @@ def main():
         print(e)
         error_notify.send("error code : 1\n"
                           "실시간 감지중 프로그램 정지\n")
-        main()
 
 
 if __name__ == "__main__":
