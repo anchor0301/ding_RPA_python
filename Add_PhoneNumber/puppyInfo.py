@@ -1,32 +1,37 @@
 import re
-import code_gspread
+from code_gspread import worksheet
 from dateutil.parser import parse
 import datetime as dt
 import datetime
+from datetime import datetime
 from datetime import timedelta
 
-
 class puppyInformation:
-    def __init__(self, doginfo):
-        self.service = doginfo.get('service')
-        self.host_name = doginfo.get('host_name')
-        self.phoneNumber = doginfo.get('phoneNumber')
-        self.backPhoneNumber = doginfo.get('phoneNumber')[-4:]
+    def __init__(self, doginfod):
+        doginfo = worksheet.row_values(doginfod)
+        self.service = doginfo[3] # 서비스
+        self.host_name = doginfo[4] # 견주이름
+        self.phoneNumber = doginfo[5]
+        self.backPhoneNumber = (doginfo[5])[-4:]
 
-        self.start_day_time = parse(doginfo.get('start_day'))
-        self.end_day_time = parse(doginfo.get('end_day'))
-        self.start_day = parse(doginfo.get('start_day')[:12])
-        self.end_day = parse(doginfo.get('end_day')[:12])
+        if doginfo[6]:
+            self.start_day_time = parse(doginfo[6]) #입실일
+            self.end_day_time = parse(doginfo[7]) #퇴실일
+            self.start_day = parse((doginfo[6])[:12])
+            self.end_day = parse((doginfo[7])[:12])
+            self.useTime = "0"
+        else:
+            self.start_day_time = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
+            self.end_day_time = str((datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
+            self.useTime = re.sub(r'[^0-9]', '', doginfo[17])
 
-        self.dog_name = doginfo.get('dog_name')
-        self.sex = doginfo.get('sex')
+        self.dog_name = doginfo[8]
+        self.sex = doginfo[9]
 
-        self.weight = doginfo.get('weight')
+        self.weight = doginfo[10]
 
-        self.breed = re.sub(r'\([^)]*\)', '', doginfo.get('breed'))
-        self.Others = doginfo.get('others')
-        self.useTime = re.sub(r'[^0-9]', '', doginfo.get("useTime"))
-
+        self.breed = re.sub(r'\([^)]*\)', '', doginfo[11])
+        self.Others = doginfo[15]
     def reservationDate(self):
         start_day = self.start_day
         end_day = self.end_day
@@ -58,8 +63,3 @@ class puppyInformation:
         print_last_info = f"{self.dog_name}/{rm_breed.rstrip()}/{self.service[0]}/{self.backPhoneNumber}"
 
         return print_last_info
-
-
-#dog = puppyInformation(code_gspread.last_col_info(332))
-#print(dog.__dict__)
-

@@ -35,6 +35,3 @@ class puppyInformation:
         self.breed = re.sub(r'\([^)]*\)', '', doginfo[11])
         self.Others = doginfo[15]
 
-
-a={'service': '유치원', 'host_name': '김성민', 'phoneNumber': '01089000137', 'backPhoneNumber': '0137', 'start_day_time': datetime.datetime(2022, 6, 25, 13, 30), 'end_day_time': datetime.datetime(2022, 6, 26, 13, 30), 'start_day': datetime.datetime(2022, 6, 25, 0, 0), 'end_day': datetime.datetime(2022, 6, 26, 0, 0), 'dog_name': '달꿍이', 'sex': '암컷 (Female)', 'weight': '2', 'breed': '포메 ', 'Others': '', 'useTime': '0'}
-b={'service': '유치원', 'host_name': '김성민', 'phoneNumber': '01089000137', 'backPhoneNumber': '0137', 'start_day_time': datetime.datetime(2022, 6, 25, 13, 30), 'end_day_time': datetime.datetime(2022, 6, 26, 13, 30), 'start_day': datetime.datetime(2022, 6, 25, 0, 0), 'end_day': datetime.datetime(2022, 6, 26, 0, 0), 'useTime': '0', 'dog_name': '달꿍이', 'sex': '암컷 (Female)', 'weight': '2', 'breed': '포메 ', 'Others': ''}

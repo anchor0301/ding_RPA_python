@@ -19,7 +19,7 @@ def register():
     doggy_number = int(input("등록할 강아지의 숫자 입력 : "))
     add_number = last_a + doggy_number - 6
 
-    dog=puppyInformation(last_col_info(add_number))
+    dog=puppyInformation(add_number)
     print(add_number)
 
 

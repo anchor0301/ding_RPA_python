@@ -9,7 +9,7 @@
 ##########################################################
 
 from ding_rest_main import error_notify, NEW_CONTACT_INFORMATION
-from code_gspread import worksheet, last_col_info, creat_a_google_contact
+from code_gspread import worksheet, creat_a_google_contact
 from init import createPage
 from hide_api import notion_databaseId, notion_headers
 from puppyInfo import puppyInformation
@@ -45,7 +45,7 @@ def main():
 
                     add_number_row = new_phone_number_length - add_number
 
-                    dog = puppyInformation(last_col_info(add_number_row))
+                    dog = puppyInformation(add_number_row)
 
                     print("등록된 연락처 목록 : ", existingEndPhoneNumber[-5:])
                     print("추가된 연락처 이름 : ", dog.Info())

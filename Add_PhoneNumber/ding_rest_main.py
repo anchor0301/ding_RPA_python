@@ -1,7 +1,6 @@
 import requests
 import json
 from line_notify import LineNotify
-from code_gspread import last_col_info
 import hide_api
 
 from puppyInfo import puppyInformation
@@ -132,7 +131,3 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
 
 print("__________________")
 
-dog = puppyInformation(last_col_info(332))
-count_day(dog)
-
-#NEW_CONTACT_INFORMATION(1,17)

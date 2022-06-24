@@ -1,7 +1,5 @@
 import requests, json
 from hide_api import notion_databaseId, notion_headers
-from code_gspread import last_col_info
-from dateutil.parser import parse
 from puppyInfo import puppyInformation
 
 
@@ -79,10 +77,4 @@ def createPage(notion_databaseId, headers, dog):
     print(res.text)
 
 # readDatabase(notion_databaseId,headers) #테이블 읽기
-
-
-#dog = puppyInformation(last_col_info(330))
-#print(dog.start_day_time)
-#createPage(notion_databaseId, notion_headers, dog)  # 노션 db 추가
-
 

@@ -74,43 +74,6 @@ doc = gc.open_by_url(hide_api.spreadsheet_url)
 # 시트 선택하기
 worksheet = doc.worksheet('시트1')
 
-
-# 현재 스프레드시트의 의 갯수를 출력한다.
-def last_col_info(add_number):
-    list_of_dicts = worksheet.row_values(add_number)
-    data_list = {
-        # 딕셔너리 형태로
-        # 요소들을 하나씩 넣음
-
-        'service': list_of_dicts[3],  # 서비스
-        'host_name': list_of_dicts[4],  # 견주이름
-        'phoneNumber': list_of_dicts[5],  # 전화번호
-
-        'start_day': list_of_dicts[6],  # 입실일
-        'end_day': list_of_dicts[7],  # 퇴실일
-
-        'dog_name': list_of_dicts[8],  # 애견이름
-        'sex': list_of_dicts[9],  # 성별
-        'weight': list_of_dicts[10],  # 몸무게
-        'breed': list_of_dicts[11],  # 견종
-        'others': list_of_dicts[15],  # 특이사항
-        "useTime": "0"  # 카운트
-    }
-    if data_list.get("end_day"):
-        data_list["start_day"] = list_of_dicts[6]
-        data_list["end_day"] = list_of_dicts[7]
-    else:
-
-        data_list["start_day"] = str(datetime.now().strftime('%d-%b-%Y %H:%M:%S'))
-        data_list["end_day"] = str((datetime.now() + timedelta(days=1)).strftime('%d-%b-%Y %H:%M:%S'))
-        data_list["useTime"] = list_of_dicts[17]  # 카운트
-
-    return data_list
-
-
-#  i 애견이름/l 견종/d 서비스/f 전화번호
-
-
 def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
 
     print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")
@@ -131,7 +94,3 @@ def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하�
     }).execute()
 
     print("등록 완료")
-
-# 테스트 용
-#print(last_col_info(332))
-# print(creat_a_google_contact(17))
