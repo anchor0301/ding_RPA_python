@@ -3,8 +3,6 @@ import json
 from line_notify import LineNotify
 import hide_api
 
-from puppyInfo import puppyInformation
-
 ###############################    라인 코드
 
 notify = LineNotify(hide_api.ACCESS_TOKEN)
@@ -101,9 +99,8 @@ def count_day(dog):
 
     resp = req('/request/kakao.json', '', 'post')
     print("response status:\n%d" % resp.status_code)
-    print("response headers:\n%s" % resp.headers)
+    #print("response headers:\n%s" % resp.headers)
     print("response body:\n%s" % resp.text)
-    print("post number : ", dog.phoneNumber)
     print("---------------------------")
 
 
@@ -122,12 +119,9 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
         send = f"\n새로운 연락처가 추가 \n"
     notify.send(send +
                 f"\n{dog.Info()}\n"
-
                 f"\n이름 : {dog.host_name} "
                 f"\n연락처 : {dog.phoneNumber}"
                 f"\n시작일 : {dog.start_day_time}"
                 f"\n종료일 : {dog.end_day_time}")
-
-
 print("__________________")
 
