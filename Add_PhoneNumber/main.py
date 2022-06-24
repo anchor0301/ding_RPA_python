@@ -9,7 +9,7 @@
 ##########################################################
 
 from ding_rest_main import error_notify, NEW_CONTACT_INFORMATION
-from code_gspread import worksheet,  last_col_info, creat_a_google_contact
+from code_gspread import worksheet, last_col_info, creat_a_google_contact
 from init import createPage
 from hide_api import notion_databaseId, notion_headers
 from puppyInfo import puppyInformation
@@ -22,6 +22,7 @@ def main():
     global existingEndRow
     global existingEndPhoneNumber
     error_notify.send("프로그램 시작")
+    print("2022/06/24 유치원분리")
     print("프로그램 준비중")
 
     existingEndPhoneNumber = worksheet.col_values(1)  # 이미 추가된 전화번호들을 전부 나열한다.
@@ -35,14 +36,14 @@ def main():
     try:
         while True:
 
-            time.sleep(4)  # 30초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
+            time.sleep(30)  # 30초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
             new_phone_number_length = len(worksheet.col_values(1))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
             if existingEndRow != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
 
                 for add_number in reversed(range(0, new_phone_number_length - existingEndRow)):  # 프로그램 실행중 번호 추가 방지
 
-                    add_number_row= new_phone_number_length - add_number
+                    add_number_row = new_phone_number_length - add_number
 
                     dog = puppyInformation(last_col_info(add_number_row))
 
@@ -76,8 +77,9 @@ def main():
                             # 등록상태
                             # 1 : 미등록
                             NEW_CONTACT_INFORMATION(1, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-                            createPage(notion_databaseId, notion_headers, dog)  #노션 추가
+                            createPage(notion_databaseId, notion_headers, dog)  # 노션 추가
                             existingEndPhoneNumber = worksheet.get("f1:f" + str(add_number_row))
+
                         except Exception as e:
                             print("중복된 연락처 추가중 프로그램 정지")
                             print(e)
@@ -108,4 +110,3 @@ if __name__ == "__main__":
         print("키보드로 종료됨")
         error_notify.send("error code : 5\n"
                           "키보드로 강제 중지됨.\n")
-

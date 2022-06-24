@@ -98,12 +98,9 @@ def last_col_info(add_number):
     if data_list.get("end_day"):
         pass
     else:
-        start = datetime.now().strftime('%d-%b-%Y %H:%M:%S')
-        end = (datetime.now() + timedelta(days=1)).strftime('%d-%b-%Y %H:%M:%S')
-        start = str(start)
-        end = str(end)
-        data_list["start_day"] = start
-        data_list["end_day"] = end
+
+        data_list["start_day"] = str(datetime.now().strftime('%d-%b-%Y %H:%M:%S'))
+        data_list["end_day"] = str((datetime.now() + timedelta(days=1)).strftime('%d-%b-%Y %H:%M:%S'))
         data_list["useTime"]=list_of_dicts[17]  # 카운트
 
     return data_list
@@ -113,6 +110,7 @@ def last_col_info(add_number):
 
 
 def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
+
     print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")
 
     service = discovery.build('people', 'v1', http=http,
