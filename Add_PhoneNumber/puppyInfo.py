@@ -61,5 +61,5 @@ class puppyInformation:
 
 
 #dog = puppyInformation(code_gspread.last_col_info(332))
-#print(dog.useTime)
+#print(dog.__dict__)
 

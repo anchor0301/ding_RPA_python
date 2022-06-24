@@ -11,7 +11,7 @@ from puppyInfo import puppyInformation
 notify = LineNotify(hide_api.ACCESS_TOKEN)
 error_notify = LineNotify(hide_api.ERROR_TOKEN)
 
-
+json_object={}
 def count_day(dog):
     API_HOST = 'https://talkapi.lgcns.com/'
     headers = hide_api.headers
@@ -64,11 +64,11 @@ def count_day(dog):
         json_string = json.dumps(json_object)
 
 
-    elif "유" in dog.service:
+    elif "유치원" in dog.service:
         json_object = {
             "service": 2210077160,
             "message":
-                f"{dog.reservationDate()}\n"  # 호텔 예약
+                f"서비스 횟수 : {dog.useTime} 회\n\n"  # 유치원 예약 
                 f"이름: {dog.dog_name}\n"
                 f"견종 : {dog.breed}\n"
                 f"서비스 : {dog.service}\n"
@@ -79,7 +79,7 @@ def count_day(dog):
                 f"■  『최종 확인』 버튼을 눌러주세요‼️",
             "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
             "title": "최종 확인을 눌러주세요",  # 타이틀
-            "template": "10005",  # 템플릿 코드
+            "template": "10010",  # 템플릿 코드
             "buttons": [
                 {"name": "최종 확인", "type": "MD"},
                 {"name": "사이트 이동",
@@ -132,7 +132,7 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
 
 print("__________________")
 
-#dog = puppyInformation(last_col_info(329))
-#count_day(dog)
+dog = puppyInformation(last_col_info(332))
+count_day(dog)
 
-# NEW_CONTACT_INFORMATION(1,17)
+#NEW_CONTACT_INFORMATION(1,17)

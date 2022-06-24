@@ -22,7 +22,7 @@ def main():
     global existingEndRow
     global existingEndPhoneNumber
     error_notify.send("프로그램 시작")
-    print("2022/06/24 유치원분리")
+    print("2022/06/24 노션 오류 수정")
     print("프로그램 준비중")
 
     existingEndPhoneNumber = worksheet.col_values(1)  # 이미 추가된 전화번호들을 전부 나열한다.

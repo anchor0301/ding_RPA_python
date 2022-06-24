@@ -39,8 +39,8 @@ def createPage(notion_databaseId, headers, dog):
             },
             "날짜": {
                 "type": "date",
-                "date": {"start": f"{dog.start_day}+09:00",
-                         "end": f"{dog.end_day}+09:00"}
+                "date": {"start": f"{dog.start_day_time}+09:00",
+                         "end": f"{dog.end_day_time}+09:00"}
             },
             "견종": {
                 "type": "select",
@@ -48,7 +48,7 @@ def createPage(notion_databaseId, headers, dog):
             },
             "몸무게": {
                 "type": "number",
-                "number": int(dog.weight)
+                "number": float(dog.weight)
             },
             "특이사항": {
                 "rich_text": [
@@ -81,8 +81,8 @@ def createPage(notion_databaseId, headers, dog):
 # readDatabase(notion_databaseId,headers) #테이블 읽기
 
 
-#dog = puppyInformation(last_col_info(329))
-#print(dog.useTime)
-#createPage(notion_databaseId, notion_headers, dog)  # db 추가
+#dog = puppyInformation(last_col_info(330))
+#print(dog.start_day_time)
+#createPage(notion_databaseId, notion_headers, dog)  # 노션 db 추가
 
 

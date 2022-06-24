@@ -14,6 +14,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from oauth2client.service_account import ServiceAccountCredentials
+
 try:
     import argparse
 
@@ -96,12 +97,13 @@ def last_col_info(add_number):
         "useTime": "0"  # 카운트
     }
     if data_list.get("end_day"):
-        pass
+        data_list["start_day"] = list_of_dicts[6]
+        data_list["end_day"] = list_of_dicts[7]
     else:
 
         data_list["start_day"] = str(datetime.now().strftime('%d-%b-%Y %H:%M:%S'))
         data_list["end_day"] = str((datetime.now() + timedelta(days=1)).strftime('%d-%b-%Y %H:%M:%S'))
-        data_list["useTime"]=list_of_dicts[17]  # 카운트
+        data_list["useTime"] = list_of_dicts[17]  # 카운트
 
     return data_list
 
@@ -130,7 +132,6 @@ def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하�
 
     print("등록 완료")
 
-
 # 테스트 용
-#last_col_info(332)
-#print(creat_a_google_contact(17))
+#print(last_col_info(332))
+# print(creat_a_google_contact(17))
