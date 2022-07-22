@@ -13,6 +13,8 @@ from code_gspread import worksheet, creat_a_google_contact
 from init import createPage
 from hide_api import notion_databaseId, notion_headers
 from puppyInfo import puppyInformation
+from code_gspread import myTurn
+
 import time
 import os
 import sys
@@ -32,7 +34,7 @@ def main():
 
     try:
         while True:
-            time.sleep(30)  # 30초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
+            time.sleep(60)  # 60초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
             new_phone_number_length = len(worksheet.col_values(1))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
             if existing_end_row != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행

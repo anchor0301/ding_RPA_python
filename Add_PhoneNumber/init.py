@@ -15,9 +15,19 @@ def readDatabase(notion_databaseId, headers):
     with open('./db.json', 'w', encoding='utf8') as f:
         json.dump(data, f, ensure_ascii=False)
 
+def changeJson(res):
+    res= res["properties"]
+    print("\n엑셀 코드 "+str(res["순번"]['number']))
+    print("전화번호 : "+dog.phoneNumber)
+    print("이름 : "+res["이름"]["title"][0]['text']['content'])
+    print("견종 : "+res["성별"]["select"]["name"] +"   "+res['견종']["select"]["name"],end="  ")
+    print(str(res["몸무게"]['number']))
+    print("서비스 : " + res["서비스"]["select"]['name'] )
+    print("입실 : "+res['날짜']['date']["start"])
+    print("퇴실 : "+res['날짜']['date']["end"])
+
 
 def createPage(notion_databaseId, headers, dog):
-
     createUrl = 'https://api.notion.com/v1/pages'
     newPageData = {
         "parent": {"database_id": notion_databaseId},
@@ -64,7 +74,10 @@ def createPage(notion_databaseId, headers, dog):
             "입실 여부": {
                 "type": "select",
                 "select": {"name": "No"}
-            },
+            }, "순번": {
+                "type": "number",
+                "number": int(dog.myTurn)
+            }
         }
     }
 
@@ -72,9 +85,11 @@ def createPage(notion_databaseId, headers, dog):
     # print(str(uploadData))
 
     res = requests.request("POST", createUrl, headers=headers, data=data)
-    print("date : ", data)
+
     print(res.status_code)
-    print(res.text)
+    changeJson(res.json())
 
+
+#dog = puppyInformation(17)
+#createPage(notion_databaseId, notion_headers, dog)  # 노션 추가
 # readDatabase(notion_databaseId,headers) #테이블 읽기
-

@@ -6,17 +6,21 @@ import datetime
 from datetime import datetime
 from datetime import timedelta
 
+from code_gspread import myTurn
+
 class puppyInformation:
     def __init__(self, doginfod):
+
+
         doginfo = worksheet.row_values(doginfod)
-        self.service = doginfo[3] # 서비스
-        self.host_name = doginfo[4] # 견주이름
+        self.service = doginfo[3]  # 서비스
+        self.host_name = doginfo[4]  # 견주이름
         self.phoneNumber = doginfo[5]
         self.backPhoneNumber = (doginfo[5])[-4:]
 
         if doginfo[6]:
-            self.start_day_time = parse(doginfo[6]) #입실일
-            self.end_day_time = parse(doginfo[7]) #퇴실일
+            self.start_day_time = parse(doginfo[6])  # 입실일
+            self.end_day_time = parse(doginfo[7])  # 퇴실일
             self.start_day = parse((doginfo[6])[:12])
             self.end_day = parse((doginfo[7])[:12])
             self.useTime = "0"
@@ -29,9 +33,10 @@ class puppyInformation:
         self.sex = doginfo[9]
 
         self.weight = doginfo[10]
-
+        self.myTurn = myTurn(doginfod)
         self.breed = re.sub(r'\([^)]*\)', '', doginfo[11])
         self.Others = doginfo[15]
+
     def reservationDate(self):
         start_day = self.start_day
         end_day = self.end_day

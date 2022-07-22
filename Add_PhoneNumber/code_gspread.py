@@ -68,6 +68,9 @@ doc = gc.open_by_url(hide_api.spreadsheet_url)
 # 시트 선택하기
 worksheet = doc.worksheet('시트1')
 
+def myTurn(add_number_row):
+    return len(worksheet.get("i1:i" + str(add_number_row)))
+
 def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
 
     print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")

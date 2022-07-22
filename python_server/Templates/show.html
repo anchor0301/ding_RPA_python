@@ -1,75 +1,53 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:float="http://www.w3.org/1999/xhtml">
-
 <head>
     <meta charset="UTF-8">
     <title>Home</title>
     <style>
-    body{
-
-            font-size:1rem;}
         table {
             width: 100%;
             border-top: 1px solid #444444;
             border-collapse: collapse;
         }
-
-        th,
-        td {
+        th, td {
             border-bottom: 1px solid #444444;
-            padding: 3px;
+            padding: 10px;
             text-align: center;
         }
-
         th {
             background-color: #bbdefb;
         }
-
         td {
             background-color: #e3f2fd;
         }
-
-
-    </style>
+</style>
 </head>
-
+ 
 <body>
-<p>
-<h1> 연락처 추가 </h1>
-</p>
-<td>
-            <form method="post">
-                <p>
-                    <input type="text" name="number" >
-                    <input type="submit" value="추가" name="add" onclick="alert('연락처 추가 및 예약 알림 전송')" >
-                </p>
-            </form>
-        </td>
-<table class="table">
-    <tr>
-        <th>번호</th>
-        <th>강아지 이름</th>
-        <th>견종</th>
-        <th>전화번호</th>
-        <th>선택</th>
-    </tr>
-    {% for obj in data_list%}
-    <tbody>
-    <tr>
-        <td>{{obj.cust_number}}</td>
-        <td>{{obj.dog_name}}</td>
-        <td>{{obj.breed}}</td>
-        <td>{{obj.PhoneNumber}}</td>
-        <form method="post">
-                <p>
-                    <input type="text" name="number" >
-                    <input type="submit" value="추가" name="add"  >
-                </p>
-            </form>
-    </tr>
-    </tbody>
-    {% endfor %}
-</table>
+    <p>
+        <h1> Hello {{name}} ! </h1>
+    </p>
+ 
+    <form method="POST">
+        <p><label>내용을 입력하세요 <input type="text" name="content"></label>&nbsp&nbsp&nbsp<input type="submit" value="작성하기" onclick="alert('작성 완료!')"></p>
+    </form>
+ 
+    <table class="table">
+        <tr>
+            <th>내용</th>
+            <th>작성자</th>
+            <th>작성시간</th>
+        </tr>
+        {% for obj in data_list%}
+        <tbody>
+            <tr>
+                <td>{{obj.con}}</td>
+                <td>{{obj.writer}}</td>
+                <td>{{obj.time}}</td>
+            </tr>
+        </tbody>
+        {% endfor %}
+    </table>
 </body>
-
+ 
 </html>
