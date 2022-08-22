@@ -1,7 +1,7 @@
 from ding_rest_main import *
 from code_gspread import *
 from hide_api import notion_databaseId, notion_headers
-from init import createPage
+from init import create_page
 
 from puppyInfo import puppyInformation
 row_number = [["  1 "], [" 2   "], [" 3   "], [" 4  "], [" 5  "], [" 6  "]]
@@ -26,7 +26,7 @@ def register():
     last_n = worksheet.get("f2" + ":f" + str(add_number-1))
     new_n = dog.phoneNumber # 새로운 휴대폰 번호 불러온다.
 
-    createPage(notion_databaseId, notion_headers, dog)  # 노션 등록
+    create_page(notion_databaseId, notion_headers, dog)  # 노션 등록
 
     if [new_n] not in last_n:  # 1. 기존 연락처 중 새로 등록된 번호가 없으면
         print(dog.phoneNumber)

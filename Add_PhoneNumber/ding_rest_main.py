@@ -89,10 +89,11 @@ def count_day(dog):
 
     def req(path, query, method, data={}):
         url = API_HOST + path
-        print('HTTP Method: %s' % method)
-        print('Request URL: %s' % url)
-        print('Headers: %s' % headers)
-        print('QueryString: %s' % query)
+
+        # print('HTTP Method: %s' % method)
+        # print('Request URL: %s' % url)
+        # print('Headers: %s' % headers)
+        # print('QueryString: %s' % query)
 
         if method == 'GET':
             return requests.get(url, headers=headers)
@@ -100,10 +101,12 @@ def count_day(dog):
             return requests.post(url, headers=headers, data=json_string)
 
     resp = req('/request/kakao.json', '', 'post')
-    print("response status:\n%d" % resp.status_code)
-    # print("response headers:\n%s" % resp.headers)
-    print("response body:\n%s" % resp.text)
+
+
     print("---------------------------")
+    print("카카오톡 응답 코드 : %d" % resp.status_code)
+    # print("response headers:\n%s" % resp.headers)
+    # print("response body:\n%s" % resp.text)
 
 
 def NEW_CONTACT_INFORMATION(registered_state, dog):
@@ -114,7 +117,6 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
     # 카카오톡 알림톡 api 실행
     count_day(dog)
 
-    send = ""
     if registered_state:
         send = f"\n이미 등록된 번호 \n"
     else:

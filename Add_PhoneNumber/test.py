@@ -1,10 +1,12 @@
+import re
 
-import datetime as dt
-import datetime
-from datetime import datetime
-from datetime import timedelta
 
-before_one_minute =  str((datetime.now() - timedelta(hours=9,minutes=1)).strftime("%Y-%m-%dT%H:%M:00.000Z"))
-print(before_one_minute)
-#2022-07-21T06:29:00.000Z"
-
+print("Scan the barcode")
+f = open("barcode.txt",'a')
+while True:
+    scan_in = input("Input :")
+    if scan_in == 'q':   # 키보드에서 q 누르고 enter입력하면 종료
+        scan_in = re.sub(r'[^0-9]', '', scan_in)
+        break
+    f.write("|"+scan_in+"||2")
+f.close()
