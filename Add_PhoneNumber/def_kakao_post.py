@@ -102,7 +102,6 @@ def count_day(dog):
 
     resp = req('/request/kakao.json', '', 'post')
 
-
     print("---------------------------")
     print("카카오톡 응답 코드 : %d" % resp.status_code)
     # print("response headers:\n%s" % resp.headers)
@@ -118,15 +117,15 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
     count_day(dog)
 
     if registered_state:
-        send = f"\n이미 등록된 번호 \n"
+        send = f"\n등록된 연락처\n"
     else:
-        send = f"\n새로운 연락처가 추가 \n"
+        send = f"\n새로운 연락처 \n"
     notify.send(send +
                 f"\n{dog.Info()}\n"
                 f"\n이름 : {dog.host_name} "
                 f"\n연락처 : {dog.phoneNumber}"
-                f"\n시작일 : {dog.start_day_time}"
-                f"\n종료일 : {dog.end_day_time}")
+                f"\n시작일 : {dog.start_day_time[5:-3]}"
+                f"\n종료일 : {dog.end_day_time[5:-3]}")
 
 
 print("__________________")

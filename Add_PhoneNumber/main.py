@@ -1,6 +1,6 @@
-# v2022.05.28
-#  카카오 알림API 추가
-#  라인 코드 삭제
+# v2022.08.23
+#
+#  중복 연락처 추가 오류 수정
 #########################################################
 #    필  독
 #   1. debug_mode.bat 을 실행
@@ -8,12 +8,12 @@
 #
 ##########################################################
 
-from ding_rest_main import error_notify, NEW_CONTACT_INFORMATION
-from code_gspread import worksheet, creat_a_google_contact
-from init import create_page
+from def_kakao_post import error_notify, NEW_CONTACT_INFORMATION
+from def_gspread import worksheet, creat_a_google_contact
+from def_notion import create_page
 from hide_api import notion_databaseId, notion_headers
 from puppyInfo import puppyInformation
-from code_gspread import myTurn
+from def_gspread import myTurn
 
 import time
 import os
@@ -35,7 +35,7 @@ def main():
     try:
         while True:
 
-            time.sleep(60)  # 60초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
+            time.sleep(90)  # 90초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
             new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
             if existing_end_row != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
@@ -44,7 +44,7 @@ def main():
 
                     add_number_row = new_phone_number_length - add_number
 
-                    dog = puppyInformation(add_number_row)
+                    dog = puppyInformation(add_number_row)  # 강아지 정보를 가져온다.
 
                     print("추가된 연락처 이름 : ", dog.Info())
                     print("추가된 전화번호 : ", dog.phoneNumber)
@@ -60,7 +60,9 @@ def main():
 
                             NEW_CONTACT_INFORMATION(0, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
                             create_page(notion_databaseId, notion_headers, dog)  # 노션 추가
-                            existing_end_phone_number = worksheet.get("f1:f" + str(add_number_row))
+                            existing_end_phone_number = worksheet.get(
+                                "f1:f" + str(add_number_row))  # 마지막 휴대폰 번호 정보를 등록한다. ( 중복 연락처 감지 )
+
                         except Exception as e:
                             print("새로운 연락처 추가중 프로그램 정지\n")
                             print(e)
@@ -77,7 +79,8 @@ def main():
 
                             NEW_CONTACT_INFORMATION(1, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
                             create_page(notion_databaseId, notion_headers, dog)  # 노션 추가
-                            existing_end_phone_number = worksheet.get("f1:f" + str(add_number_row))
+                            existing_end_phone_number = worksheet.get(
+                                "f1:f" + str(add_number_row))  # 마지막 휴대폰 번호 정보를 등록한다. ( 중복 연락처 감지 )
 
                         except Exception as e:
                             print("중복된 연락처 추가중 프로그램 정지")

@@ -3,7 +3,7 @@ from datetime import datetime
 from hide_api import notion_databaseId, notion_headers
 from puppyInfo import puppyInformation
 
-
+#데이터베이스 읽기
 def read_database(notion_database_id, headers):
     """
     데이터베이스를 읽어서 콘솔에 출력을 한 뒤 현재 폴더 db.json 저장을 합니다.
@@ -20,7 +20,7 @@ def read_database(notion_database_id, headers):
     with open('./db.json', 'w', encoding='utf8') as f:
         json.dump(data, f, ensure_ascii=False)
 
-
+#json 정보를 출력함
 def change_json(res, dog):
     res = res["properties"]
     print("\n----------- 응답 결과 -----------")

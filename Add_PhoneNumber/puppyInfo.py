@@ -1,12 +1,12 @@
 import re
-from code_gspread import worksheet
+from def_gspread import worksheet
 from dateutil.parser import parse
 import datetime as dt
 import datetime
 from datetime import datetime
 from datetime import timedelta
 
-from code_gspread import myTurn
+from def_gspread import myTurn
 
 class puppyInformation:
     def __init__(self, doginfod):
