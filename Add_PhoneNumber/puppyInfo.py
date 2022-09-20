@@ -68,3 +68,7 @@ class puppyInformation:
         print_last_info = f"{self.dog_name}/{rm_breed.rstrip()}/{self.service[0]}/{self.backPhoneNumber}"
 
         return print_last_info
+#
+# py=puppyInformation(17)
+#
+# print(py.phoneNumber)

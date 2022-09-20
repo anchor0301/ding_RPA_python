@@ -4,7 +4,7 @@ import os
 
 import gspread
 import httplib2
-from apiclient import discovery
+import pymysql
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
@@ -73,28 +73,44 @@ doc = gc.open_by_url(hide_api.spreadsheet_url)
 worksheet = doc.worksheet('시트1')
 
 
-def myTurn(add_number_row):
-    return len(worksheet.get("i1:i" + str(add_number_row)))
+# TODO 테스트용 삭제하기!
+def ss(ss):
+    print(worksheet.get("i1:i" + str(ss)))
 
 
-def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
+db_connect = pymysql.connect(
+    host="localhost",
+    port=3306,
+    db="user_db",
+    user='root',
+    passwd='0000',
+    charset='utf8'
+)
+db_connected = db_connect.cursor()
+# sql_cmd = "create database user_db;"  # 데이터베이스 생성
+# sql_cmd = "delete database user_profile;"  # 데이터베이스 삭제
 
-    print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")
+create_table = "create table dog_info (" \
+               "BOOK_ID INT(11) UNSIGNED NOT NULL AUTO_INCREMENT," \
+               "SERVICE VARCHAR(10) NOT NULL," \
+               "CHECK_IN DATETIME," \
+               "CHECK_OUT DATETIME," \
+               "TIMESTAMP DATETIME," \
+               "CUST_NUMBER INT(11) UNSIGNED NOT NULL ," \
+               "PRIMARY KEY(BOOK_ID))"
 
-    service = discovery.build('people', 'v1', http=http,
-                              discoveryServiceUrl='https://people.googleapis.com/$discovery/rest')
-    service.people().createContact(body={
-        "names": [
-            {
-                'givenName': f"{dog.Info()}"
-            }
-        ],
-        "phoneNumbers": [
-            {
-                'value': f"{dog.phoneNumber}"
-            }
-        ]
-    }).execute()
 
-    print("등록 완료")
+insert_table = "insert into user_profile " \
+               "(OWNER_NAME,PHONE_NUMBER)" \
+               "values" \
+               "(%s, %s)"
 
+delete_table = "delete from user_profile where *"
+
+# 증가 초기화 명령어
+init_table = "ALTER TABLE user_profile AUTO_INCREMENT = 1;"
+
+print(db_connected.execute(create_table))
+# print(db_connected.execute(insert_table, ("김지호", "01045900004")))
+
+# print(db_connected.execute(insert_table, ("김성민", "01089000137")))

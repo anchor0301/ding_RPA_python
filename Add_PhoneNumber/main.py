@@ -19,14 +19,16 @@ import time
 import os
 import sys
 
+#polling System
 
 def main():
     error_notify.send("프로그램 시작")
-    print("2022/08/22 버그 수정")
+    print("2022/09/20 버그 수정")
 
-    existing_end_phone_number = worksheet.col_values(6)  # 이미 추가된 전화번호들을 전부 나열한다.
-    existing_end_row = len(existing_end_phone_number)  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
+    existing_end_row = len( worksheet.col_values(6))  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
 
+    existing_end_phone_number = worksheet.get(
+                                "f1:f" + str(existing_end_row))  # 이미 추가된 전화번호들을 전부 나열한다.
     print("프로그램 준비 완료")
     print("__________________")
 
@@ -35,7 +37,7 @@ def main():
     try:
         while True:
 
-            time.sleep(90)  # 90초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
+            time.sleep(120)
             new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
             if existing_end_row != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
@@ -49,7 +51,7 @@ def main():
                     print("추가된 연락처 이름 : ", dog.Info())
                     print("추가된 전화번호 : ", dog.phoneNumber)
 
-                    if dog.phoneNumber not in existing_end_phone_number:
+                    if [dog.phoneNumber] not in existing_end_phone_number:
                         try:
 
                             # 등록상태

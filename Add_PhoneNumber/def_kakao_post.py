@@ -2,6 +2,7 @@ import requests
 import json
 from line_notify import LineNotify
 import hide_api
+from Add_PhoneNumber.puppyInfo import puppyInformation
 
 ###############################    라인 코드
 
@@ -34,7 +35,7 @@ def count_day(dog):
                 {"name": "최종 확인", "type": "MD"},
                 {"name": "사이트 이동",
                  "url": "https://m.map.kakao.com/actions/detailMapView?id=1372380561&refService=place||https://map.kakao.com/?urlX=531668&urlY=926633&urlLevel=2&itemId=1372380561&q=%EB%94%A9%EA%B5%B4%EB%"},
-                {"name": "사이트 이동", "url": "http://3.35.10.42/login||http://3.35.10.42/login"}]
+                {"name": "사이트 이동", "url": "http://13.125.165.236/login||http://13.125.165.236/login"}]
         }
         json_string = json.dumps(json_object)
 
@@ -58,7 +59,7 @@ def count_day(dog):
                 {"name": "최종 확인", "type": "MD"},
                 {"name": "사이트 이동",
                  "url": "https://m.map.kakao.com/actions/detailMapView?id=1372380561&refService=place||https://map.kakao.com/?urlX=531668&urlY=926633&urlLevel=2&itemId=1372380561&q=%EB%94%A9%EA%B5%B4%EB%"},
-                {"name": "사이트 이동", "url": "http://3.35.10.42/login||http://3.35.10.42/login"}]
+                {"name": "사이트 이동", "url": "http://13.125.165.236/login||http://13.125.165.236/login"}]
         }
         json_string = json.dumps(json_object)
 
@@ -83,7 +84,7 @@ def count_day(dog):
                 {"name": "최종 확인", "type": "MD"},
                 {"name": "사이트 이동",
                  "url": "https://m.map.kakao.com/actions/detailMapView?id=1372380561&refService=place||https://map.kakao.com/?urlX=531668&urlY=926633&urlLevel=2&itemId=1372380561&q=%EB%94%A9%EA%B5%B4%EB%"},
-                {"name": "사이트 이동", "url": "http://3.35.10.42/login||http://3.35.10.42/login"}]
+                {"name": "사이트 이동", "url": "http://13.125.165.236/login||http://13.125.165.236/login"}]
         }
         json_string = json.dumps(json_object)
 
@@ -124,8 +125,9 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
                 f"\n{dog.Info()}\n"
                 f"\n이름 : {dog.host_name} "
                 f"\n연락처 : {dog.phoneNumber}"
-                f"\n시작일 : {dog.start_day_time[5:-3]}"
-                f"\n종료일 : {dog.end_day_time[5:-3]}")
+                f"\n시작일 : {str(dog.start_day_time)[5:-3]}"
+                f"\n종료일 : {str(dog.end_day_time)[5:-3]}")
 
 
 print("__________________")
+
