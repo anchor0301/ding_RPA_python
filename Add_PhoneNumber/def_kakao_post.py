@@ -9,7 +9,31 @@ from Add_PhoneNumber.puppyInfo import puppyInformation
 notify = LineNotify(hide_api.ACCESS_TOKEN)
 error_notify = LineNotify(hide_api.ERROR_TOKEN)
 
-json_object = {}
+
+def exit_dog(dog):
+    json_object = {
+        "service": 2210077160,
+        "message":
+           "안녕하세요. 딩굴댕굴입니다.\n\n"
+           "[서비스 내역]\n\n"
+           f"■ 애견이름: {dog.dog_name}\n"
+           f"■ 이용일자 : {dog.start_day_time}\n"
+           f"■ 서비스 :  {dog.service}\n\n"
+           "[서비스 설문조사]\n"
+           "고객님께 더 나은 서비스를 제공하기 위해 설문조사를 진행하고 있습니다.\n이번에 경험하신 서비스에 대한 소중한 의견을 남겨주세요.\n\n"
+           "※설문에 참여하신 분 중 추첨을 통해 기프티콘을 드립니다.\n\n"
+           "- 전화문의 및 상담 : 0507-1485-0260",
+        "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
+        "template": "10011",  # 템플릿 코드
+        "buttons": [
+            {"name": "설문조사", "url": "https://forms.gle/sX4iNu3NaDS4beQR6||https://forms.gle/sX4iNu3NaDS4beQR6"}]
+    }
+    json_string = json.dumps(json_object)
+    resp = requests.post('https://talkapi.lgcns.com/request/kakao.json', headers=hide_api.headers, data=json_string)
+    print("---------------------------")
+    print("카카오톡 응답 코드 : %d" % resp.status_code)
+    print("response headers: %s" % resp.headers)
+    print("response body: %s" % resp.text)
 
 
 def count_day(dog):
@@ -130,4 +154,3 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
 
 
 print("__________________")
-

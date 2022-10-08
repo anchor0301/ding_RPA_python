@@ -70,6 +70,8 @@ gc = gspread.authorize(credentials)
 # 스프레스시트 문서 가져오기
 doc = gc.open_by_url(hide_api.spreadsheet_url)
 # 시트 선택하기
+
+
 worksheet = doc.worksheet('시트1')
 
 
@@ -77,7 +79,12 @@ def myTurn(add_number_row):
     return len(worksheet.get("i1:i" + str(add_number_row)))
 
 
-def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
+def creat_a_google_contact(dog):
+    """
+    구글 주소록에 연락처를 추가하는 api
+    :param dog: 스프레드 시트의 강아지 데이터
+    :return:
+    """
 
     print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")
 
@@ -97,4 +104,3 @@ def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하�
     }).execute()
 
     print("등록 완료")
-

@@ -19,16 +19,16 @@ import time
 import os
 import sys
 
-#polling System
+
+# polling System
 
 def main():
     error_notify.send("프로그램 시작")
     print("2022/09/20 버그 수정")
 
-    existing_end_row = len( worksheet.col_values(6))  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
+    existing_end_row = len(worksheet.col_values(6))  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
 
-    existing_end_phone_number = worksheet.get(
-                                "f1:f" + str(existing_end_row))  # 이미 추가된 전화번호들을 전부 나열한다.
+    existing_end_phone_number = worksheet.get("f1:f" + str(existing_end_row))  # 이미 추가된 전화번호들을 전부 나열한다.
     print("프로그램 준비 완료")
     print("__________________")
 
@@ -36,7 +36,6 @@ def main():
 
     try:
         while True:
-
             time.sleep(120)
             new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
@@ -80,7 +79,7 @@ def main():
                             # 1 : 미등록
 
                             NEW_CONTACT_INFORMATION(1, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-                            create_page(notion_databaseId, notion_headers, dog)  # 노션 추가
+                            create_page(notion_databaseId, dog)  # 노션 추가
                             existing_end_phone_number = worksheet.get(
                                 "f1:f" + str(add_number_row))  # 마지막 휴대폰 번호 정보를 등록한다. ( 중복 연락처 감지 )
 
