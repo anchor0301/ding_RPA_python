@@ -151,6 +151,3 @@ def NEW_CONTACT_INFORMATION(registered_state, dog):
                 f"\n연락처 : {dog.phoneNumber}"
                 f"\n시작일 : {str(dog.start_day_time)[5:-3]}"
                 f"\n종료일 : {str(dog.end_day_time)[5:-3]}")
-
-
-print("__________________")

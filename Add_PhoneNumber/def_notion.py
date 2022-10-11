@@ -2,10 +2,12 @@ import datetime as datetime
 import requests, json
 from datetime import datetime
 
-from hide_api import notion_databaseId, notion_headers, patch_data
+from datetime import timedelta
+from hide_api import notion_headers, patch_data
 
 from puppyInfo import puppyInformation
 from def_kakao_post import exit_dog
+
 body_data = {
     "page_size": 10,
     "filter": {
@@ -19,7 +21,7 @@ body_data = {
             {
                 "timestamp": "last_edited_time",
                 "last_edited_time": {
-                    "equals": f"{str(datetime.now().strftime('%Y-%m-%d'))}"
+                    "equals": f"{str((datetime.now() - timedelta(hours=9)).strftime('%Y-%m-%d'))}"
                 }
             },
             {
@@ -52,9 +54,9 @@ def read_database(notion_database_id):
     print(res.status_code)
     print(data)
     print(res.text)
-
-    with open('./db.json', 'w', encoding='utf8') as f:
-        json.dump(data, f, ensure_ascii=False)
+    # db.json 생성
+    # with open('./db.json', 'w', encoding='utf8') as f:
+    #     json.dump(data, f, ensure_ascii=False)
 
 
 # json 정보를 출력함
@@ -74,10 +76,10 @@ def change_json(res, dog):
 
 
 # 애견 페이지를 만든다
-def create_page(notion_database_id, dog):
+def create_page( dog):
     create_url = 'https://api.notion.com/v1/pages'
     new_page_data = {
-        "parent": {"database_id": notion_database_id},
+        "parent": {"database_id": "5ae1d1a61f5f4efe9f9557d62b9adf5e"},
         "properties": {
             "이름": {
                 "title": [
@@ -138,12 +140,15 @@ def create_page(notion_database_id, dog):
     change_json(res.json(), dog)
 
 
-def rest_exit_database(notion_database_id):
-    read_url = f"https://api.notion.com/v1/databases/{notion_database_id}/query"
+def rest_exit_database():
+    read_url = "https://api.notion.com/v1/databases/5ae1d1a61f5f4efe9f9557d62b9adf5e/query"
 
     res = requests.request("POST", read_url, headers=notion_headers, data=json.dumps(body_data))
     data = res.json()
+
     results = data.get("results")
+    print(results)
+    # 없으면 아무것도 안함
     if ("[]" == str(results)):
         return False
 
@@ -151,17 +156,23 @@ def rest_exit_database(notion_database_id):
         # 애견 이름
         result = data.get("results")[i].get("properties").get("이름").get("title")[0].get("text").get("content")
 
+
+        # 최종 편집
+        last_edit = data.get("results")[i].get("properties").get("최종편집").get("last_edited_time")
+        print(last_edit)
         # 애견 페이지 코드
         page_code = data.get("results")[i].get("id")
 
         print("애견 이름 :  %s \n애견 페이지 : %s" % (result, page_code))
 
-        patch_exit_database(page_code)
 
+        patch_exit_database(page_code)
+        #TODO patch_data(dog) 추가하기
         print("_____________________________")
     return True
 
 
+# 노션에 카카오톡 메시지를 체크로 변경함
 def patch_exit_database(notion_page_id):
     read_url = f"https://api.notion.com/v1/pages/{notion_page_id}"
 
@@ -172,4 +183,4 @@ def patch_exit_database(notion_page_id):
 # create_page(notion_databaseId, notion_headers, dog)  # 노션 추가
 # read_database(notion_databaseId,notion_headers) #테이블 읽기
 
-rest_exit_database(notion_databaseId)  # 퇴실한 녀석 찾기
+#rest_exit_database()  # 퇴실한 녀석 찾기

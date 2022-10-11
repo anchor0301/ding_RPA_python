@@ -11,10 +11,9 @@
 from def_kakao_post import error_notify, NEW_CONTACT_INFORMATION
 from def_gspread import worksheet, creat_a_google_contact
 from def_notion import create_page
-from hide_api import notion_databaseId, notion_headers
+from hide_api import notion_headers
 from puppyInfo import puppyInformation
 from def_gspread import myTurn
-
 import time
 import os
 import sys
@@ -24,7 +23,7 @@ import sys
 
 def main():
     error_notify.send("프로그램 시작")
-    print("2022/09/20 버그 수정")
+    print("2022/10/09 설문지 추가")
 
     existing_end_row = len(worksheet.col_values(6))  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
 
@@ -36,7 +35,7 @@ def main():
 
     try:
         while True:
-            time.sleep(120)
+            time.sleep(180)
             new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
 
             if existing_end_row != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
@@ -60,7 +59,7 @@ def main():
                             creat_a_google_contact(dog)  # 새로 등록된 번호를 구글주소록에서 추가한다.
 
                             NEW_CONTACT_INFORMATION(0, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-                            create_page(notion_databaseId, notion_headers, dog)  # 노션 추가
+                            create_page(notion_headers, dog)  # 노션 추가
                             existing_end_phone_number = worksheet.get(
                                 "f1:f" + str(add_number_row))  # 마지막 휴대폰 번호 정보를 등록한다. ( 중복 연락처 감지 )
 
@@ -79,7 +78,7 @@ def main():
                             # 1 : 미등록
 
                             NEW_CONTACT_INFORMATION(1, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-                            create_page(notion_databaseId, dog)  # 노션 추가
+                            create_page(dog)  # 노션 추가
                             existing_end_phone_number = worksheet.get(
                                 "f1:f" + str(add_number_row))  # 마지막 휴대폰 번호 정보를 등록한다. ( 중복 연락처 감지 )
 
@@ -97,6 +96,7 @@ def main():
         print(e)
         error_notify.send("error code : 1\n"
                           "실시간 감지중 프로그램 정지\n")
+
 
 
 if __name__ == "__main__":
