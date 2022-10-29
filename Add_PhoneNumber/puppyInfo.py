@@ -6,7 +6,7 @@ import datetime
 from datetime import datetime
 from datetime import timedelta
 
-from def_gspread import myTurn
+from def_gspread import get_item_index
 
 class puppyInformation:
     def __init__(self, doginfod):
@@ -25,6 +25,7 @@ class puppyInformation:
             self.end_day = parse((doginfo[7])[:12])
             self.useTime = "0"
         else:
+
             self.start_day_time = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
             self.end_day_time = str((datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
             self.useTime = re.sub(r'[^0-9]', '', doginfo[17])
@@ -33,9 +34,11 @@ class puppyInformation:
         self.sex = doginfo[9]
 
         self.weight = doginfo[10]
-        self.myTurn = myTurn(doginfod)
+        self.get_item_index = get_item_index(doginfod)
         self.breed = re.sub(r'\([^)]*\)', '', doginfo[11])
         self.Others = doginfo[15]
+
+
 
     def reservationDate(self):
         start_day = self.start_day
@@ -59,7 +62,7 @@ class puppyInformation:
 
         return f"{start_day_time}부터 {use_time}시간\n\n"
 
-    def Info(self):
+    def to_string(self):
         # 견종 중 괄호안의 글자 삭제
         rm_breed = re.sub(r'\([^)]*\)', '', self.breed)
 

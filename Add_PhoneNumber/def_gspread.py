@@ -75,11 +75,11 @@ doc = gc.open_by_url(hide_api.spreadsheet_url)
 worksheet = doc.worksheet('시트1')
 
 
-def myTurn(add_number_row):
+def get_item_index(add_number_row):
     return len(worksheet.get("i1:i" + str(add_number_row)))
 
 
-def creat_a_google_contact(dog):
+def create_google_contact(dog):
     """
     구글 주소록에 연락처를 추가하는 api
     :param dog: 스프레드 시트의 강아지 데이터
@@ -93,7 +93,7 @@ def creat_a_google_contact(dog):
     service.people().createContact(body={
         "names": [
             {
-                'givenName': f"{dog.Info()}"
+                'givenName': f"{dog.to_string()}"
             }
         ],
         "phoneNumbers": [

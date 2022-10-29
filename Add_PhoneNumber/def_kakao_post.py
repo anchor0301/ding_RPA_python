@@ -2,42 +2,42 @@ import requests
 import json
 from line_notify import LineNotify
 import hide_api
-from Add_PhoneNumber.puppyInfo import puppyInformation
-
 ###############################    라인 코드
 
 notify = LineNotify(hide_api.ACCESS_TOKEN)
 error_notify = LineNotify(hide_api.ERROR_TOKEN)
 
 
-def exit_dog(dog):
+def post_message_exit(dog, start_day):
     json_object = {
         "service": 2210077160,
         "message":
            "안녕하세요. 딩굴댕굴입니다.\n\n"
            "[서비스 내역]\n\n"
            f"■ 애견이름: {dog.dog_name}\n"
-           f"■ 이용일자 : {dog.start_day_time}\n"
+           f"■ 이용일자 : {start_day}\n"
            f"■ 서비스 :  {dog.service}\n\n"
-           "[서비스 설문조사]\n"
-           "고객님께 더 나은 서비스를 제공하기 위해 설문조사를 진행하고 있습니다.\n이번에 경험하신 서비스에 대한 소중한 의견을 남겨주세요.\n\n"
-           "※설문에 참여하신 분 중 추첨을 통해 기프티콘을 드립니다.\n\n"
+           "[참고사항]\n\n"
+           "호텔 이용 후 구토, 설사, 기운 없음 등의 증상이 보일 수 있으나 이는 휴식을 하면 점차 회복되므로 집에서 푹 쉴 수 있도록 도와주세요. 이용해주셔서 감사합니다.\n\n"
+           "[서비스 설문조사]\n\n"
+           "고객님께 더 나은 서비스를 제공하기 위해 설문조사를 진행하고 있습니다. 이번에 경험하신 서비스에 대한 소중한 의견을 남겨주세요.\n\n"
+           "※ 매월 1일마다 설문에 참여하신 분께 추첨을 통해 기프티콘을 드립니다. (카카오톡 채널에 공지)\n\n"
            "- 전화문의 및 상담 : 0507-1485-0260",
         "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
+        "title": "퇴실 안내",  # 타이틀
         "template": "10011",  # 템플릿 코드
         "buttons": [
-            {"name": "설문조사", "url": "https://forms.gle/sX4iNu3NaDS4beQR6||https://forms.gle/sX4iNu3NaDS4beQR6"}]
+            {"name": "서비스 설문조사 참여", "url": "https://forms.gle/sX4iNu3NaDS4beQR6||https://forms.gle/sX4iNu3NaDS4beQR6"}]
     }
     json_string = json.dumps(json_object)
     resp = requests.post('https://talkapi.lgcns.com/request/kakao.json', headers=hide_api.headers, data=json_string)
-    print("---------------------------")
     print("카카오톡 응답 코드 : %d" % resp.status_code)
-    print("response headers: %s" % resp.headers)
     print("response body: %s" % resp.text)
+    print("---------------------------")
 
 
-def count_day(dog):
-    API_HOST = 'https://talkapi.lgcns.com/'
+def post_message_service(dog):
+    api_host = 'https://talkapi.lgcns.com/'
     headers = hide_api.headers
     if "호" in dog.service:
         json_object = {
@@ -113,7 +113,7 @@ def count_day(dog):
         json_string = json.dumps(json_object)
 
     def req(path, query, method, data={}):
-        url = API_HOST + path
+        url = api_host + path
 
         # print('HTTP Method: %s' % method)
         # print('Request URL: %s' % url)
@@ -130,24 +130,27 @@ def count_day(dog):
     print("---------------------------")
     print("카카오톡 응답 코드 : %d" % resp.status_code)
     # print("response headers:\n%s" % resp.headers)
-    # print("response body:\n%s" % resp.text)
+    print("카카오톡 전송 결과:\n%s" % resp.text)
 
 
-def NEW_CONTACT_INFORMATION(registered_state, dog):
+def create_contact(registered_state, dog):
     # 등록상태
     # 0 : 아직 미등록
     # 1 : 이미 등록됨
-
-    # 카카오톡 알림톡 api 실행
-    count_day(dog)
+    try:
+        # 카카오톡 알림톡 api 실행
+        post_message_service(dog)
+    except:
+        print("카톡 에러 발생")
 
     if registered_state:
         send = f"\n등록된 연락처\n"
     else:
         send = f"\n새로운 연락처 \n"
     notify.send(send +
-                f"\n{dog.Info()}\n"
+                f"\n{dog.to_string()}\n"
                 f"\n이름 : {dog.host_name} "
                 f"\n연락처 : {dog.phoneNumber}"
                 f"\n시작일 : {str(dog.start_day_time)[5:-3]}"
                 f"\n종료일 : {str(dog.end_day_time)[5:-3]}")
+

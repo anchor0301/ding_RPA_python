@@ -1,27 +1,21 @@
 import datetime as datetime
-import requests, json
 from datetime import datetime
 
-from datetime import timedelta
-from hide_api import notion_headers, patch_data
+import json
+import requests
 
+from def_kakao_post import post_message_exit
+from hide_api import notion_headers, patch_data
 from puppyInfo import puppyInformation
-from def_kakao_post import exit_dog
 
 body_data = {
-    "page_size": 10,
+    "page_size": 15,
     "filter": {
         "and": [
             {
                 "property": "입실 여부",
                 "select": {
                     "equals": "퇴실"
-                }
-            },
-            {
-                "timestamp": "last_edited_time",
-                "last_edited_time": {
-                    "equals": f"{str((datetime.now() - timedelta(hours=9)).strftime('%Y-%m-%d'))}"
                 }
             },
             {
@@ -60,23 +54,23 @@ def read_database(notion_database_id):
 
 
 # json 정보를 출력함
-def change_json(res, dog):
+def print_item_info(res, dog):
     res = res["properties"]
-    print("\n----------- 응답 결과 -----------")
-    print("타임스탬프 : ", datetime.now())
-    print("엑셀 행 : " + str(res["순번"]['number']))
-    print("전화번호 : " + dog.phoneNumber)
-    print("강아지 이름 : " + res["이름"]["title"][0]['text']['content'])
-    print("강아지 정보 : " + res["성별"]["select"]["name"] + "   " + res['견종']["select"]["name"], end="  ")
-    print(str(res["몸무게"]['number']))
-    print("서비스 : " + res["서비스"]["select"]['name'])
-    print("입실 : " + res['날짜']['date']["start"])
-    print("퇴실 : " + res['날짜']['date']["end"])
+    print("\n---------------- 응답 결과 ----------------")
+    print("타임스탬프\t:  ", datetime.now())
+    print("엑셀 행 \t\t:\t" + str(res["순번"]['number']))
+    print("전화번호 \t\t: \t" + dog.phoneNumber)
+    print("강아지 이름 \t: \t" + res["이름"]["title"][0]['text']['content'])
+    print("강아지 정보 \t: \t" + res["성별"]["select"]["name"] + "\t" + res['견종']["select"]["name"], end="\t")
+    print(str(res["몸무게"]['number'])+"kg")
+    print("서비스 \t\t: \t" + res["서비스"]["select"]['name'])
+    print("입실 \t\t: \t" + res['날짜']['date']["start"])
+    print("퇴실 \t\t: \t" + res['날짜']['date']["end"])
     print("---------------------------------------\n\n")
 
 
 # 애견 페이지를 만든다
-def create_page( dog):
+def create_page(dog):
     create_url = 'https://api.notion.com/v1/pages'
     new_page_data = {
         "parent": {"database_id": "5ae1d1a61f5f4efe9f9557d62b9adf5e"},
@@ -125,7 +119,7 @@ def create_page( dog):
                 "select": {"name": "No"}
             }, "순번": {
                 "type": "number",
-                "number": int(dog.myTurn)
+                "number": int(dog.get_item_index)
             }
         }
     }
@@ -137,9 +131,10 @@ def create_page( dog):
 
     print("노션 응답 코드 :  %s \n" % res.status_code)
     # print(res.json())
-    change_json(res.json(), dog)
+    print_item_info(res.json(), dog)
 
 
+# 오늘 퇴실한 강아지 출력 및
 def rest_exit_database():
     read_url = "https://api.notion.com/v1/databases/5ae1d1a61f5f4efe9f9557d62b9adf5e/query"
 
@@ -147,28 +142,28 @@ def rest_exit_database():
     data = res.json()
 
     results = data.get("results")
-    print(results)
     # 없으면 아무것도 안함
-    if ("[]" == str(results)):
+    if "[]" == str(results):
         return False
 
     for i in range(len(results)):
         # 애견 이름
         result = data.get("results")[i].get("properties").get("이름").get("title")[0].get("text").get("content")
 
+        # 입실시간
+        start_day = data.get("results")[i].get("properties").get("입실시간").get("formula").get("string")
 
-        # 최종 편집
-        last_edit = data.get("results")[i].get("properties").get("최종편집").get("last_edited_time")
-        print(last_edit)
+        # 애견 순번
+        dog_num = int(data.get("results")[i].get("properties").get("순번").get("number"))
+
         # 애견 페이지 코드
         page_code = data.get("results")[i].get("id")
 
-        print("애견 이름 :  %s \n애견 페이지 : %s" % (result, page_code))
+        print("애견 이름 :  %s \n애견 페이지 : %s\n애견 순번 : %s" % (result, page_code, dog_num))
 
-
+        post_message_exit(puppyInformation(dog_num), start_day)
         patch_exit_database(page_code)
-        #TODO patch_data(dog) 추가하기
-        print("_____________________________")
+
     return True
 
 
@@ -178,9 +173,7 @@ def patch_exit_database(notion_page_id):
 
     requests.request("PATCH", read_url, headers=notion_headers, data=json.dumps(patch_data))
 
-
-# dog = puppyInformation(17)
-# create_page(notion_databaseId, notion_headers, dog)  # 노션 추가
+#dog = puppyInformation(17)
+#create_page(dog)  # 노션 추가 및 응답 결과 출력
 # read_database(notion_databaseId,notion_headers) #테이블 읽기
-
-#rest_exit_database()  # 퇴실한 녀석 찾기
+#rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
