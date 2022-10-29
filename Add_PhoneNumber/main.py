@@ -15,7 +15,7 @@ import time
 from def_gspread import worksheet, create_google_contact
 from def_kakao_post import error_notify, create_contact
 from def_notion import create_page
-from puppyInfo import puppyInformation
+from puppyInfo import DogInformation
 
 
 # polling System
@@ -43,7 +43,7 @@ def main():
 
                     add_number_row = new_phone_number_length - add_number
 
-                    dog = puppyInformation(add_number_row)  # 강아지 정보를 가져온다.
+                    dog = DogInformation(add_number_row)  # 강아지 정보를 가져온다.
 
                     print("추가된 연락처 이름 : ", dog.to_string())
                     print("추가된 전화번호 : ", dog.phoneNumber)

@@ -6,7 +6,7 @@ import requests
 
 from def_kakao_post import post_message_exit
 from hide_api import notion_headers, patch_data
-from puppyInfo import puppyInformation
+from puppyInfo import DogInformation
 
 body_data = {
     "page_size": 15,
@@ -161,7 +161,7 @@ def rest_exit_database():
 
         print("애견 이름 :  %s \n애견 페이지 : %s\n애견 순번 : %s" % (result, page_code, dog_num))
 
-        post_message_exit(puppyInformation(dog_num), start_day)
+        post_message_exit(DogInformation(dog_num), start_day)
         patch_exit_database(page_code)
 
     return True

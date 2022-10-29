@@ -1,6 +1,6 @@
 
-from Add_PhoneNumber.puppyInfo import puppyInformation
-dog=puppyInformation(17)
+from Add_PhoneNumber.puppyInfo import DogInformation
+dog=DogInformation(17)
 a=("안녕하세요. 딩굴댕굴입니다.\n\n"
            "[서비스 내역]\n\n"
            f"■ 애견이름: {dog.dog_name}\n"
