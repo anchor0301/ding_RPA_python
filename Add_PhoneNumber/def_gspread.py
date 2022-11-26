@@ -1,19 +1,16 @@
 from __future__ import print_function
-import time
-import re
+
+import os
+
 import gspread
 import httplib2
-import datetime
-from dateutil.parser import parse
-from datetime import datetime
-from datetime import timedelta
-import os
-import hide_api
 from apiclient import discovery
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from oauth2client.service_account import ServiceAccountCredentials
+
+import hide_api
 
 try:
     import argparse
@@ -25,7 +22,7 @@ except ImportError:
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/people.googleapis.com-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/contacts'
-CLIENT_SECRET_FILE = "aaaa.json"
+CLIENT_SECRET_FILE = ".credentials/aaaa.json"
 APPLICATION_NAME = 'People API Python Quickstart'
 
 
@@ -65,16 +62,29 @@ scopee = [
     'https://spreadsheets.google.com/feeds',
     'https://www.googleapis.com/auth/drive',
 ]
-json_file_name = "ding.json"
+
+json_file_name = ".credentials/ding.json"
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scopee)
 gc = gspread.authorize(credentials)
 
 # 스프레스시트 문서 가져오기
 doc = gc.open_by_url(hide_api.spreadsheet_url)
 # 시트 선택하기
+
+
 worksheet = doc.worksheet('시트1')
 
-def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하는 api 입니다.
+
+def get_item_index(add_number_row):
+    return len(worksheet.get("i1:i" + str(add_number_row)))
+
+
+def create_google_contact(dog):
+    """
+    구글 주소록에 연락처를 추가하는 api
+    :param dog: 스프레드 시트의 강아지 데이터
+    :return:
+    """
 
     print(dog.phoneNumber, "번 행의 연락처를 등록합니다.")
 
@@ -83,7 +93,7 @@ def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하�
     service.people().createContact(body={
         "names": [
             {
-                'givenName': f"{dog.Info()}"
+                'givenName': f"{dog.to_string()}"
             }
         ],
         "phoneNumbers": [
@@ -93,4 +103,4 @@ def creat_a_google_contact(dog):  # 구글 주소록에 연락처를 추가하�
         ]
     }).execute()
 
-    print("등록 완료")
+    print("전화 번호 등록 완료")

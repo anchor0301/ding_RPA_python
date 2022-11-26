@@ -1,37 +1,61 @@
 import re
-from code_gspread import worksheet
+from def_gspread import worksheet
 from dateutil.parser import parse
 import datetime as dt
 import datetime
 from datetime import datetime
 from datetime import timedelta
 
-class puppyInformation:
-    def __init__(self, doginfod):
-        doginfo = worksheet.row_values(doginfod)
-        self.service = doginfo[3] # 서비스
-        self.host_name = doginfo[4] # 견주이름
-        self.phoneNumber = doginfo[5]
-        self.backPhoneNumber = (doginfo[5])[-4:]
+from def_gspread import get_item_index
 
-        if doginfo[6]:
-            self.start_day_time = parse(doginfo[6]) #입실일
-            self.end_day_time = parse(doginfo[7]) #퇴실일
-            self.start_day = parse((doginfo[6])[:12])
-            self.end_day = parse((doginfo[7])[:12])
+
+class DogInformation:
+    """
+        @dog_row_number 엑셀에서 해당 강아지 행 번호
+
+        해당 행 강아지 정보를 가진 객체
+
+    """
+
+    def __init__(self, dog_row_number):
+        now = datetime.now()
+        dog_information = worksheet.row_values(dog_row_number)
+        self.row_number = int(get_item_index(dog_row_number))  # 몇번쨰 행인가
+        self.service = dog_information[3]  # 서비스
+        self.host_name = dog_information[4]  # 견주이름
+        self.phoneNumber = dog_information[5] #전체 전화번호
+        self.backPhoneNumber = (dog_information[5])[-4:] #전화번호 뒷자라
+
+        if dog_information[6]:
+            self.start_day_time = parse(dog_information[6])  # 입실일
+            self.end_day_time = parse(dog_information[7])  # 퇴실일
+            self.start_day = parse((dog_information[6])[:12])
+            self.end_day = parse((dog_information[7])[:12])
             self.useTime = "0"
-        else:
-            self.start_day_time = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            self.end_day_time = str((datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
-            self.useTime = re.sub(r'[^0-9]', '', doginfo[17])
+        else: #유치원
+            self.start_day_time = str(now.strftime("%Y-%m-%d %H:%M:%S"))
+            self.end_day_time = str((now + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
+            self.useTime = re.sub(r'[^0-9]', '', dog_information[17]) #횟수
 
-        self.dog_name = doginfo[8]
-        self.sex = doginfo[9]
+        self.dog_name = dog_information[8] #강아지 이름
+        self.sex = dog_information[9]   #강아지 성별
+        self.weight = dog_information[10] #강아지 몸무게
+        self.breed = re.sub(r'\([^)]*\)', '', dog_information[11])
+        self.Others = dog_information[15]
 
-        self.weight = doginfo[10]
+    # 메소드 생성시
+    def info(self):
+        print("추가된 시간\t:  ", datetime.now())
+        print("엑셀 행 \t:\t", self.row_number)
+        print("연락처 이름 \t: \t"+ self.to_string())
+        print("전화번호 \t: \t" + self.phoneNumber)
+        print("강아지 이름 \t: \t" + self.dog_name)
+        print("강아지 정보 \t: \t" + self.sex + "\t" +self.breed+"\t"+self.weight + "kg")
+        print("서비스 \t\t: \t" + self.service)
+        print("입실 \t\t: \t", self.start_day_time)
+        print("퇴실 \t\t: \t", self.end_day_time)
+        print("------------------------------------------\n")
 
-        self.breed = re.sub(r'\([^)]*\)', '', doginfo[11])
-        self.Others = doginfo[15]
     def reservationDate(self):
         start_day = self.start_day
         end_day = self.end_day
@@ -54,7 +78,7 @@ class puppyInformation:
 
         return f"{start_day_time}부터 {use_time}시간\n\n"
 
-    def Info(self):
+    def to_string(self):
         # 견종 중 괄호안의 글자 삭제
         rm_breed = re.sub(r'\([^)]*\)', '', self.breed)
 
@@ -63,3 +87,7 @@ class puppyInformation:
         print_last_info = f"{self.dog_name}/{rm_breed.rstrip()}/{self.service[0]}/{self.backPhoneNumber}"
 
         return print_last_info
+
+
+#py=DogInformation(17)
+# print(py.phoneNumber)

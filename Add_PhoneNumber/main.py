@@ -1,106 +1,95 @@
-# v2022.05.28
-#  카카오 알림API 추가
-#  라인 코드 삭제
+# v2022.11.23
+#
+#  중복 연락처 추가 오류 수정
 #########################################################
-#    필  독
+#
 #   1. debug_mode.bat 을 실행
 #   2. 파이썬 계속 실행시킨다.
 #
 ##########################################################
 
-from ding_rest_main import error_notify, NEW_CONTACT_INFORMATION
-from code_gspread import worksheet, creat_a_google_contact
-from init import createPage
-from hide_api import notion_databaseId, notion_headers
-from puppyInfo import puppyInformation
-import time
-import os
-import sys
 
+from def_gspread import worksheet, create_google_contact
+from def_kakao_post import error_notify, create_contact
+from def_notion import create_page
+from puppyInfo import DogInformation
+
+import time
+
+
+# polling System
 
 def main():
-    global existingEndRow
-    global existingEndPhoneNumber
     error_notify.send("프로그램 시작")
-    print("2022/06/24 노션 오류 수정")
-    print("프로그램 준비중")
+    print("2022/11/22 - 503 에러 예외 처리 수정")
 
-    existingEndPhoneNumber = worksheet.col_values(1)  # 이미 추가된 전화번호들을 전부 나열한다.
-    existingEndRow = len(existingEndPhoneNumber)  # 이미 추가된 전화번호들중 마지막 번호의 열 번호를 저장한다.   A
+    existing_end_column = len(worksheet.col_values(6))  # 이미 추가된 전화번호들 중 마지막 번호의 열 번호를 저장한다.   A
 
-    print("마지막 전화번호 저장 완료")
-    print("__________________")
+    existing_end_phone_number = worksheet.get("f1:f" + str(existing_end_column))  # 이미 추가된 전화번호들을 전부 나열한다.
+    print("프로그램 준비 완료")
 
-    ######################연락처 등록 감지 ######################
+    ######################연락처 등록 감지 시작######################
 
     try:
         while True:
 
-            time.sleep(30)  # 30초마다 끝 번호와 새로 불러온 열의 갯수를 비교한다.
-            new_phone_number_length = len(worksheet.col_values(1))  # 새로 추가된 전화번호를 newPhoneNumberLength로 저장  B
+            time.sleep(180)  # 3분마다 실행
 
-            if existingEndRow != new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
+            # 503 에러 방지
+            try:
+                new_phone_number_length = len(worksheet.col_values(6))  # 새로 추가된 전화번호를 newPhoneNumberless 저장  B
 
-                for add_number in reversed(range(0, new_phone_number_length - existingEndRow)):  # 프로그램 실행중 번호 추가 방지
+            except Exception as e:  # 모든 예외의 에러 메시지를 출력할 때는 Exception을 사용
+                print("503 에러발생")
+                new_phone_number_length = existing_end_column
 
-                    add_number_row = new_phone_number_length - add_number
+            if existing_end_column == new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
+                continue
 
-                    dog = puppyInformation(add_number_row)
+            for add_number in reversed(range(0, new_phone_number_length - existing_end_column)):  # 프로그램 실행중 번호 추가 방지
 
-                    print("등록된 연락처 목록 : ", existingEndPhoneNumber[-5:])
-                    print("추가된 연락처 이름 : ", dog.Info())
-                    print("추가된 전화번호 : ", dog.phoneNumber)
+                add_number_column = new_phone_number_length - add_number
 
-                    if dog.phoneNumber not in existingEndPhoneNumber:
-                        try:
+                dog = DogInformation(add_number_column)  # 강아지 정보를 가져온다.
+                print("---------------- 응답 결과 ----------------")
 
-                            # 등록상태
-                            # 1. 기존 연락처 중 새로 등록된 번호가 없으면
-                            print(f"새로운 연락처를 추가합니다\n")
+                # 등록상태
+                # True. 새로 등록된 전화번호
+                # False. 중복된 전화번호가 있다면
+                if [dog.phoneNumber] not in existing_end_phone_number:
+                    try:
+                        create_google_contact(dog)  # 새로 등록된 번호를 구글주소록에서 추가한다.
+                        create_contact(0, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
-                            creat_a_google_contact(dog)  # 새로 등록된 번호를 구글주소록에서 추가한다.
+                    except Exception as e:
+                        print("새로운 연락처 추가중 프로그램 정지\n")
+                        error_notify.send("error code : 2\n"
+                                          "새로운 연락처 추가중 프로그램 정지")
+                else:
+                    try:
+                        create_contact(1, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
 
-                            NEW_CONTACT_INFORMATION(0, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-                            createPage(notion_databaseId, notion_headers, dog)
-                            existingEndPhoneNumber = worksheet.get("f1:f" + str(add_number_row))
-                        except Exception as e:
-                            print("새로운 연락처 추가중 프로그램 정지\n")
-                            print(e)
-                            error_notify.send("error code : 2\n"
-                                              "새로운 연락처 추가중 프로그램 정지")
+                    except Exception as e:
+                        print("중복된 연락처 추가중 프로그램 정지")
+                        error_notify.send("error code : 3 \n"
+                                          "중복된 연락처 추가중 프로그램 정지\n")
 
+                create_page(dog)  # 노션 추가
+                existing_end_phone_number = worksheet.get(
+                    "f1:f" + str(add_number_column))  # 마지막 휴대폰 번호 정보를 등록한다. ( 중복 연락처 감지 )
 
-
-                    else:  # 2. 중복된 전화번호가 있다면
-                        try:
-                            print(f"중복된 연락처가 있습니다.\n")
-                            # 등록상태
-                            # 1 : 미등록
-                            NEW_CONTACT_INFORMATION(1, dog)  # 새로운 번호를 끝 번호로 지정 및 라인 알림전송
-                            createPage(notion_databaseId, notion_headers, dog)  # 노션 추가
-                            existingEndPhoneNumber = worksheet.get("f1:f" + str(add_number_row))
-
-                        except Exception as e:
-                            print("중복된 연락처 추가중 프로그램 정지")
-                            print(e)
-                            error_notify.send("error code : 3 \n"
-                                              "중복된 연락처 추가중 프로그램 정지\n")
-
-                existingEndRow = new_phone_number_length  # 끝 번호는 새로 등록된 번호로 바꾼다
+            existing_end_column = new_phone_number_length  # 끝 번호는 새로 등록된 번호로 바꾼다
 
 
     except Exception as e:
         print("실시간 감지중 프로그램 정지")
-        print(e)
         error_notify.send("error code : 1\n"
                           "실시간 감지중 프로그램 정지\n")
 
 
 if __name__ == "__main__":
     try:
-
         main()
-        os.execl(sys.executable, sys.executable, *sys.argv)
     except Exception as e:
         print(e)
         print("중지")
