@@ -18,12 +18,13 @@ class DogInformation:
     """
 
     def __init__(self, dog_row_number):
-
+        now = datetime.now()
         dog_information = worksheet.row_values(dog_row_number)
+        self.row_number = int(get_item_index(dog_row_number))  # 몇번쨰 행인가
         self.service = dog_information[3]  # 서비스
         self.host_name = dog_information[4]  # 견주이름
-        self.phoneNumber = dog_information[5]
-        self.backPhoneNumber = (dog_information[5])[-4:]
+        self.phoneNumber = dog_information[5] #전체 전화번호
+        self.backPhoneNumber = (dog_information[5])[-4:] #전화번호 뒷자라
 
         if dog_information[6]:
             self.start_day_time = parse(dog_information[6])  # 입실일
@@ -31,18 +32,29 @@ class DogInformation:
             self.start_day = parse((dog_information[6])[:12])
             self.end_day = parse((dog_information[7])[:12])
             self.useTime = "0"
-        else:
-            self.start_day_time = str(datetime.now().strftime("%Y-%m-%d %H:%M:%S"))
-            self.end_day_time = str((datetime.now() + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
-            self.useTime = re.sub(r'[^0-9]', '', dog_information[17])
+        else: #유치원
+            self.start_day_time = str(now.strftime("%Y-%m-%d %H:%M:%S"))
+            self.end_day_time = str((now + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
+            self.useTime = re.sub(r'[^0-9]', '', dog_information[17]) #횟수
 
-        self.dog_name = dog_information[8]
-        self.sex = dog_information[9]
-
-        self.weight = dog_information[10]
-        self.get_item_index = get_item_index(dog_row_number)
+        self.dog_name = dog_information[8] #강아지 이름
+        self.sex = dog_information[9]   #강아지 성별
+        self.weight = dog_information[10] #강아지 몸무게
         self.breed = re.sub(r'\([^)]*\)', '', dog_information[11])
         self.Others = dog_information[15]
+
+    # 메소드 생성시
+    def info(self):
+        print("추가된 시간\t:  ", datetime.now())
+        print("엑셀 행 \t:\t", self.row_number)
+        print("연락처 이름 \t: \t"+ self.to_string())
+        print("전화번호 \t: \t" + self.phoneNumber)
+        print("강아지 이름 \t: \t" + self.dog_name)
+        print("강아지 정보 \t: \t" + self.sex + "\t" +self.breed+"\t"+self.weight + "kg")
+        print("서비스 \t\t: \t" + self.service)
+        print("입실 \t\t: \t", self.start_day_time)
+        print("퇴실 \t\t: \t", self.end_day_time)
+        print("------------------------------------------\n")
 
     def reservationDate(self):
         start_day = self.start_day
@@ -78,6 +90,4 @@ class DogInformation:
 
 
 #py=DogInformation(17)
-
-#
 # print(py.phoneNumber)

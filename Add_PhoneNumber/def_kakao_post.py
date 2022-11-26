@@ -85,6 +85,7 @@ def post_message_service(dog):
                  "url": "https://m.map.kakao.com/actions/detailMapView?id=1372380561&refService=place||https://map.kakao.com/?urlX=531668&urlY=926633&urlLevel=2&itemId=1372380561&q=%EB%94%A9%EA%B5%B4%EB%"},
                 {"name": "사이트 이동", "url": "http://13.125.165.236/login||http://13.125.165.236/login"}]
         }
+
         json_string = json.dumps(json_object)
 
 
@@ -127,25 +128,23 @@ def post_message_service(dog):
 
     resp = req('/request/kakao.json', '', 'post')
 
-    print("---------------------------")
-    print("카카오톡 응답 코드 : %d" % resp.status_code)
+    print("카카오톡 응답 코드 : %d \t" % resp.status_code ,end="" )
+    print(resp.text)
     # print("response headers:\n%s" % resp.headers)
-    print("카카오톡 전송 결과:\n%s" % resp.text)
 
 
 def create_contact(registered_state, dog):
     # 등록상태
     # 0 : 아직 미등록
     # 1 : 이미 등록됨
-    try:
-        # 카카오톡 알림톡 api 실행
-        post_message_service(dog)
-    except:
-        print("카톡 에러 발생")
+    # 카카오톡 알림톡 api 실행
+    post_message_service(dog)
 
     if registered_state:
+        print(f"중복된 연락처가 있습니다.")
         send = f"\n등록된 연락처\n"
     else:
+        print(f"새로운 연락처를 추가합니다\n")
         send = f"\n새로운 연락처 \n"
     notify.send(send +
                 f"\n{dog.to_string()}\n"

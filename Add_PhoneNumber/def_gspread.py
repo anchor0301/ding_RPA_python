@@ -22,7 +22,7 @@ except ImportError:
 # If modifying these scopes, delete your previously saved credentials
 # at ~/.credentials/people.googleapis.com-python-quickstart.json
 SCOPES = 'https://www.googleapis.com/auth/contacts'
-CLIENT_SECRET_FILE = "aaaa.json"
+CLIENT_SECRET_FILE = ".credentials/aaaa.json"
 APPLICATION_NAME = 'People API Python Quickstart'
 
 
@@ -63,7 +63,7 @@ scopee = [
     'https://www.googleapis.com/auth/drive',
 ]
 
-json_file_name = "ding.json"
+json_file_name = ".credentials/ding.json"
 credentials = ServiceAccountCredentials.from_json_keyfile_name(json_file_name, scopee)
 gc = gspread.authorize(credentials)
 
@@ -103,4 +103,4 @@ def create_google_contact(dog):
         ]
     }).execute()
 
-    print("등록 완료")
+    print("전화 번호 등록 완료")

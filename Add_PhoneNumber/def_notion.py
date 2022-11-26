@@ -119,19 +119,18 @@ def create_page(dog):
                 "select": {"name": "No"}
             }, "순번": {
                 "type": "number",
-                "number": int(dog.get_item_index)
+                "number": dog.row_number
             }
         }
     }
 
     data = json.dumps(new_page_data)
-    # print(str(uploadData))
 
     res = requests.request("POST", create_url, headers=notion_headers, data=data)
 
     print("노션 응답 코드 :  %s \n" % res.status_code)
     # print(res.json())
-    print_item_info(res.json(), dog)
+    dog.info()
 
 
 # 오늘 퇴실한 강아지 출력 및
@@ -173,7 +172,9 @@ def patch_exit_database(notion_page_id):
 
     requests.request("PATCH", read_url, headers=notion_headers, data=json.dumps(patch_data))
 
-#dog = puppyInformation(17)
+#dog = DogInformation(17)
 #create_page(dog)  # 노션 추가 및 응답 결과 출력
 # read_database(notion_databaseId,notion_headers) #테이블 읽기
 #rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
+
+
