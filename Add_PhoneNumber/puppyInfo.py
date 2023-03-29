@@ -27,7 +27,7 @@ class DogInformation:
         self.backPhoneNumber = (dog_information[5])[-4:] #전화번호 뒷자라
 
         if dog_information[6]:
-            self.start_day_time = parse(dog_information[6])  # 입실일
+            self.start_day_time = parse(dog_information[6]) # 입실일
             self.end_day_time = parse(dog_information[7])  # 퇴실일
             self.start_day = parse((dog_information[6])[:12])
             self.end_day = parse((dog_information[7])[:12])
@@ -65,7 +65,7 @@ class DogInformation:
         # 일계산
         day = end_day - (start_day + dt.timedelta(days=-1))
 
-        return f"{start_day.strftime('%m월 %d일')}부터 총{night.days}박 {day.days}일"
+        return f"{start_day.strftime('%m월 %d일')} 부터 총{night.days}박 {day.days}일"
 
     def overNight(self):
         start_day_time = self.start_day_time
@@ -88,6 +88,9 @@ class DogInformation:
 
         return print_last_info
 
-
 #py=DogInformation(17)
-# print(py.phoneNumber)
+# print(type(py.start_day_time))
+# print(str(parse(py.start_day_time)))
+#
+# print(parse(py.start_day_time).isoformat())
+

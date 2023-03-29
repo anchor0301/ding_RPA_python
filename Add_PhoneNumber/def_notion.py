@@ -1,6 +1,6 @@
 import datetime as datetime
 from datetime import datetime
-
+from dateutil.parser import parse
 import json
 import requests
 
@@ -90,8 +90,8 @@ def create_page(dog):
             },
             "날짜": {
                 "type": "date",
-                "date": {"start": f"{dog.start_day_time}+09:00",
-                         "end": f"{dog.end_day_time}+09:00"}
+                "date": {"start": f"{parse(str(dog.start_day_time)).isoformat()}",
+                         "end": f"{parse(str(dog.end_day_time)).isoformat()}"}
             },
             "견종": {
                 "type": "select",
@@ -129,7 +129,7 @@ def create_page(dog):
     res = requests.request("POST", create_url, headers=notion_headers, data=data)
 
     print("노션 응답 코드 :  %s \n" % res.status_code)
-    # print(res.json())
+    print(res.json())
     dog.info()
 
 
@@ -172,9 +172,9 @@ def patch_exit_database(notion_page_id):
 
     requests.request("PATCH", read_url, headers=notion_headers, data=json.dumps(patch_data))
 
-#dog = DogInformation(17)
+#dog = DogInformation(1488)
 #create_page(dog)  # 노션 추가 및 응답 결과 출력
 # read_database(notion_databaseId,notion_headers) #테이블 읽기
-#rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
+rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
 
 

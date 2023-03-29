@@ -2,6 +2,8 @@ import requests
 import json
 from line_notify import LineNotify
 import hide_api
+from Add_PhoneNumber.puppyInfo import DogInformation
+
 ###############################    라인 코드
 
 notify = LineNotify(hide_api.ACCESS_TOKEN)
@@ -49,9 +51,9 @@ def post_message_service(dog):
                 f"서비스 : {dog.service}\n"
                 f"전화번호 뒷자리 : {dog.backPhoneNumber}\n"
                 f"\n"
-                f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다. 💕\n"
+                f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다.\n"
                 f"\n"
-                f"■  『최종 확인』 버튼을 눌러주세요‼️",
+                f"■  『최종 확인』 버튼을 눌러주세요",
             "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
             "title": "최종 확인을 눌러주세요",  # 타이틀
             "template": "10005",  # 템플릿 코드
@@ -73,9 +75,9 @@ def post_message_service(dog):
                 f"서비스 : {dog.service}\n"
                 f"전화번호 뒷자리 : {dog.backPhoneNumber}\n"
                 f"\n"
-                f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다. 💕\n"
+                f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다.\n"
                 f"\n"
-                f"■ 『최종 확인』 버튼을 눌러주세요‼️",
+                f"■ 『최종 확인』 버튼을 눌러주세요",
             "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
             "title": "최종 확인을 눌러주세요",  # 타이틀
             "template": "10007",  # 템플릿 코드
@@ -99,9 +101,9 @@ def post_message_service(dog):
                 f"서비스 : {dog.service}\n"
                 f"전화번호 뒷자리 : {dog.backPhoneNumber}\n"
                 f"\n"
-                f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다. 💕\n"
+                f"■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다.\n"
                 f"\n"
-                f"■  『최종 확인』 버튼을 눌러주세요‼️",
+                f"■  『최종 확인』 버튼을 눌러주세요",
             "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
             "title": "최종 확인을 눌러주세요",  # 타이틀
             "template": "10010",  # 템플릿 코드
@@ -152,4 +154,8 @@ def create_contact(registered_state, dog):
                 f"\n연락처 : {dog.phoneNumber}"
                 f"\n시작일 : {str(dog.start_day_time)[5:-3]}"
                 f"\n종료일 : {str(dog.end_day_time)[5:-3]}")
+
+#dog=DogInformation(17)
+
+#post_message_service(dog)
 

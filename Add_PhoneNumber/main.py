@@ -21,7 +21,7 @@ import time
 
 def main():
     error_notify.send("프로그램 시작")
-    print("2022/11/22 - 503 에러 예외 처리 수정")
+    print("2023/02/17 - 이상한 오류 수정")
 
     existing_end_column = len(worksheet.col_values(6))  # 이미 추가된 전화번호들 중 마지막 번호의 열 번호를 저장한다.   A
 
