@@ -35,7 +35,7 @@ class DogInformation:
         else: #유치원
             self.start_day_time = str(now.strftime("%Y-%m-%d %H:%M:%S"))
             self.end_day_time = str((now + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
-            self.useTime = re.sub(r'[^0-9]', '', dog_information[17]) #횟수
+            self.useTime = re.sub(r'[^0-9]', '', dog_information[19]) #횟수
 
         self.dog_name = dog_information[8] #강아지 이름
         self.sex = dog_information[9]   #강아지 성별
@@ -54,6 +54,7 @@ class DogInformation:
         print("서비스 \t\t: \t" + self.service)
         print("입실 \t\t: \t", self.start_day_time)
         print("퇴실 \t\t: \t", self.end_day_time)
+        print("유치원 횟수 \t: \t", self.useTime)
         print("------------------------------------------\n")
 
     def reservationDate(self):
@@ -88,7 +89,9 @@ class DogInformation:
 
         return print_last_info
 
-#py=DogInformation(17)
+# py=DogInformation(17)
+# print(py.useTime)
+
 # print(type(py.start_day_time))
 # print(str(parse(py.start_day_time)))
 #

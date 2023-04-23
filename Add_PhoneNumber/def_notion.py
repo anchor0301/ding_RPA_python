@@ -175,6 +175,6 @@ def patch_exit_database(notion_page_id):
 #dog = DogInformation(1488)
 #create_page(dog)  # 노션 추가 및 응답 결과 출력
 # read_database(notion_databaseId,notion_headers) #테이블 읽기
-rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
+# rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
 
 

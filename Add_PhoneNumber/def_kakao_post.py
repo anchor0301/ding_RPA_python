@@ -155,7 +155,7 @@ def create_contact(registered_state, dog):
                 f"\n시작일 : {str(dog.start_day_time)[5:-3]}"
                 f"\n종료일 : {str(dog.end_day_time)[5:-3]}")
 
-#dog=DogInformation(17)
-
-#post_message_service(dog)
+# dog=DogInformation(17)
+#
+# post_message_service(dog)
 
