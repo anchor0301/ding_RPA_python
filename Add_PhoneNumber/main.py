@@ -8,20 +8,19 @@
 #
 ##########################################################
 
-
 from def_gspread import worksheet, create_google_contact
 from def_kakao_post import error_notify, create_contact
 from def_notion import create_page
-from puppyInfo import DogInformation
-
+from puppyInfo import service
 import time
+
 
 
 # polling System
 
 def main():
     error_notify.send("프로그램 시작")
-    print("2023/02/17 - 이상한 오류 수정")
+    print("2023/04/29 - 클래스 나누기")
 
     existing_end_column = len(worksheet.col_values(6))  # 이미 추가된 전화번호들 중 마지막 번호의 열 번호를 저장한다.   A
 
@@ -50,7 +49,7 @@ def main():
 
                 add_number_column = new_phone_number_length - add_number
 
-                dog = DogInformation(add_number_column)  # 강아지 정보를 가져온다.
+                dog = service(add_number_column)  # 강아지 정보를 가져온다.
                 print("---------------- 응답 결과 ----------------")
 
                 # 등록상태

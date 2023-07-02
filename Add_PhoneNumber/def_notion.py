@@ -6,7 +6,27 @@ import requests
 
 from def_kakao_post import post_message_exit
 from hide_api import notion_headers, patch_data
-from puppyInfo import DogInformation
+from puppyInfo import service
+
+book_body_data = {
+ "page_size": 10,
+ "filter": {
+        "and": [
+            {
+                "property": "입실 여부",
+                "select": {
+                    "equals": "No"
+                }
+            }
+        ]
+    },
+    "sorts": [
+        {
+          "property": "날짜",
+          "direction": "ascending"
+        }
+    ]
+}
 
 body_data = {
     "page_size": 15,
@@ -159,12 +179,40 @@ def rest_exit_database():
         page_code = data.get("results")[i].get("id")
 
         print("애견 이름 :  %s \n애견 페이지 : %s\n애견 순번 : %s" % (result, page_code, dog_num))
-
-        post_message_exit(DogInformation(dog_num), start_day)
+        dog=service(dog_num)
+        post_message_exit(dog, start_day)
         patch_exit_database(page_code)
 
     return True
+def listBookings():
+    read_url = "https://api.notion.com/v1/databases/5ae1d1a61f5f4efe9f9557d62b9adf5e/query"
 
+    res = requests.request("POST", read_url, headers=notion_headers, data=json.dumps(book_body_data))
+    data = res.json()
+
+    results = data.get("results")
+    # 없으면 아무것도 안함
+    if "[]" == str(results):
+        return False
+
+    for i in range(len(results)):
+
+        # 입실 날짜
+        start_day = data.get("results")[i].get("properties").get("날짜").get("date").get("start")[:16]
+
+        if(start_day[:10] =="2023-05-15" ):
+            # 애견 이름
+            result = data.get("results")[i].get("properties").get("이름").get("title")[0].get("text").get("content")
+
+
+            # 애견 순번
+            dog_num = int(data.get("results")[i].get("properties").get("순번").get("number"))
+
+            # 애견 페이지 코드
+            page_code = data.get("results")[i].get("id")
+
+            print("애견 이름 :  %s \n애견 입실시간 : %s\n애견 순번 : %s\n_______" % (result, start_day, dog_num))
+            dog = service(dog_num)
 
 # 노션에 카카오톡 메시지를 체크로 변경함
 def patch_exit_database(notion_page_id):
@@ -176,5 +224,7 @@ def patch_exit_database(notion_page_id):
 #create_page(dog)  # 노션 추가 및 응답 결과 출력
 # read_database(notion_databaseId,notion_headers) #테이블 읽기
 # rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
+
+# listBookings()
 
 
