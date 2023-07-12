@@ -1,18 +1,5 @@
-import os
-import datetime
 
-path_dir = "/Users/anchor/Desktop/사진"
-
-file_list = os.listdir(path_dir)
-file_list_gettime = os.path.getctime(path_dir)
-print(file_list.sort(reverse=True))
-
-
-for i in range(3, 8):
-    create_time =  os.path.getctime(f'{path_dir}/{file_list[i]}')
-    create_time = datetime.datetime.fromtimestamp(create_time)
-    create_time = datetime.datetime.strftime(create_time, '%Y-%m-%d %H:%M')
-
-    print(f'[{i - 2}]', end="\t  ")
-    print(file_list[i], end="\t")
-    print(create_time)
+from datetime import datetime,timedelta
+print("2023-07-03T14+09:00")
+nowTimes = str((datetime.now() + timedelta(hours=2)).strftime('%Y-%m-%dT%H:01+09:00'))
+print(nowTimes)

@@ -3,7 +3,7 @@ from datetime import datetime
 from dateutil.parser import parse
 import requests
 import json
-from hide_api import notion_headers, patch_data
+from hide_api import notion_headers, patch_exit_data
 existing_end_column = 1
 new_phone_number_length = 1
 

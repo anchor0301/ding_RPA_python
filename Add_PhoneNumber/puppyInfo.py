@@ -67,6 +67,12 @@ class Hotel:
 
         return print_last_info
 
+    def register_time(self):
+        start_day_time = self.start_day_time
+        start_day_time = start_day_time.strftime("%H:%M")
+
+        return f"{start_day_time}"
+
 
 class kindSchool(Hotel):
     def __init__(self, dog_row_number):
@@ -109,7 +115,6 @@ def service(dog_row_number):
     how_to_service = worksheet.row_values(dog_row_number)[3]
     if how_to_service in services:
         return services[how_to_service](dog_row_number)
-
 
 #
 # Hotel

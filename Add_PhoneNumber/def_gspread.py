@@ -4,7 +4,10 @@ import os
 
 import gspread
 import httplib2
-from apiclient import discovery
+
+#pip install --upgrade google-api-python-client
+from googleapiclient import discovery
+
 from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage

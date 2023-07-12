@@ -4,7 +4,6 @@ from line_notify import LineNotify
 import hide_api
 from puppyInfo import service
 
-
 import os.path
 import requests
 
@@ -74,28 +73,58 @@ class LineNotify:
         requests.post(API_URI, headers=self.headers, params=params, files=files)
 
 
-
 ###############################    라인 코드
 
 notify = LineNotify(hide_api.ACCESS_TOKEN)
 error_notify = LineNotify(hide_api.ERROR_TOKEN)
 
 
+def post_message_register_check(dog, start_day):
+    json_object = {
+        "service": 2210077160,
+        "message":
+            f"{dog.dog_name} 견주님, 오늘 {dog.register_time()} 딩굴댕굴 예약 잊지 않으셨죠?\n"
+            "좋은 하루 보내세요!\n\n"
+            "[예약정보]\n"
+            f"- 예약일시 : {start_day}\n"
+            f"- 예약매장 : 딩굴댕굴\n"
+            f"- 예약서비스 : {dog.service}\n\n"
+            f"[매장 정보]\n"
+            f"- 천안시 서북구 성정두정로 100\n\n"
+            f"[주의사항]\n"
+            f"- 예약 변경/취소 발생시 전화 및 메시지 회신 부탁드립니다.\n"
+            f"- 010-7498-0144"
+           ,
+        "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
+        "title": f"{dog.dog_name}",  # 타이틀
+        "template": "10027",  # 템플릿 코드
+        "buttons": [
+            {"name": "딩굴댕굴 네이버", "url": "https://naver.me/G5I0XCzI||https://naver.me/G5I0XCzI"},
+            {"name": "주의사항",
+             "url": "http://wp2102.synology.me:1004/Rolling_in_the_dog/notice||http://wp2102.synology.me:1004/Rolling_in_the_dog/notice"}]
+    }
+    json_string = json.dumps(json_object)
+    resp = requests.post('https://talkapi.lgcns.com/request/kakao.json', headers=hide_api.headers, data=json_string)
+    print("카카오톡 응답 코드 : %d" % resp.status_code)
+    print("response body: %s" % resp.text)
+    print("---------------------------")
+
+
 def post_message_exit(dog, start_day):
     json_object = {
         "service": 2210077160,
         "message":
-           "안녕하세요. 딩굴댕굴입니다.\n\n"
-           "[서비스 내역]\n\n"
-           f"■ 애견이름: {dog.dog_name}\n"
-           f"■ 이용일자 : {start_day}\n"
-           f"■ 서비스 :  {dog.service}\n\n"
-           "[참고사항]\n\n"
-           "호텔 이용 후 구토, 설사, 기운 없음 등의 증상이 보일 수 있으나 이는 휴식을 하면 점차 회복되므로 집에서 푹 쉴 수 있도록 도와주세요. 이용해주셔서 감사합니다.\n\n"
-           "[서비스 설문조사]\n\n"
-           "고객님께 더 나은 서비스를 제공하기 위해 설문조사를 진행하고 있습니다. 이번에 경험하신 서비스에 대한 소중한 의견을 남겨주세요.\n\n"
-           "※ 매월 1일마다 설문에 참여하신 분께 추첨을 통해 기프티콘을 드립니다. (카카오톡 채널에 공지)\n\n"
-           "- 전화문의 및 상담 : 0507-1485-0260",
+            "안녕하세요. 딩굴댕굴입니다.\n\n"
+            "[서비스 내역]\n\n"
+            f"■ 애견이름: {dog.dog_name}\n"
+            f"■ 이용일자 : {start_day}\n"
+            f"■ 서비스 :  {dog.service}\n\n"
+            "[참고사항]\n\n"
+            "호텔 이용 후 구토, 설사, 기운 없음 등의 증상이 보일 수 있으나 이는 휴식을 하면 점차 회복되므로 집에서 푹 쉴 수 있도록 도와주세요. 이용해주셔서 감사합니다.\n\n"
+            "[서비스 설문조사]\n\n"
+            "고객님께 더 나은 서비스를 제공하기 위해 설문조사를 진행하고 있습니다. 이번에 경험하신 서비스에 대한 소중한 의견을 남겨주세요.\n\n"
+            "※ 매월 1일마다 설문에 참여하신 분께 추첨을 통해 기프티콘을 드립니다. (카카오톡 채널에 공지)\n\n"
+            "- 전화문의 및 상담 : 0507-1485-0260",
         "mobile": f"{dog.phoneNumber}",  # 전송받는 전화번호
         "title": "퇴실 안내",  # 타이틀
         "template": "10011",  # 템플릿 코드
@@ -201,7 +230,7 @@ def post_message_service(dog):
 
     resp = req('/request/kakao.json', '', 'post')
 
-    print("카카오톡 응답 코드 : %d \t" % resp.status_code ,end="" )
+    print("카카오톡 응답 코드 : %d \t" % resp.status_code, end="")
     print(resp.text)
     # print("response headers:\n%s" % resp.headers)
 
@@ -226,7 +255,8 @@ def create_contact(registered_state, dog):
                 f"\n시작일 : {str(dog.start_day_time)[5:-3]}"
                 f"\n종료일 : {str(dog.end_day_time)[5:-3]}")
 
-# dog=DogInformation(17)
-#
-# post_message_service(dog)
+#dog = service(17)
+#post_message_service(dog)
 
+
+# post_message_service(dog)
