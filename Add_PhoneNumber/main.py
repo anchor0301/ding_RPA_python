@@ -9,7 +9,7 @@
 ##########################################################
 
 from def_gspread import worksheet, create_google_contact
-from def_kakao_post import error_notify, create_contact
+from def_kakao_post import error_notify, create_contact ,notify
 from def_notion import create_page
 from puppyInfo import service
 import time
@@ -19,8 +19,8 @@ import time
 # polling System
 
 def main():
-    error_notify.send("프로그램 시작")
-    print("2023/04/29 - 클래스 나누기")
+    notify.send("프로그램 시작")
+    print("2023/07/12 - 시놀로지로 이동")
 
     existing_end_column = len(worksheet.col_values(6))  # 이미 추가된 전화번호들 중 마지막 번호의 열 번호를 저장한다.   A
 
@@ -31,7 +31,6 @@ def main():
 
     try:
         while True:
-
             time.sleep(180)  # 3분마다 실행
 
             # 503 에러 방지
@@ -62,7 +61,7 @@ def main():
 
                     except Exception as e:
                         print("새로운 연락처 추가중 프로그램 정지\n")
-                        error_notify.send("error code : 2\n"
+                        notify.send("error code : 2\n"
                                           "새로운 연락처 추가중 프로그램 정지")
                 else:
                     try:
@@ -70,7 +69,7 @@ def main():
 
                     except Exception as e:
                         print("중복된 연락처 추가중 프로그램 정지")
-                        error_notify.send("error code : 3 \n"
+                        notify.send("error code : 3 \n"
                                           "중복된 연락처 추가중 프로그램 정지\n")
 
                 create_page(dog)  # 노션 추가
@@ -82,7 +81,7 @@ def main():
 
     except Exception as e:
         print("실시간 감지중 프로그램 정지")
-        error_notify.send("error code : 1\n"
+        notify.send("error code : 1\n"
                           "실시간 감지중 프로그램 정지\n")
 
 
