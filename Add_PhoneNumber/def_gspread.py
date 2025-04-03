@@ -11,7 +11,7 @@ from oauth2client import client
 from oauth2client import tools
 from oauth2client.file import Storage
 from oauth2client.service_account import ServiceAccountCredentials
-
+from CardDAV import *
 import hide_api
 
 try:
@@ -37,7 +37,7 @@ def get_credentials():
     """
     home_dir = os.path.expanduser('./')
 
-    #credential_dir = os.path.join(home_dir, '~/../Ubuntu1/ding_homepage/ding_RPA_python/Add_PhoneNumber/credentials')
+    # credential_dir = os.path.join(home_dir, '~/../Ubuntu1/ding_homepage/ding_RPA_python/Add_PhoneNumber/credentials')
     credential_dir = os.path.join(home_dir, '.credentials')
     if not os.path.exists(credential_dir):
         os.makedirs(credential_dir)
@@ -108,5 +108,5 @@ def create_google_contact(dog):
             }
         ]
     }).execute()
-
+    add_contact_to_carddav(dog.host_name, dog.to_string(), dog.phoneNumber)
     print("전화 번호 등록 완료")

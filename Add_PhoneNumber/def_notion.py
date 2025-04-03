@@ -399,5 +399,4 @@ def find_expired_puppy():
 # rest_exit_database()  # 퇴실한 녀석 찾아 메시지 전송
 # listBookings()
 
-# dog = service(3485)
 # post_message_exit(dog)
