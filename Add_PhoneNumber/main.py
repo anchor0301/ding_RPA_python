@@ -8,7 +8,7 @@
 #
 ##########################################################
 
-from def_gspread import worksheet, create_google_contact
+from def_gspread import worksheet, create_google_contact, create_synology_contact
 from def_kakao_post import *
 from def_notion import create_page
 
@@ -76,6 +76,7 @@ def main():
                         notify.send(f"‼‼‼\n새로운 연락처 추가중 프로그램 정지\n{e}")
                 else:
                     try:
+                        create_synology_contact(dog)
                         kakao.post_message_service(dog)
                         notify.registration_true()
 
