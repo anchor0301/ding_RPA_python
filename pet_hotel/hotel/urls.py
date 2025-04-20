@@ -16,8 +16,7 @@ urlpatterns = [
     path('reservation/<int:pk>/checkout/', views.checkout_now, name='checkout_now'),
     path('reservation/<int:pk>/checkin/', views.checkin_reservation, name='checkin_reservation'),
 
-
-    path('reservations/', views.reservation_list, name='reservations'),
+    path('reservations/', views.reservation_list, name='reservation_list'),
     path('reservation/<int:pk>/cancel/', views.cancel_reservation, name='cancel_reservation'),
 
 ]

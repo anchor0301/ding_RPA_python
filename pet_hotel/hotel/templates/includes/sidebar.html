@@ -1,11 +1,28 @@
 <!-- templates/includes/sidebar.html -->
 
 <div class="sidebar" id="sidebar">
-    <ul>
-        <li><a href="{% url 'hotel:dashboard' %}">🏠 대시보드</a></li>
-        <li><a href="{% url 'hotel:reservations' %}">📅 예약 관리</a></li>
-        <li><a href="{% url 'hotel:checkins' %}">📥 입실 예정 목록</a></li>
-        <li><a href="{% url 'hotel:checkouts' %}">📤 퇴실 예정 목록</a></li>
-    </ul>
+    <nav>
+        <ul>
+            <li class="{% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}">
+                <a href="{% url 'hotel:dashboard' %}">
+                    🏠 대시보드
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'reservation_list' %}active{% endif %}">
+                <a href="{% url 'hotel:reservation_list' %}">
+                    📅 예약 관리
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'checkins' %}active{% endif %}">
+                <a href="{% url 'hotel:checkins' %}">
+                    📥 입실 예정 목록
+                </a>
+            </li>
+            <li class="{% if request.resolver_match.url_name == 'checkouts' %}active{% endif %}">
+                <a href="{% url 'hotel:checkouts' %}">
+                    📤 퇴실 예정 목록
+                </a>
+            </li>
+        </ul>
     </nav>
 </div>

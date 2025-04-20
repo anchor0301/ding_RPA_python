@@ -19,3 +19,13 @@ document.addEventListener('DOMContentLoaded', () => {
     }
   });
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+  const activeItem = document.querySelector('.sidebar li.active');
+  if (activeItem) {
+    // 트랜지션을 위해 약간의 지연 후 클래스 추가
+    setTimeout(() => {
+      activeItem.classList.add('was-active');
+    }, 10);
+  }
+});
