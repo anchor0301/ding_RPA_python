@@ -113,3 +113,12 @@ canvas {
   padding: 2rem;
   background: #f8f9fa;
 }
+
+
+.sidebar-hidden {
+  display: none !important;
+}
+
+.content-expanded {
+  width: 100%;
+}
