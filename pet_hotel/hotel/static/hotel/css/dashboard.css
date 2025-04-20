@@ -96,4 +96,20 @@ canvas {
   font-size: 0.95rem;
   padding: 0.5em 0.75em;
   border-radius: 1em;
+}.dashboard-container {
+  display: flex;
+  min-height: 100vh;
+}
+
+.sidebar {
+  width: 220px;
+  background-color: #343a40;
+  padding: 1rem;
+  flex-shrink: 0;
+}
+
+.main-content {
+  flex-grow: 1;
+  padding: 2rem;
+  background: #f8f9fa;
 }
