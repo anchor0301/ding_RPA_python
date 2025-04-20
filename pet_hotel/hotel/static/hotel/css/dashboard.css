@@ -2,7 +2,8 @@
 #dashboard {
   padding: 1rem 0;
 }
-/* 카드 스타일 */
+
+/* KPI 카드 */
 .kpi-card {
   background: #f8f9fa;
   border-radius: 1rem;
@@ -11,25 +12,18 @@
   text-align: center;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
-  height: 100%; /* 카드 높이 균일화 */
+  height: 100%;
 }
-
-
-/* 호버 시 부드러운 효과 */
 .kpi-card:hover {
   transform: translateY(-4px);
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
-
-/* 라벨(설명) */
 .kpi-card .label {
   font-size: 1rem;
   color: #6c757d;
   font-weight: 500;
   margin-bottom: 0.5rem;
 }
-
-/* 숫자 */
 .kpi-card .value {
   font-size: 2.5rem;
   font-weight: bold;
@@ -39,44 +33,54 @@
 /* 전체 레이아웃 컨테이너 */
 .dashboard-container {
   display: flex;
+  position: relative;
 }
 
-/* 사이드바 메뉴 스타일 */
+/* ===== 사이드바 ===== */
 .sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
   width: 220px;
   background-color: #343a40;
   padding: 1rem;
-  min-height: 100vh;
+  height: 100vh;
+  transform: translateX(0);
+  transition: transform 0.3s ease-in-out;
+  z-index: 1000;
 }
-
-/* 메뉴 아이템 스타일 */
+.sidebar-hidden {
+  transform: translateX(-100%);
+}
 .sidebar ul {
   list-style: none;
   padding: 0;
   margin: 0;
 }
-
 .sidebar ul li {
   margin-bottom: 1rem;
 }
-
 .sidebar ul li a {
   text-decoration: none;
   color: #fff;
   font-size: 1rem;
   transition: color 0.2s;
 }
-
 .sidebar ul li a:hover {
   color: #6c63ff;
 }
 
-/* 메인 콘텐츠 스타일 */
+/* ===== 메인 콘텐츠 ===== */
 .main-content {
+  margin-left: 220px;
   flex-grow: 1;
   padding: 2rem;
   background: #f8f9fa;
   min-height: 100vh;
+  transition: margin-left 0.3s ease-in-out;
+}
+.content-expanded {
+  margin-left: 0 !important;
 }
 
 /* 차트 */
@@ -85,7 +89,6 @@
   width: 100%;
   max-width: 100%;
 }
-
 canvas {
   width: 100% !important;
   height: auto !important;
@@ -96,29 +99,4 @@ canvas {
   font-size: 0.95rem;
   padding: 0.5em 0.75em;
   border-radius: 1em;
-}.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-}
-
-.sidebar {
-  width: 220px;
-  background-color: #343a40;
-  padding: 1rem;
-  flex-shrink: 0;
-}
-
-.main-content {
-  flex-grow: 1;
-  padding: 2rem;
-  background: #f8f9fa;
-}
-
-
-.sidebar-hidden {
-  display: none !important;
-}
-
-.content-expanded {
-  width: 100%;
 }

@@ -11,19 +11,16 @@
     {% block extra_css %}{% endblock %}
 </head>
 <body>
-<!--  사이드 바 -->
 <div class="dashboard-container d-flex">
-    {% include 'includes/sidebar.html' %}
 
-    <!-- 메인 컨텐츠 -->
-    <main class="main-content">
-        <button id="menu-toggle" class="btn btn-outline-secondary mb-3 d-lg-none">
-            ☰ 메뉴
-        </button>
-
-        {% block content %}{% endblock %}
-    </main>
+<!--  사이드 바 -->
+  {% include 'includes/sidebar.html' %}
+  <main class="main-content">
+    <button id="menu-toggle" class="btn btn-outline-secondary mb-3 d-lg-none">☰ 메뉴</button>
+    {% block content %}{% endblock %}
+  </main>
 </div>
+
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script src="{% static 'hotel/js/sidebar.js' %}"></script>
