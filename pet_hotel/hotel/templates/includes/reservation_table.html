@@ -1,0 +1,38 @@
+<table class="custom-table table">
+  <thead>
+    <tr>
+      <th>#</th>
+      <th>예약 ID</th>
+      <th>고객명</th>
+      <th>강아지명</th>
+      <th>체크인</th>
+      <th>체크아웃</th>
+      {% if show_action %}
+        <th>액션</th>
+      {% endif %}
+    </tr>
+  </thead>
+  <tbody>
+    {% for r in reservations %}
+    <tr class="{% if clickable %}clickable-row{% endif %}"
+        data-dog-id="{{ r.dog.id }}"
+        data-dog-name="{{ r.dog.name|escapejs }}"
+        data-dog-breed="{{ r.dog.breed|default:''|escapejs }}"
+        data-dog-age="{{ r.dog.age|default:'' }}">
+      <td>{{ forloop.counter }}</td>
+      <td>{{ r.id }}</td>
+      <td>{{ r.customer.name }}</td>
+      <td>
+        <span class="dog-name clickable-dog">{{ r.dog.name }}</span>
+      </td>
+      <td>{{ r.check_in|date:"n월 j일 H:i" }}</td>
+      <td>{{ r.check_out|date:"n월 j일 H:i" }}</td>
+      {% if show_action %}
+        <td>{{ r.action_buttons|safe }}</td>
+      {% endif %}
+    </tr>
+    {% empty %}
+    <tr><td colspan="7" class="text-center">데이터가 없습니다.</td></tr>
+    {% endfor %}
+  </tbody>
+</table>

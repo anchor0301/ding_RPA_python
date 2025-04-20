@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'hotel/css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+  <div class="list-header d-flex justify-content-between align-items-center mb-3">
+    <h1>입실한 강아지 목록 ({{ today|date:"Y년 n월 j일" }})</h1>
+    <input type="text" id="searchInput" class="search-input form-control w-25" placeholder="검색…" />
+  </div>
+
+  {% include "includes/reservation_table.html" with show_action=True clickable=False %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.getElementById('searchInput').addEventListener('keyup', e => {
+    const term = e.target.value.toLowerCase();
+    document.querySelectorAll('tbody tr').forEach(tr => {
+      tr.style.display = tr.textContent.toLowerCase().includes(term) ? '' : 'none';
+    });
+  });
+
+  document.querySelectorAll('.extend-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const confirmExtend = confirm('1박 연장하시겠습니까?');
+      if (!confirmExtend) return;
+      const resp = await fetch(`/hotel/reservation/${id}/extend/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+      });
+      const data = await resp.json();
+      if (data.success) location.reload();
+    });
+  });
+
+  document.querySelectorAll('.checkout-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const confirmOut = confirm('퇴실 처리하시겠습니까?');
+      if (!confirmOut) return;
+      const resp = await fetch(`/hotel/reservation/${id}/checkout/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+      });
+      const data = await resp.json();
+      if (data.success) location.reload();
+    });
+  });
+</script>
+{% endblock %}

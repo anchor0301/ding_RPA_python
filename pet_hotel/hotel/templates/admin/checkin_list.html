@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load tz %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'hotel/css/list.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="list-container">
+  <div class="list-header d-flex justify-content-between align-items-center mb-3">
+    <h1>입실 예정 강아지 목록 ({{ today|date:"Y년 n월 j일" }})</h1>
+    <input id="searchInput" class="search-input form-control w-25" placeholder="검색…" />
+  </div>
+
+  {% block reservation_table %}
+    {% include "includes/reservation_table.html" with show_action=True clickable=True %}
+  {% endblock %}
+</div>
+
+{# 강아지 정보 수정 모달 #}
+<div class="modal fade" id="dogModal" tabindex="-1" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <form id="dogForm">
+        {% csrf_token %}
+        <div class="modal-header">
+          <h5 class="modal-title">강아지 정보 수정</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <input type="hidden" id="dogId">
+          <div class="mb-3">
+            <label for="dogName" class="form-label">이름</label>
+            <input type="text" id="dogName" name="name" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="dogBreed" class="form-label">품종</label>
+            <input type="text" id="dogBreed" name="breed" class="form-control">
+          </div>
+          <div class="mb-3">
+            <label for="dogAge" class="form-label">나이</label>
+            <input type="number" id="dogAge" name="age" class="form-control" min="0">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">취소</button>
+          <button type="submit" class="btn btn-primary">저장</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}
+
+{% block action_buttons %}
+  <button class="btn btn-sm btn-danger cancel-btn" data-id="{{ r.id }}">예약 취소</button>
+  <button class="btn btn-sm btn-primary checkin-btn" data-id="{{ r.id }}">입실</button>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  document.querySelectorAll('.cancel-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      if (!confirm('정말로 이 예약을 취소하시겠습니까?')) return;
+
+      const resp = await fetch(`/hotel/reservation/${id}/cancel/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+      });
+      const data = await resp.json();
+      if (data.success) {
+        alert('예약이 취소되었습니다.');
+        location.reload();
+      } else {
+        alert('취소 실패!');
+      }
+    });
+  });
+
+  document.querySelectorAll('.checkin-btn').forEach(btn => {
+    btn.addEventListener('click', async () => {
+      const id = btn.dataset.id;
+      const confirmCheckin = confirm('정말로 이 강아지를 입실 처리하시겠습니까?');
+
+      if (!confirmCheckin) return;
+
+      const resp = await fetch(`/hotel/reservation/${id}/checkin/`, {
+        method: 'POST',
+        headers: { 'X-CSRFToken': '{{ csrf_token }}' }
+      });
+
+      const data = await resp.json();
+      if (data.success) {
+        alert('입실 처리되었습니다!');
+        location.reload();
+      } else {
+        alert('입실 처리 실패!');
+      }
+    });
+  });
+</script>
+{% endblock %}
