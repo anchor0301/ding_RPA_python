@@ -17,7 +17,7 @@
             <strong class="text-dark">🚪 입실 예정:</strong>
             <ul class="mb-0 ps-3 small text-dark">
                 {% for r in upcoming_checkins %}
-                <li>{{ r.dog.name }} <span class="text-muted">({{ r.check_in|date:"n월 j일 H:i" }} 입실)</span></li>
+                <li>{{ r.dog.name }} <span class="text-muted">({{ r.check_in|date:"n월 j일 H:i" }} 입실) {{r.check_in}}</span></li>
                 {% endfor %}
             </ul>
         </div>

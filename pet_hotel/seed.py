@@ -1,50 +1,51 @@
-#python manage.py shell < seed.py
-
-
-from hotel.models import Customer, Dog, Reservation
-from django.utils import timezone
-from datetime import timedelta
+import os
+import django
 import random
+from datetime import datetime, timedelta
 
-# 기존 데이터 초기화 (선택)
-Customer.objects.all().delete()
-Dog.objects.all().delete()
-Reservation.objects.all().delete()
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "your_project_name.settings")  # 수정 필요
+django.setup()
 
-# 기본 데이터
-customers = ["김철수", "이영희", "박민수", "최지우", "정하늘"]
-dogs = ["뽀삐", "초코", "몽이", "보리", "해피"]
-now = timezone.now()
+from hotel.models import Customer, Dog, Reservation  # 모델 경로에 따라 수정 필요
+from django.utils import timezone
 
-# 고객 생성
-customer_objs = {}
-for name in customers:
-    c = Customer.objects.create(name=name, phone="010-1234-5678")
-    customer_objs[name] = c
-
-# 반려견 생성
-dog_objs = {}
-for name in dogs:
-    owner = random.choice(list(customer_objs.values()))
-    d = Dog.objects.create(name=name, breed="믹스", age=random.randint(1, 10), owner=owner)
-    dog_objs[name] = d
-
-# 예약 생성
+names = ["김철수", "이영희", "박민수", "최지우", "정다은", "한지민", "강호동", "유재석", "서지훈", "노지현"]
+dog_names = ["초코", "보리", "해피", "뽀삐", "두리", "콩이", "달이", "별이", "몽이", "루비"]
+breeds = ["푸들", "말티즈", "비숑", "포메", "웰시코기", "믹스", "닥스훈트"]
+notes = [
+    "사람을 좋아해요", "간식 알레르기 있음", "짖음이 심함",
+    "분리불안 있음", "산책을 좋아해요", "귀 청소 시 싫어해요", "기타 특이사항 없음"
+]
 for _ in range(10):
-    dog = random.choice(list(dog_objs.values()))
-    customer = dog.owner
-    check_in = now - timedelta(days=random.randint(0, 3), hours=random.randint(0, 10))
-    check_out = check_in + timedelta(days=random.randint(1, 3), hours=random.randint(0, 10))
-    reservation_date = check_in - timedelta(days=1)
+    name = random.choice(names)
+    phone = f"010{random.randint(10000000, 99999999)}"
+    customer, _ = Customer.objects.get_or_create(name=name, phone=phone)
+
+    dog_name = random.choice(dog_names)
+    gender = random.choice(["수컷", "암컷"])
+    breed = random.choice(breeds)
+    weight = round(random.uniform(2.0, 10.0), 1)
+    dog = Dog.objects.create(name=dog_name, gender=gender, breed=breed, weight=weight, customer=customer)
+
+    # ✅ check_in 날짜 랜덤: 과거 / 오늘 / 미래
+    today = timezone.now()
+    day_offset = random.choice([
+        random.randint(-5, -1),  # 과거
+        0,                       # 오늘
+        random.randint(1, 5)     # 미래
+    ])
+    start_dt = today + timedelta(days=day_offset, hours=random.randint(0, 12))
+    end_dt = start_dt + timedelta(days=random.randint(1, 3), hours=random.randint(1, 4))
 
     Reservation.objects.create(
         customer=customer,
         dog=dog,
-        reservation_date=reservation_date.date(),
-        check_in=check_in,
-        check_out=check_out,
-        is_checked_in=random.choice([True, False]),
-        is_checked_out=random.choice([True, False])
+        check_in=start_dt,
+        check_out=end_dt,
+        is_checked_in=False,
+        is_checked_out=False,
+        status_info=random.choice(notes),
+        reservation_date=start_dt.date()
     )
 
-print("✅ 시간대-aware 더미 데이터 생성 완료!")
+print("✅ 더미 데이터 생성 완료 (과거/오늘/미래 포함)!")

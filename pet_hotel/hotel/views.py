@@ -11,16 +11,34 @@ from .models import Reservation, Dog
 
 
 def dashboard(request):
+    now = timezone.now()
     today = timezone.localdate()
+
+    # 기준 시간: 현재 ~ 2시간 후
+    within_2h = now + timedelta(hours=2)
 
     context = {
         'today': today,
-        'checkin_count': Reservation.objects.filter(check_in__date=today, is_checked_in=False, is_checked_out=False).count(),
-        'checkout_count': Reservation.objects.filter(check_out__date=today, is_checked_in=True, is_checked_out=False).count(),
+        'checkin_count': Reservation.objects.filter(check_in__date=today, is_checked_in=False,
+                                                    is_checked_out=False).count(),
+        'checkout_count': Reservation.objects.filter(check_out__date=today, is_checked_in=True,
+                                                     is_checked_out=False).count(),
         'reservation_count': Reservation.objects.filter(reservation_date=today).count(),
         'current_count': Reservation.objects.filter(is_checked_in=True, is_checked_out=False).count(),
-        'upcoming_checkins': Reservation.objects.filter(check_in__date=today, is_checked_in=False, is_checked_out=False).select_related('dog'),
-        'upcoming_checkouts': Reservation.objects.filter(check_out__date=today, is_checked_in=True, is_checked_out=False).select_related('dog'),
+        'upcoming_checkins': Reservation.objects.filter(
+            check_in__date=today,
+            is_checked_in=False,
+            is_checked_out=False,
+            check_in__lte=within_2h,
+            check_in__gte=now
+        ).select_related('dog'),
+        'upcoming_checkouts': Reservation.objects.filter(
+            check_out__date=today,
+            is_checked_in=True,
+            is_checked_out=False,
+            check_out__lte=within_2h,
+            check_out__gte=now
+        ).select_related('dog')
     }
 
     # 최근 7일 점유 현황
@@ -39,7 +57,8 @@ def dashboard(request):
 
 def checkin_list(request):
     today = timezone.localdate()
-    reservations = Reservation.objects.filter(check_in__date=today, is_checked_in=False, is_checked_out=False).select_related('dog', 'customer')
+    reservations = Reservation.objects.filter(check_in__date=today, is_checked_in=False,
+                                              is_checked_out=False).select_related('dog', 'customer')
 
     for r in reservations:
         r.action_buttons = f"""
@@ -91,7 +110,8 @@ def checkout_now(request, pk):
 
 def checkout_list(request):
     today = timezone.localdate()
-    reservations = Reservation.objects.filter(check_out__date=today, is_checked_in=True, is_checked_out=False).select_related('dog', 'customer')
+    reservations = Reservation.objects.filter(check_out__date=today, is_checked_in=True,
+                                              is_checked_out=False).select_related('dog', 'customer')
 
     for r in reservations:
         r.action_buttons = f"""
@@ -142,7 +162,8 @@ def cancel_reservation(request, pk):
 
 
 def current_dogs(request):
-    reservations = Reservation.objects.filter(is_checked_in=True, is_checked_out=False).select_related('dog', 'customer')
+    reservations = Reservation.objects.filter(is_checked_in=True, is_checked_out=False).select_related('dog',
+                                                                                                       'customer')
 
     for r in reservations:
         r.action_buttons = f"""
