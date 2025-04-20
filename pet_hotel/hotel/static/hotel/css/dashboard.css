@@ -1,13 +1,7 @@
-
 /* 대시보드 전체 그리드 */
 #dashboard {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 1.5rem;
-  padding: 1rem;
-  margin-top: 1.5rem;
+  padding: 1rem 0;
 }
-
 /* 카드 스타일 */
 .kpi-card {
   background: #f8f9fa;
@@ -17,72 +11,75 @@
   text-align: center;
   cursor: pointer;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+  height: 100%; /* 카드 높이 균일화 */
 }
 
-/* 카드 호버 효과 */
+
+/* 호버 시 부드러운 효과 */
 .kpi-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transform: translateY(-4px);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
 }
 
-/* 라벨(설명) 스타일 */
+/* 라벨(설명) */
 .kpi-card .label {
-  font-size: 0.9rem;
+  font-size: 1rem;
   color: #6c757d;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  font-weight: 500;
+  margin-bottom: 0.5rem;
 }
 
-/* 값(숫자) 스타일 */
+/* 숫자 */
 .kpi-card .value {
   font-size: 2.5rem;
   font-weight: bold;
-  margin-top: 0.25rem;
   color: #212529;
 }
 
 /* 전체 레이아웃 컨테이너 */
 .dashboard-container {
-    display: flex;
+  display: flex;
 }
 
 /* 사이드바 메뉴 스타일 */
 .sidebar {
-    width: 220px;
-    background-color: #343a40;
-    padding: 1rem;
-    min-height: 100vh;
+  width: 220px;
+  background-color: #343a40;
+  padding: 1rem;
+  min-height: 100vh;
 }
 
 /* 메뉴 아이템 스타일 */
 .sidebar ul {
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .sidebar ul li {
-    margin-bottom: 1rem;
+  margin-bottom: 1rem;
 }
 
 .sidebar ul li a {
-    text-decoration: none;
-    color: #fff;
-    font-size: 1rem;
-    transition: color 0.2s;
+  text-decoration: none;
+  color: #fff;
+  font-size: 1rem;
+  transition: color 0.2s;
 }
 
 .sidebar ul li a:hover {
-    color: #6c63ff;
+  color: #6c63ff;
 }
 
 /* 메인 콘텐츠 스타일 */
 .main-content {
-    flex-grow: 1;
-    padding: 2rem;
-    background: #f8f9fa;
-    min-height: 100vh;
+  flex-grow: 1;
+  padding: 2rem;
+  background: #f8f9fa;
+  min-height: 100vh;
 }
+
+/* 차트 */
 .chart-container {
   position: relative;
   width: 100%;
@@ -93,6 +90,8 @@ canvas {
   width: 100% !important;
   height: auto !important;
 }
+
+/* 뱃지 스타일 */
 .badge {
   font-size: 0.95rem;
   padding: 0.5em 0.75em;
