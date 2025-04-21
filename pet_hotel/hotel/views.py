@@ -172,3 +172,29 @@ def current_dogs(request):
         """
 
     return render(request, 'admin/current_dogs.html', {'today': timezone.localdate(), 'reservations': reservations})
+
+
+##### 칸반
+
+def reservation_kanban_view(request):
+    all_reservations = Reservation.objects.select_related('dog', 'customer')
+
+    categorized = {
+        '입실 전': [],
+        '입실 중': [],
+        '퇴실 완료': [],
+        '예약 취소': [],
+    }
+
+    for r in all_reservations:
+        if r.is_canceled:
+            categorized['예약 취소'].append(r)
+        elif r.is_checked_out:
+            categorized['퇴실 완료'].append(r)
+        elif r.is_checked_in:
+            categorized['입실 중'].append(r)
+        else:
+            categorized['입실 전'].append(r)
+
+    return render(request, 'hotel/reservation_kanban.html', {'reservations': categorized})
+

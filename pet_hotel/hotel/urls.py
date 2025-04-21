@@ -19,4 +19,6 @@ urlpatterns = [
     path('reservations/', views.reservation_list, name='reservation_list'),
     path('reservation/<int:pk>/cancel/', views.cancel_reservation, name='cancel_reservation'),
 
+    path("kanban/", views.reservation_kanban_view, name="reservation_kanban"),
+
 ]

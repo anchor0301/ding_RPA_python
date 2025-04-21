@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="kanban-board d-flex gap-4">
+  {% for status, items in reservations.items %}
+  <div class="kanban-column flex-fill border rounded p-2 bg-light">
+    <h5 class="text-center">{{ status }}</h5>
+    <div class="kanban-list d-flex flex-column gap-2">
+      {% for r in items %}
+      <div class="kanban-card p-2 bg-white shadow-sm rounded">
+        <strong>{{ r.dog.name }}</strong><br>
+        <small>{{ r.customer.name }}</small><br>
+        <span class="text-muted">체크인: {{ r.check_in|date:"Y-m-d" }}</span>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

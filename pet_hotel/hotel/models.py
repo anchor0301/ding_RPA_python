@@ -35,6 +35,7 @@ class Reservation(models.Model):
     check_out = models.DateTimeField()
     is_checked_in = models.BooleanField(default=False)
     is_checked_out = models.BooleanField(default=False)
+    is_canceled = models.BooleanField(default=False)
     status_info = models.TextField(blank=True)  # 기타 특이사항
 
     def __str__(self):
