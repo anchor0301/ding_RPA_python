@@ -1,0 +1,59 @@
+
+.kanban-card:hover {
+  background-color: #f4f6f8;  /* ✅ 기존보다 살짝 어두운 톤 */
+}
+
+
+.card-date {
+  font-size: 13px;
+  color: #555;
+  font-weight: 400;
+}
+
+/* 공통 */
+.card-tag.breed {
+  background-color: #f0f0f0;
+  color: #555;
+}
+
+.card-tag {
+  display: inline-block;
+  font-size: 12px;
+  font-weight: 500;
+  padding: 3px 10px;
+  border-radius: 5px; /* ✅ 둥글게! */
+  color: #333;
+  background-color: #eee;
+  margin-right: 4px;
+}
+
+/* 견종별 예시 */
+.card-tag.breed.푸들 {
+  background-color: #ffe0d2;
+  color: #b84d00;
+}
+
+.card-tag.breed.말티즈 {
+  background-color: #dbe9ff;
+  color: #225d9c;
+}
+
+.card-tag.breed.포메 {
+  background-color: #fdf0d5;
+  color: #946800;
+}
+
+.card-tag.breed.비숑 {
+  background-color: #f0e9ff;
+  color: #6a48a6;
+}
+
+.card-tag.breed.닥스훈트 {
+  background-color: #eee;
+  color: #3b3b3b;
+}
+
+.card-tag.breed.믹스 {
+  background-color: #d9ffd9;
+  color: #237c24;
+}

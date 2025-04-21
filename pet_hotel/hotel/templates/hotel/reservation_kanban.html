@@ -10,31 +10,63 @@
 
 <div class="kanban-board d-flex gap-3">
   {% for status_key, label in status_labels.items %}
-  <div class="kanban-column flex-fill bg-light border rounded p-2" data-status="{{ status_key }}"
-       ondrop="handleDrop(event)" ondragover="allowDrop(event)">
-    <h5 class="text-center  user-select-none">{{ label }}</h5>
-    <div class="kanban-list d-flex flex-column gap-2 min-vh-25">
+<div class="kanban-column flex-fill bg-light border rounded p-2" data-status="{{ status_key }}"
+     ondrop="handleDrop(event)"
+     ondragover="allowDrop(event)">
+  <!-- ✅ 제목은 항상 보이도록 유지 -->
+  <h5 class="text-center user-select-none toggle-header" data-target="{{ status_key }}">
+    <span class="toggle-icon" id="icon-{{ status_key }}">▼</span>
+    {{ label }} ({{ reservation_counts|get_item:status_key }})
+  </h5>
 
-      {% for r in reservations|get_item:status_key %}
-      <div class="kanban-card bg-white p-2 rounded shadow-sm"
-           id="card-{{ r.id }}"
-           draggable="true"
-           ondragstart="handleDragStart(event)"
-           data-id="{{ r.id }}">
-        <strong>{{ r.dog.name }}</strong><br>
-        <small>{{ r.customer.name }}</small><br>
-        <span class="text-muted">체크인: {{ r.check_in|date:"Y-m-d" }}</span>
-      </div>
-      {% empty %}
-      <div class="text-muted text-center small">예약 없음</div>
-      {% endfor %}
+  <!-- ✅ 카드 리스트 부분만 id 부여해서 숨길 수 있게 -->
+  <div class="kanban-list d-flex flex-column gap-2 min-vh-25" id="column-{{ status_key }}">
+    {% for r in reservations|get_item:status_key %}
+    <div class="kanban-card"
+     draggable="true"
+     ondragstart="handleDragStart(event)"
+     data-id="{{ r.id }}"
+     id="card-{{ r.id }}">
 
-    </div>
+  <div class="card-title">
+    {{ r.dog.name }}/전화번호/몸무게{{ r.dog.id }}/{{ r.dog.age }}
   </div>
-  {% endfor %}
+<div>
+  <span class="card-tag breed {{ r.dog.breed }}">{{ r.dog.breed }}</span>
+
+  {% if r.dog.gender == "male" %}
+    <span class="card-tag male">수컷 </span>
+  {% else %}
+    <span class="card-tag female">암컷 </span>
+  {% endif %}
+</div>
+  {% if r.notes %}
+    <div class="card-description">{{ r.notes }}</div>
+  {% endif %}
+
+  <div class="card-date">
+    {{ r.check_in|date:"m/d H:i" }} → {{ r.check_out|date:"m/d H:i" }}
+  </div>
+
+</div>
+
+    {% empty %}
+    <div class="text-muted text-center small">예약 없음</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endfor %}
+
 </div>
 
 {% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'hotel/css/kanban.css' %}">
+<link rel="stylesheet" href="{% static 'hotel/css/kanban_card.css' %}">
+{% endblock %}
+
 {% block extra_js %}
 <script>
   const csrfToken = "{{ csrf_token }}";

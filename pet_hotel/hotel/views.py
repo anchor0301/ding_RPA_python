@@ -197,6 +197,8 @@ def reservation_kanban_view(request):
         else:
             categorized['waiting'].append(r)
 
+    reservation_counts = {key: len(value) for key, value in categorized.items()}
+
     # 상태 key → 한글로 매핑
     status_labels = {
         'waiting': '입실 전',
@@ -207,6 +209,7 @@ def reservation_kanban_view(request):
     return render(request, 'hotel/reservation_kanban.html', {
         'reservations': categorized,
         'status_labels': status_labels,
+        'reservation_counts': reservation_counts,
     })
 
 @csrf_exempt
@@ -215,7 +218,6 @@ def update_reservation_status(request, reservation_id):
         data = json.loads(request.body)
         new_status = data.get("new_status")
         r = Reservation.objects.get(id=reservation_id)
-
         if new_status == "waiting":
             r.is_checked_in = False
             r.is_checked_out = False
