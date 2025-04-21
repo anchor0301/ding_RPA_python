@@ -22,5 +22,6 @@ urlpatterns = [
     path("kanban/", views.reservation_kanban_view, name="reservation_kanban"),
     path('reservation/<int:reservation_id>/update_status/', views.update_reservation_status,
          name='update_reservation_status'),
+    path("reservation/<int:reservation_id>/detail/", views.reservation_detail, name="reservation_detail"),
 
 ]

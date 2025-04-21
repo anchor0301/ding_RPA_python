@@ -1,0 +1,41 @@
+<div class="detail-section">
+  <h6 class="section-title">🐶 강아지 정보</h6>
+  <ul class="detail-list">
+    <li><span>이름:</span> {{ dog.name }}</li>
+    <li><span>견종:</span> {{ dog.breed }}</li>
+    <li><span>성별:</span> {{ dog.gender }}</li>
+    <li><span>나이:</span> {{ dog.age }}</li>
+    <li><span>특이사항:</span> {{ dog.notes|default:"-" }}</li>
+  </ul>
+</div>
+
+<div class="detail-section">
+  <h6 class="section-title">📊 이용 이력</h6>
+  <ul class="detail-list">
+    <li><span>전체 이용 횟수:</span> {{ total_visits }}회</li>
+    <li>
+      <span>마지막 이용:</span>
+      {% if last_visit %}
+        {{ last_visit.check_in|date:"Y-m-d" }} ~ {{ last_visit.check_out|date:"Y-m-d" }}
+      {% else %}
+        이번이 첫 예약입니다!
+      {% endif %}
+    </li>
+  </ul>
+</div>
+
+<div class="detail-section">
+  <h6 class="section-title">📅 예약 정보</h6>
+  <ul class="detail-list">
+    <li><span>예약일:</span> {{ reservation.reservation_date }}</li>
+    <li><span>체크인:</span> {{ reservation.check_in }}</li>
+    <li><span>체크아웃:</span> {{ reservation.check_out }}</li>
+  </ul>
+</div>
+
+{% if reservation.notes %}
+<div class="detail-section">
+  <h6 class="section-title">📝 메모</h6>
+  <div class="detail-note">{{ reservation.notes }}</div>
+</div>
+{% endif %}

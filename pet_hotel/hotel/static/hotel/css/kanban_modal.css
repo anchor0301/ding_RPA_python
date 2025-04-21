@@ -1,0 +1,43 @@
+.detail-section {
+  background-color: #f9f9f9;
+  border-radius: 12px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+}
+
+.section-title {
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 0.75rem;
+  color: #333;
+}
+
+.detail-list {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.detail-list li {
+  margin-bottom: 0.5rem;
+  font-size: 14px;
+  display: flex;
+  gap: 0.5rem;
+}
+
+.detail-list li span {
+  min-width: 100px;
+  font-weight: 500;
+  color: #555;
+}
+
+.detail-note {
+  font-size: 14px;
+  color: #444;
+  background-color: #fff;
+  padding: 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e5e5e5;
+  white-space: pre-wrap;
+}

@@ -30,6 +30,7 @@
 }
 
 .kanban-card:active {
+  opacity: 0.5;
   cursor: grabbing;
 }
 

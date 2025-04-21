@@ -26,7 +26,8 @@
      draggable="true"
      ondragstart="handleDragStart(event)"
      data-id="{{ r.id }}"
-     id="card-{{ r.id }}">
+     id="card-{{ r.id }}"
+     data-status="{{ status_key }}">
 
   <div class="card-title">
     {{ r.dog.name }}/전화번호/몸무게{{ r.dog.id }}/{{ r.dog.age }}
@@ -59,12 +60,30 @@
 {% endfor %}
 
 </div>
+<!-- 예약 상세 정보 모달 -->
+<div class="modal fade" id="reservationDetailModal" tabindex="-1" aria-labelledby="reservationDetailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reservationDetailLabel">예약 상세 정보</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        로딩 중...
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {% endblock %}
 
 {% block extra_css %}
 <link rel="stylesheet" href="{% static 'hotel/css/kanban.css' %}">
 <link rel="stylesheet" href="{% static 'hotel/css/kanban_card.css' %}">
+<link rel="stylesheet" href="{% static 'hotel/css/kanban_modal.css' %}">
 {% endblock %}
 
 {% block extra_js %}

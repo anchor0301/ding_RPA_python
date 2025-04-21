@@ -9,7 +9,9 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_POST
 from django.db.models import Q
 
+from django.template.loader import render_to_string
 from .models import Reservation, Dog
+from django.http import HttpResponse
 
 
 def dashboard(request):
@@ -212,6 +214,7 @@ def reservation_kanban_view(request):
         'reservation_counts': reservation_counts,
     })
 
+
 @csrf_exempt
 def update_reservation_status(request, reservation_id):
     if request.method == "POST":
@@ -240,3 +243,35 @@ def update_reservation_status(request, reservation_id):
     return JsonResponse({"success": False}, status=400)
 
 
+def reservation_detail(request, reservation_id):
+    reservation = get_object_or_404(Reservation, id=reservation_id)
+    dog = reservation.dog
+
+    # ✅ 실제 이용한 횟수: 입실했고, 취소 안 된 경우만
+    total_visits = Reservation.objects.filter(
+        dog=dog,
+        is_checked_in=True,
+        is_canceled=False
+    ).count()
+
+    # ✅ 해당 예약 전 마지막 이용: 현재 예약 이전 중, 입실 + 퇴실 + 미취소
+    last_visit = (
+        Reservation.objects
+        .filter(
+            dog=dog,
+            is_checked_in=True,
+            is_checked_out=True,
+            is_canceled=False,
+            id__lt=reservation.id
+        )
+        .order_by('-check_out')
+        .first()
+    )
+
+    html = render_to_string('hotel/reservation_detail_snippet.html', {
+        'reservation': reservation,
+        'dog': dog,
+        'total_visits': total_visits,
+        'last_visit': last_visit
+    })
+    return HttpResponse(html)
