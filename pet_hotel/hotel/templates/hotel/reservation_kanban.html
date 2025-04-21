@@ -29,6 +29,7 @@
      id="card-{{ r.id }}"
      data-status="{{ status_key }}">
 
+
   <div class="card-title">
     {{ r.dog.name }}/전화번호/몸무게{{ r.dog.id }}/{{ r.dog.age }}
   </div>
@@ -71,9 +72,13 @@
       <div class="modal-body" id="modalBody">
         로딩 중...
       </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
-      </div>
+      <div class="modal-footer justify-content-between">
+  <div class="quick-actions">
+
+ </div>
+  <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>
+
     </div>
   </div>
 </div>

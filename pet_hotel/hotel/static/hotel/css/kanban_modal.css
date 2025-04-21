@@ -41,3 +41,37 @@
   border: 1px solid #e5e5e5;
   white-space: pre-wrap;
 }
+.card-context-menu {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  z-index: 9999;
+  width: 160px;
+  font-size: 14px;
+}
+
+.card-context-menu ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.card-context-menu li {
+  padding: 10px;
+  cursor: pointer;
+  border-bottom: 1px solid #eee;
+}
+
+.card-context-menu li:last-child {
+  border-bottom: none;
+}
+
+.card-context-menu li:hover {
+  background-color: #f4f4f4;
+}
+
+.d-none {
+  display: none !important;
+}
