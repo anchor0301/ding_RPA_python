@@ -1,19 +1,44 @@
 {% extends "base.html" %}
+{% load static %}
+{% load dict_filters %}
+
+
 {% block content %}
-<div class="kanban-board d-flex gap-4">
-  {% for status, items in reservations.items %}
-  <div class="kanban-column flex-fill border rounded p-2 bg-light">
-    <h5 class="text-center">{{ status }}</h5>
-    <div class="kanban-list d-flex flex-column gap-2">
-      {% for r in items %}
-      <div class="kanban-card p-2 bg-white shadow-sm rounded">
+<div class="d-flex justify-content-between align-items-center my-4">
+  <h2>예약 상태 보드 (Kanban)</h2>
+</div>
+
+<div class="kanban-board d-flex gap-3">
+  {% for status_key, label in status_labels.items %}
+  <div class="kanban-column flex-fill bg-light border rounded p-2" data-status="{{ status_key }}"
+       ondrop="handleDrop(event)" ondragover="allowDrop(event)">
+    <h5 class="text-center  user-select-none">{{ label }}</h5>
+    <div class="kanban-list d-flex flex-column gap-2 min-vh-25">
+
+      {% for r in reservations|get_item:status_key %}
+      <div class="kanban-card bg-white p-2 rounded shadow-sm"
+           id="card-{{ r.id }}"
+           draggable="true"
+           ondragstart="handleDragStart(event)"
+           data-id="{{ r.id }}">
         <strong>{{ r.dog.name }}</strong><br>
         <small>{{ r.customer.name }}</small><br>
         <span class="text-muted">체크인: {{ r.check_in|date:"Y-m-d" }}</span>
       </div>
+      {% empty %}
+      <div class="text-muted text-center small">예약 없음</div>
       {% endfor %}
+
     </div>
   </div>
   {% endfor %}
 </div>
+
 {% endblock %}
+{% block extra_js %}
+<script>
+  const csrfToken = "{{ csrf_token }}";
+</script>
+<script src="{% static 'hotel/js/kanban.js' %}"></script>
+{% endblock %}
+

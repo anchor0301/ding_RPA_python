@@ -1,4 +1,6 @@
 # hotel/views.py
+from django.views.decorators.csrf import csrf_exempt
+
 import json
 from django.utils import timezone
 from datetime import timedelta
@@ -175,26 +177,64 @@ def current_dogs(request):
 
 
 ##### 칸반
-
 def reservation_kanban_view(request):
-    all_reservations = Reservation.objects.select_related('dog', 'customer')
-
     categorized = {
-        '입실 전': [],
-        '입실 중': [],
-        '퇴실 완료': [],
-        '예약 취소': [],
+        'waiting': [],
+        'checked_in': [],
+        'checked_out': [],
+        'canceled': [],
     }
+
+    all_reservations = Reservation.objects.select_related('dog', 'customer')
 
     for r in all_reservations:
         if r.is_canceled:
-            categorized['예약 취소'].append(r)
+            categorized['canceled'].append(r)
         elif r.is_checked_out:
-            categorized['퇴실 완료'].append(r)
+            categorized['checked_out'].append(r)
         elif r.is_checked_in:
-            categorized['입실 중'].append(r)
+            categorized['checked_in'].append(r)
         else:
-            categorized['입실 전'].append(r)
+            categorized['waiting'].append(r)
 
-    return render(request, 'hotel/reservation_kanban.html', {'reservations': categorized})
+    # 상태 key → 한글로 매핑
+    status_labels = {
+        'waiting': '입실 전',
+        'checked_in': '입실 중',
+        'checked_out': '퇴실 완료',
+        'canceled': '예약 취소',
+    }
+    return render(request, 'hotel/reservation_kanban.html', {
+        'reservations': categorized,
+        'status_labels': status_labels,
+    })
+
+@csrf_exempt
+def update_reservation_status(request, reservation_id):
+    if request.method == "POST":
+        data = json.loads(request.body)
+        new_status = data.get("new_status")
+        r = Reservation.objects.get(id=reservation_id)
+
+        if new_status == "waiting":
+            r.is_checked_in = False
+            r.is_checked_out = False
+            r.is_canceled = False
+        elif new_status == "checked_in":
+            r.is_checked_in = True
+            r.is_checked_out = False
+            r.is_canceled = False
+        elif new_status == "checked_out":
+            r.is_checked_in = True
+            r.is_checked_out = True
+            r.is_canceled = False
+        elif new_status == "canceled":
+            r.is_canceled = True
+            r.is_checked_in = False
+            r.is_checked_out = False
+
+        r.save()
+        return JsonResponse({"success": True})
+    return JsonResponse({"success": False}, status=400)
+
 
