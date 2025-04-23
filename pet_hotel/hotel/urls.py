@@ -24,4 +24,9 @@ urlpatterns = [
          name='update_reservation_status'),
     path("reservation/<int:reservation_id>/detail/", views.reservation_detail, name="reservation_detail"),
 
+    # 동의서 서명
+    path('agreement/<uuid:token>/', views.agreement_view, name='agreement'),
+    path('agreement/<uuid:token>/submit/', views.agreement_submit, name='agreement_submit'),
+    path('agreement/reserve/', views.reserve_view, name='reserve')
+
 ]

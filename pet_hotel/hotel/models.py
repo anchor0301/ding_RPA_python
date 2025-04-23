@@ -1,5 +1,6 @@
 # hotel/models.py
 from django.db import models
+import uuid
 
 GENDER_CHOICES = (
     ('수컷', '수컷'),
@@ -10,11 +11,16 @@ GENDER_CHOICES = (
 class Customer(models.Model):
     name = models.CharField(max_length=100)
     phone = models.CharField(max_length=20)
+    address = models.CharField(max_length=200, blank=True)
+    notes = models.TextField(blank=True)
+
+    token = models.UUIDField(default=uuid.uuid4, unique=True, null=True, editable=False)  # 1회용 링크용
+    agreement_signed = models.BooleanField(default=False)
+
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f"{self.name} ({self.phone})"
-
 
 class Dog(models.Model):
     name = models.CharField(max_length=100)
@@ -22,6 +28,7 @@ class Dog(models.Model):
     weight = models.FloatField()
     breed = models.CharField(max_length=100)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='dogs')
+
 
     def __str__(self):
         return f"{self.name} ({self.breed})"

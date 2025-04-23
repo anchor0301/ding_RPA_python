@@ -1,7 +1,7 @@
 .kanban-board {
   display: flex;
-  gap: 1rem;
-  margin-bottom: 2rem;
+  flex-wrap: nowrap;
+  overflow-x: auto;
 }
 
 .kanban-column {
@@ -43,4 +43,16 @@
 
 .d-none {
   display: none !important;
+}
+
+/* 모바일 모드일 때 카드 드래그 막기 */
+body.mobile-mode .kanban-card {
+  pointer-events: none;
+  cursor: default;
+}
+
+/* 모바일에선 토글 버튼 크게 */
+body.mobile-mode .toggle-header {
+  font-size: 1.1rem;
+  padding: 1rem 1.5rem;
 }
