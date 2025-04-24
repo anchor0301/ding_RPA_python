@@ -41,7 +41,7 @@ def customer_start(request):
             )
             return redirect(f'/hotel/register_dog/?customer_id={new_customer.id}')
 
-    return render(request, 'hotel/customer_start.html')
+    return render(request, 'admin/admin_register_make_uuid.html')
 
 
 
