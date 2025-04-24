@@ -1,0 +1,17 @@
+{% block content %}
+<div class="container mt-5">
+  <h2>고객 정보 입력</h2>
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label for="name" class="form-label">이름</label>
+      <input type="text" class="form-control" name="name" value="{{ customer.name }}" required>
+    </div>
+    <div class="mb-3">
+      <label for="phone" class="form-label">전화번호</label>
+      <input type="text" class="form-control" name="phone" value="{{ customer.phone }}" required>
+    </div>
+    <button type="submit" class="btn btn-primary">다음으로</button>
+  </form>
+</div>
+{% endblock %}

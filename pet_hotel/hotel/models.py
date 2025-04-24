@@ -29,6 +29,12 @@ class Dog(models.Model):
     breed = models.CharField(max_length=100)
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='dogs')
 
+    special_note = models.TextField(blank=True, help_text="견종 특이사항")
+    neutered = models.BooleanField(default=False, verbose_name="중성화 여부")
+    vaccinated = models.BooleanField(default=False, verbose_name="접종 완료 여부")
+    bites = models.BooleanField(default=False, verbose_name="입질 있음")
+    separation_anxiety = models.BooleanField(default=False, verbose_name="분리불안")
+    timid = models.BooleanField(default=False, verbose_name="겁이 많음")
 
     def __str__(self):
         return f"{self.name} ({self.breed})"

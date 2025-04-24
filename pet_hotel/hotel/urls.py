@@ -27,6 +27,17 @@ urlpatterns = [
     # 동의서 서명
     path('agreement/<uuid:token>/', views.agreement_view, name='agreement'),
     path('agreement/<uuid:token>/submit/', views.agreement_submit, name='agreement_submit'),
-    path('agreement/reserve/', views.reserve_view, name='reserve')
+    path('agreement/reserve/', views.reserve_view, name='reserve'),
+
+    #고객 관련
+    path('start/', views.customer_start, name='start'),
+    path('register_customer/', views.register_customer, name='register_customer'),
+    path('register_customer/', views.register_customer, name='register_customer'),
+    path('register_dog/', views.register_dog, name='register_dog'),
+    path('admin_register_dog/', views.admin_register_dog, name='admin_register_dog'),
+    path('generate_link/', views.create_agreement_link, name='generate_link'),
+
+    path('generate_link/', views.create_agreement_link, name='generate_link'),  # ✅ 여기에 반드시 있어야 함!
+    path('admin_register_customer/', views.admin_register_customer, name='admin_register_customer'),
 
 ]
