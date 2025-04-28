@@ -1,3 +1,6 @@
+{% extends "public_base.html" %}
+
+{% block content %}
 <h2>{{ customer.name }} 님의 예약</h2>
 
 <form method="post">
@@ -16,5 +19,10 @@
   <label>체크아웃 날짜:</label>
   <input type="date" name="check_out">
 
+  <label>참고사항:</label>
+  <input type="text" name="notes">
+
   <button type="submit">예약하기 🐾</button>
 </form>
+
+{% endblock %}

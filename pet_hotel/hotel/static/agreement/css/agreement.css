@@ -1,0 +1,15 @@
+/* agreement/css/agreement.css */
+
+#signature-pad {
+  /* 화면에 보이는 크기 */
+  width: 300px;
+  height: 200px;
+  /* 그리기 해상도는 유지하되, 보이는 크기만 조절 */
+  /* border: 1px solid #ccc; 이미 style 인라인에 있다면 제거해도 됩니다 */
+  border: 1px solid #ccc;
+}
+
+canvas {
+    width: 70% !important;
+    height: auto !important;
+}

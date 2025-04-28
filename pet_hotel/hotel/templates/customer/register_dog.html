@@ -1,9 +1,8 @@
-{% extends 'base.html' %}
-
+{% extends "public_base.html" %}
 {% block content %}
 <div class="container mt-5">
   <h2>🐾 {{ customer.name }} 님의 강아지를 등록해주세요</h2>
-  <form method="post">
+  <form method="post" >
     {% csrf_token %}
 
     <div class="mb-3">

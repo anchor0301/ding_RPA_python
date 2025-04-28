@@ -10,8 +10,7 @@ GENDER_CHOICES = (
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
-    phone = models.CharField(max_length=20)
-    address = models.CharField(max_length=200, blank=True)
+    phone = models.CharField(max_length=20, unique=True)
     notes = models.TextField(blank=True)
 
     token = models.UUIDField(default=uuid.uuid4, unique=True, null=True, editable=False)  # 1회용 링크용
@@ -21,6 +20,7 @@ class Customer(models.Model):
 
     def __str__(self):
         return f"{self.name} ({self.phone})"
+
 
 class Dog(models.Model):
     name = models.CharField(max_length=100)
@@ -50,6 +50,8 @@ class Reservation(models.Model):
     is_checked_out = models.BooleanField(default=False)
     is_canceled = models.BooleanField(default=False)
     status_info = models.TextField(blank=True)  # 기타 특이사항
+
+    notes = models.TextField("참고사항", blank=True, null=True)
 
     def __str__(self):
         return f"{self.dog.name} 예약 ({self.check_in.strftime('%Y-%m-%d')})"
