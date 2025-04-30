@@ -21,7 +21,6 @@ from django.utils.timezone import make_aware
 from datetime import datetime
 
 
-
 def admin_register_customer(request):
     if request.method == 'POST':
         name = request.POST.get('name')
@@ -70,21 +69,26 @@ def admin_register_dog(request):
     return render(request, 'hotel/admin_register_dog.html', {'customers': customers})
 
 
-def create_agreement_link(request):
-    if request.method == 'POST':
-        phone = request.POST.get('phone')
-        name = request.POST.get('name', '')  # 없으면 빈 문자열
+def generate_link(request):
+    if request.method != 'POST':
+        return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
 
-        # 전화번호 기준으로만 조회 또는 생성
-        customer, created = Customer.objects.get_or_create(phone=phone, defaults={'name': name})
+    phone = request.POST.get('phone')
+    if not phone:
+        return JsonResponse({'error': '전화번호를 입력해주세요.'}, status=400)
 
-        if not customer.token:
-            customer.token = uuid.uuid4()
-            customer.save()
+    qs = Customer.objects.filter(phone=phone).order_by('-id')  # id 역순, 가장 최신 것을 우선
+    if not qs.exists():
+        return JsonResponse({'error': '해당 전화번호의 고객을 찾을 수 없습니다.'}, status=404)
 
-        url = request.build_absolute_uri(f'/hotel/agreement/{customer.token}/')
-        return JsonResponse({'url': url})
+    customer = qs.first()
+    customer.token = uuid.uuid4()
+    customer.save()
 
+    link = request.build_absolute_uri(
+        reverse('customer:agreement', args=[str(customer.token)])
+    )
+    return JsonResponse({'url': link})
 
 def checkout_list(request):
     today = timezone.localdate()
@@ -98,7 +102,6 @@ def checkout_list(request):
         """
 
     return render(request, 'admin/checkout_list.html', {'today': today, 'reservations': reservations})
-
 
 
 def reservation_list(request):
@@ -134,4 +137,3 @@ def current_dogs(request):
         """
 
     return render(request, 'admin/current_dogs.html', {'today': timezone.localdate(), 'reservations': reservations})
-

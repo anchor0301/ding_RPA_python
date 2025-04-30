@@ -1,4 +1,3 @@
-
 import uuid
 
 from django.views.decorators.csrf import csrf_exempt
@@ -22,118 +21,209 @@ from django.utils.timezone import make_aware
 from datetime import datetime
 
 
+def flow_view(request, token):
+    print("어디로 가야하지?")
+    customer = get_object_or_404(Customer, token=token)
+    # 고객 기본 정보 작성 여부
+    if not (customer.name and customer.phone):
+        print('고객 생성 접속')
+        return redirect('customer:register_customer', token=token)
+    # 강아지 정보 여부
+    if not customer.dogs.exists():
+        print('애견 생성 접속')
+        return redirect('customer:register_dog', token=token)
+    # 동의서 서명 여부
+    if not customer.agreement_signed:
+        print("동의서 작성 접속")
+        return redirect('customer:agreement_write', token=token)
+    # 준비 완료 → 예약 화면으로
+    return redirect('customer:reservation_form', token=token)
 
-def register_customer(request):
-    token = request.GET.get('token')
+
+@require_POST
+def generate_agreement_link(request):
+    phone = request.POST.get('phone')
+
+    if not phone:
+        return JsonResponse({'error': '전화번호를 입력해주세요.'}, status=400)
+    qs = Customer.objects.filter(phone=phone).order_by('-id')
+    if qs.exists():
+        customer = qs.first()
+        customer.token = uuid.uuid4()
+        customer.agreement_signed = False
+        customer.save()
+        # 필요에 따라 동의서 또는 예약으로
+        if customer.name and customer.phone and customer.dogs.exists() and customer.agreement_signed:
+            target = 'customer:reserve'
+        else:
+            target = 'customer:agreement'
+        url = request.build_absolute_uri(reverse(target, args=[str(customer.token)]))
+        return JsonResponse({'url': url})
+    # 신규 고객
+    token = uuid.uuid4()
+    Customer.objects.create(name='', phone=phone, token=token, agreement_signed=False)
+    url = request.build_absolute_uri(reverse('customer:register_customer', args=[str(token)]))
+    return JsonResponse({'new': True, 'url': url})
+
+
+def register_customer(request, token):
+    customer = Customer.objects.filter(token=token).first()
+    if not customer:
+        return render(request, 'customer/expired.html')
+
     customer = get_object_or_404(Customer, token=token)
 
     if request.method == 'POST':
-        customer.name = request.POST.get('name')
-        customer.phone = request.POST.get('phone')
+        customer.name = request.POST.get('name', '') or '미작성'
+        customer.phone = request.POST.get('phone', '')
         customer.save()
-        return redirect(f'/hotel/agreement/{customer.token}/')  # 다시 agreement 흐름으로
+        return redirect('customer:agreement', token=token)
+    return render(request, 'customer/register_customer.html', {'customer': customer})
 
-    return render(request, 'agreement/register_customer.html', {'customer': customer})
 
-
-def reserve_view(request):
-    token = request.GET.get("token")
-    if not token:
-        return HttpResponseForbidden("⚠️ 접근 권한이 없습니다.")
-
+def register_dog(request, customer_id=None, token=None):
     customer = Customer.objects.filter(token=token).first()
-    if not customer or not customer.agreement_signed:
-        return HttpResponseForbidden("⚠️ 동의서 서명 후 유효한 링크로만 예약할 수 있습니다.")
+    if not customer:
+        return render(request, 'customer/expired.html')
 
-    # ✅ 이미 예약 완료한 경우 (중복 예약 방지)
-    if Reservation.objects.filter(customer=customer).exists():
-        return render(request, 'agreement/already_reserved.html', {'customer': customer})
-
-    if request.method == 'POST':
-        dog_id = request.POST.get("dog_id")
-        check_in = request.POST.get("check_in")
-        check_out = request.POST.get("check_out")
-
-        try:
-            dog = Dog.objects.get(id=dog_id, customer=customer)
-
-            Reservation.objects.create(
-                customer=customer,
-                dog=dog,
-                reservation_date=datetime.now().date(),
-                check_in=make_aware(datetime.strptime(check_in, "%Y-%m-%d")),
-                check_out=make_aware(datetime.strptime(check_out, "%Y-%m-%d")),
-                is_checked_in=False,
-                is_checked_out=False
-            )
-
-            # ✅ 예약 완료 후 token 무효화!
-            customer.token = None
-            customer.save()
-
-            return render(request, 'agreement/reserve_done.html', {'dog': dog})
-
-        except Exception as e:
-            return HttpResponseForbidden(f"예약 처리 중 오류 발생: {e}")
-
-    dogs = customer.dogs.all()
-    return render(request, 'agreement/reserve.html', {
-        'customer': customer,
-        'dogs': dogs
-    })
-
-
-def register_dog(request):
-    customer_id = request.GET.get("customer_id")
-    customer = get_object_or_404(Customer, id=customer_id)
-
+    if customer_id:
+        customer = get_object_or_404(Customer, id=customer_id)
+    else:
+        customer = get_object_or_404(Customer, token=token)
     if request.method == 'POST':
         Dog.objects.create(
             customer=customer,
-            name=request.POST.get("name"),
-            breed=request.POST.get("breed"),
-            weight=request.POST.get("weight"),
-            gender=request.POST.get("gender"),
-            special_note=request.POST.get("special_note"),
-            neutered=bool(request.POST.get("neutered")),
-            vaccinated=bool(request.POST.get("vaccinated")),
-            bites=bool(request.POST.get("bites")),
-            separation_anxiety=bool(request.POST.get("separation_anxiety")),
-            timid=bool(request.POST.get("timid")),
+            name=request.POST.get('name'),
+            breed=request.POST.get('breed'),
+            weight=request.POST.get('weight'),
+            gender=request.POST.get('gender'),
+            special_note=request.POST.get('special_note'),
+            neutered=bool(request.POST.get('neutered')),
+            vaccinated=bool(request.POST.get('vaccinated')),
+            bites=bool(request.POST.get('bites')),
+            separation_anxiety=bool(request.POST.get('separation_anxiety')),
+            timid=bool(request.POST.get('timid')),
         )
-        return redirect(f'/hotel/agreement/{customer.token}/')
+        return redirect('customer:agreement_write', token=customer.token)
+    return render(request, 'customer/register_dog.html', {'customer': customer})
 
-    return render(request, 'agreement/register_dog.html', {'customer': customer})
+
+def reserve(request, token):
+    """
+    Path parameter로 받은 token을 통해 모든 조건을 체크하고 중복 제출을 방지함
+    """
+    customer = get_object_or_404(Customer, token=token)
+    # 이미 예약했으면 중복 방지
+    if Reservation.objects.filter(customer=customer).exists():
+        print("이미 예약함")
+        return render(request, 'customer/reservation_submit.html', {'customer': customer})
+
+    # 예약 가능 상태인지 검증
+    if not (customer.name and customer.phone):  # 고객 정보 여부 체크
+        print("고객 정보 없음")
+        return redirect('customer:register_customer', token=token)
+    if not customer.dogs.exists():  # 애견 정보 여부 체크
+        print("애견 정보 없음")
+        return redirect('customer:register_dog', token=token)
+    if not customer.agreement_signed:  # 동의서 여부 체크
+        print("동의서 없음")
+        return redirect('customer:agreement_write', token=token)
+
+    # 폼 데이터 처리
+    dog_id = request.POST.get('dog_id')
+    check_in = request.POST.get('check_in')
+    check_out = request.POST.get('check_out')
+    notes = request.POST.get('notes', '').strip()
+
+    dog = get_object_or_404(Dog, id=dog_id, customer=customer)
+
+    reservation = Reservation.objects.create(
+        customer=customer,
+        dog=dog,
+        reservation_date=timezone.now(),
+        check_in=make_aware(datetime.strptime(check_in, '%Y-%m-%d')),
+        check_out=make_aware(datetime.strptime(check_out, '%Y-%m-%d')),
+        notes=notes,
+    )
+    # 예약 후 토큰 초기화하여 재사용 방지
+    customer.token = None
+    customer.save()
+    return render(request, 'customer/reservation_submit.html', {'customer': customer, 'reservation': reservation})
 
 
 @csrf_exempt
-def agreement_submit(request, token):
-    if request.method == 'POST':
-        customer = Customer.objects.filter(token=token).first()
-        if customer:
-            customer.agreement_signed = True
-            customer.save()
+def agreement_write(request, token):
+    """
+        동의서 작성 페이지를 렌더링합니다.
+        GET 요청 시 서명 캔버스와 동의서 내용을 표시합니다.
+        """
 
-            # ✅ 예약 페이지까지는 token 유지!
-            return redirect(reverse('hotel:reserve') + f'?token={customer.token}')
+    customer = Customer.objects.filter(token=token).first()
+    if not customer:
+        return render(request, 'customer/expired.html')
 
-    return redirect('hotel:agreement', token=token)
-
-
-def agreement_view(request, token):
+    print("동의서 작성 페이지")
     customer = get_object_or_404(Customer, token=token)
+    return render(request, 'customer/agreement_write.html', {'customer': customer})
 
-    # 1. 고객 정보가 없거나 미완성된 경우
-    if not customer.name or not customer.phone:
-        return redirect(f'/hotel/register_customer/?token={token}')
 
-    # 2. 강아지 정보가 없는 경우
-    if not customer.dogs.exists():
-        return redirect(f'/hotel/register_dog/?customer_id={customer.id}')
+def reservation_form(request, token):
+    """
+    GET 요청 시 고객(token) 정보로 강아지 목록을 가져와
+    reservation_form.html 템플릿에 전달합니다.
+    이미 예약된 고객은 중복 방지를 위해 이미 예약 안내 페이지로 보냅니다.
+    """
+    print("예약 페이지")
+    customer = Customer.objects.filter(token=token).first()
+    if not customer:
+        return render(request, 'customer/expired.html')
 
-    # 3. 고객 정보와 강아지 정보가 모두 있음 → 동의서 페이지
-    if customer.agreement_signed:
-        return redirect(f'/hotel/reserve/?token={token}')
+    # 3) 예약 가능한 강아지 목록 가져오기
+    dogs = customer.dogs.all()
 
-    return render(request, 'agreement/form.html', {'customer': customer})
+    # 4) 폼 렌더링
+    return render(request, 'customer/reservation_form.html', {
+        'customer': customer,
+        'dogs': dogs,
+    })
 
+
+@require_POST
+def reservation_submit(request, token):
+    """
+    예약 완료 페이지, POST 요청 처리 후 token 초기화 및 완료 템플릿 렌더링
+    """
+
+    customer = Customer.objects.filter(token=token).first()
+    if not customer:
+        return render(request, 'customer/expired.html')
+
+    customer = get_object_or_404(Customer, token=token)
+    # 이미 예약했다면 중복 방지
+    if not customer:
+        return render(request, 'customer/expired.html')
+
+    dog_id = request.POST.get('dog_id')
+    check_in = request.POST.get('check_in')
+    check_out = request.POST.get('check_out')
+    notes = request.POST.get('notes', '').strip()
+    dog = get_object_or_404(Dog, id=dog_id, customer=customer)
+
+    reservation = Reservation.objects.create(
+        customer=customer,
+        dog=dog,
+        reservation_date=timezone.now(),
+        check_in=make_aware(datetime.strptime(check_in, '%Y-%m-%d')),
+        check_out=make_aware(datetime.strptime(check_out, '%Y-%m-%d')),
+        notes=notes,
+    )
+
+    # token 초기화 → 재사용 방지
+    customer.token = None
+    customer.save()
+
+    return render(request, 'customer/reservation_submit.html', {
+        'customer': customer,
+        'reservation': reservation,
+        'dog': dog
+    })

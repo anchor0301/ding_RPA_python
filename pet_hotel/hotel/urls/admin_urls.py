@@ -21,7 +21,11 @@ urlpatterns = [
     path('reservations/', views.reservation_list, name='reservation_list'),
     path('reservation/<int:pk>/cancel/', views.cancel_reservation, name='cancel_reservation'),
 
+    #칸반
     path("kanban/", views.reservation_kanban_view, name="reservation_kanban"),
+
+    # 링크 생성
+    path('generate_link/', views.generate_link, name='generate_link'),
 
     path('reservation/<int:reservation_id>/update_status/', views.update_reservation_status,
          name='update_reservation_status'),

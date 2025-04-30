@@ -7,23 +7,19 @@ from .. import views
 app_name = 'customer'
 
 urlpatterns = [
-    path(
-        'agreement/<uuid:token>/',
-        views.reserve_view,
-        name='agreement'
-    ),
-    # 2) **reserve** 뷰에도 토큰을 path로 받도록 변경
-    path('agreement/<uuid:token>/reserve/', views.reserve_view, name='reserve'),
 
-    # 고객 관련
-    path('register_customer/<uuid:token>/', views.register_customer, name='register_customer'), #고객정보 추가
-    path('register_dog/', views.register_dog, name='register_dog'), # 강아지 정보 추가
+    # 1. Flow 허브 (여기서 register → dog → agreement → reservation 로 분기)
+    path('agreement/<uuid:token>/', views.flow_view, name='agreement'),
 
-    path('generate_link/', views.generate_agreement_link, name='generate_link'),  # ✅ 여기에 반드시 있어야 함!
+    # 2. 고객 정보 등록 (GET/POST)
+    path('agreement/<uuid:token>/register/customer/', views.register_customer, name='register_customer'),
+    # 3. 강아지 정보 등록
+    path('agreement/<uuid:token>/register/dog/', views.register_dog, name='register_dog'),
 
+    # 4. 동의서 페이지
+    path('agreement/<uuid:token>/write/', views.agreement_write, name='agreement_write'),
 
-    path('agreement/<uuid:token>/submit/', views.agreement_submit, name='agreement_submit'),
-    path('admin_register_dog/', views.admin_register_dog, name='admin_register_dog'), # 어드민 강아지 정보 추가
+    # 5. 예약 폼 (GET) / 예약 처리 (POST)
+    path('agreement/<uuid:token>/reservation/', views.reservation_form, name='reservation_form'),
+    path('agreement/<uuid:token>/reservation/submit/', views.reservation_submit, name='reservation_submit'),
 ]
-
-

@@ -3,7 +3,7 @@
 {% block content %}
 <h2>{{ customer.name }} 님의 예약</h2>
 
-<form method="post">
+<form method="post" action="{% url 'customer:reservation_submit' customer.token %}">
   {% csrf_token %}
 
   <label for="dog">강아지 선택:</label>

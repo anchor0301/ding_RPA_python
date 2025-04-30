@@ -1,11 +1,9 @@
-{% extends 'public_base.html' %}
-
-{% block title %}링크 만료{% endblock %}
+{% extends "public_base.html" %}
 
 {% block content %}
-<div class="text-center py-5">
-    <h1 class="mb-4">😢 링크가 만료되었습니다</h1>
-    <p>해당 링크는 이미 사용되었거나 만료되었습니다.<br>궁금한 사항은 사장님께 문의해 주세요.</p>
-    <a href="/" class="btn btn-primary mt-4">홈으로 가기</a>
+<div class="expired-container">
+  <h2>🔒 링크가 만료되었거나 유효하지 않습니다</h2>
+  <p>죄송합니다. 이 링크의 유효기간이 만료되었거나 잘못된 접근입니다.</p>
+
 </div>
 {% endblock %}
