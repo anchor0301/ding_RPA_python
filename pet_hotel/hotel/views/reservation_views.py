@@ -20,6 +20,9 @@ from django.contrib import admin
 from django.utils.timezone import make_aware
 from datetime import datetime
 
+import base64
+from django.core.files.base import ContentFile
+
 
 def flow_view(request, token):
     print("어디로 가야하지?")
@@ -165,6 +168,57 @@ def agreement_write(request, token):
     print("동의서 작성 페이지")
     customer = get_object_or_404(Customer, token=token)
     return render(request, 'customer/agreement_write.html', {'customer': customer})
+
+
+@csrf_exempt
+def agreement_submit(request):
+    """
+    POST된 Base64 서명 이미지를 디코딩해 저장하고,
+    agreement_signed=True로 표시한 뒤 예약 폼으로 이동
+    """
+    token = request.GET.get('token')
+    if request.method == 'POST':
+        customer = get_object_or_404(Customer, token=token)
+        raw = request.POST.get('signature')
+        header, imgstr = raw.split(';base64,')
+        ext = header.split('/')[-1]  # e.g. 'png'
+        data = base64.b64decode(imgstr)
+
+        # 파일명: 날짜_성함_전화번호_signature.ext
+        today = timezone.localtime().strftime('%Y%m%d')
+        safe_name = customer.name.replace(' ', '')
+        phone = customer.phone
+        filename = f"{today}_{safe_name}_{phone}_signature.{ext}"
+
+        customer.reservation_signature.save(filename, ContentFile(data), save=False)
+
+        customer.agreement_signed = True
+        customer.save()
+        return redirect('customer:reservation_form', token=token)
+    return redirect('customer:agreement', token=token)
+
+
+@csrf_exempt
+def grooming_agreement_submit(request):
+    token = request.GET.get('token')
+    customer = get_object_or_404(Customer, token=token)
+    if request.method == 'POST':
+        raw = request.POST.get('signature')
+        header, imgstr = raw.split(';base64,')
+        ext = header.split('/')[-1]
+        data = base64.b64decode(imgstr)
+
+        # 파일명 생성: YYYYMMDD_이름_전화_그루밍.png
+        today = timezone.localtime().strftime('%Y%m%d')
+        safe_name = customer.name.replace(' ', '')
+        phone = customer.phone
+        filename = f"{today}_{safe_name}_{phone}_grooming.{ext}"
+
+        customer.grooming_signature.save(filename, ContentFile(data), save=False)
+        customer.save()
+        # 저장 후 이동할 URL로 리다이렉트
+        return redirect('customer:grooming_done')
+    return redirect('customer:grooming_agreement')
 
 
 def reservation_form(request, token):

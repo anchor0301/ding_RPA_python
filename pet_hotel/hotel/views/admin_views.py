@@ -69,22 +69,29 @@ def admin_register_dog(request):
     return render(request, 'hotel/admin_register_dog.html', {'customers': customers})
 
 
+@require_POST
 def generate_link(request):
-    if request.method != 'POST':
-        return JsonResponse({'error': '잘못된 요청입니다.'}, status=400)
-
     phone = request.POST.get('phone')
     if not phone:
         return JsonResponse({'error': '전화번호를 입력해주세요.'}, status=400)
 
-    qs = Customer.objects.filter(phone=phone).order_by('-id')  # id 역순, 가장 최신 것을 우선
-    if not qs.exists():
-        return JsonResponse({'error': '해당 전화번호의 고객을 찾을 수 없습니다.'}, status=404)
+    # 1) phone 으로 고객 조회 또는 생성
+    customer, created = Customer.objects.get_or_create(
+        phone=phone,
+        defaults={
+            'name': '',               # 아직 모를 수 있으니 빈 문자열
+            'agreement_signed': False,
+            'token': uuid.uuid4(),
+        }
+    )
 
-    customer = qs.first()
-    customer.token = uuid.uuid4()
-    customer.save()
+    # 2) 기존 고객일 땐 토큰만 갱신
+    if not created:
+        customer.token = uuid.uuid4()
+        customer.agreement_signed = False
+        customer.save()
 
+    # 3) 링크 생성
     link = request.build_absolute_uri(
         reverse('customer:agreement', args=[str(customer.token)])
     )

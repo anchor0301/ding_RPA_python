@@ -15,7 +15,17 @@ class Customer(models.Model):
 
     token = models.UUIDField(default=uuid.uuid4, unique=True, null=True, editable=False)  # 1회용 링크용
     agreement_signed = models.BooleanField(default=False)
+    reservation_signature = models.ImageField(
+        upload_to='documents/reservation/',
+        blank=True, null=True,
+        help_text="예약 페이지 서명 이미지 (PNG)"
+    )
 
+    grooming_signature = models.ImageField(
+        upload_to='documents/grooming/',
+        blank=True, null=True,
+        help_text="미용 페이지 서명 이미지 (PNG)"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):

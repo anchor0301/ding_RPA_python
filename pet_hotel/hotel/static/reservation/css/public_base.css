@@ -1,0 +1,22 @@
+
+
+/* 전체 컨테이너 최대 너비 제한 */
+.container {
+  max-width: 600px;
+}
+
+/* 헤딩 아래 여백 */
+h2 {
+  font-weight: 600;
+  color: #34495e;
+}
+
+/* 버튼 호버 시 살짝 명암 조정 */
+.btn-primary:hover {
+  filter: brightness(1.05);
+}
+
+/* date input 커서 포인터 */
+input[type="date"] {
+  cursor: pointer;
+}
