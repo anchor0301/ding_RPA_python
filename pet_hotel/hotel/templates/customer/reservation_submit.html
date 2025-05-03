@@ -1,10 +1,20 @@
 {% extends "public_base.html" %}
 {% load static %}
 
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="{% static 'reservation/css/reservation_submit.css' %}">
+{% endblock %}
+
 {% block content %}
 
-<h2>예약 완료 🎉</h2>
-<p>{{ dog.name }}의 호텔 예약이 정상적으로 완료되었습니다!</p>
+<h2>{{ customer.name }}님의 예약이 완료되었습니다!</h2>
+<ul>
+  {% for reservation in reservations %}
+    <li>{{ reservation.dog.name }} - {{ reservation.check_in|date:"Y-m-d" }} ~ {{ reservation.check_out|date:"Y-m-d" }}</li>
+  {% endfor %}
+</ul>
 <a href="/customer">홈으로 가기</a>
 
 {% endblock %}

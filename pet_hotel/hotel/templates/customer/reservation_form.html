@@ -1,76 +1,79 @@
 {% extends "public_base.html" %}
 {% load static %}
 
+
+{% block extra_css %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/themes/material_blue.css">
+<link rel="stylesheet" href="{% static 'reservation/css/reservation_form.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr/dist/l10n/ko.js"></script>
+
+<script src="{% static 'reservation/js/reservation_form.js' %}"></script>
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-<h2>{{ customer.name }} 님의 예약</h2>
+    <h2>{{ customer.name }} 님의 예약</h2>
 
-<form method="post" action="{% url 'customer:reservation_submit' customer.token %}" novalidate
-    class="needs-validation"
-    id="reservationForm">
-  {% csrf_token %}
-<!-- 반려견 선택 -->
-    <div class="mb-3">
-      <label for="dogSelect" class="form-label">반려견 선택</label>
-      <select class="form-select" id="dogSelect" name="dog_id" required>
-        <option value="">강아지를 선택하세요</option>
-        {% for dog in dogs %}
-          <option value="{{ dog.id }}">{{ dog.name }} ({{ dog.breed }})</option>
-        {% endfor %}
-      </select>
-      <div class="invalid-feedback">
-        반려견을 선택해주세요.
-      </div>
-    </div>
+    <form method="post" action="{% url 'customer:reservation_submit' customer.token %}" novalidate
+          class="needs-validation"
+          id="reservationForm">
+        {% csrf_token %}
+        <!-- 반려견 선택 -->
+        <div class="mb-3">
+  <label for="dog_ids" class="form-label">반려견 선택</label>
+  <div class="dog-select-group">
+    {% for dog in customer.dogs.all %}
+      <label class="dog-option">
+        <input type="checkbox" name="dog_ids" value="{{ dog.id }}">
+        <span class="dog-name">{{ dog.name }}</span>
+        <span class="dog-breed">({{ dog.breed }})</span>
+      </label>
+    {% endfor %}
+  </div>
+              <div class="mt-2">
+    <a href="{% url 'customer:register_dog' token=customer.token %}" class="btn btn-outline-secondary add-dog-btn">
+      + 강아지 추가하기
+    </a>
+  </div>
+</div>
 
-    <!-- 입실/퇴실 날짜 -->
-    <div class="row g-3 mb-3">
-      <div class="col-md-6">
-        <label for="checkIn" class="form-label">입실 날짜</label>
-        <input
-          type="date"
-          class="form-control"
-          id="checkIn"
-          name="check_in"
-          required
-        >
-        <div class="invalid-feedback">
-          입실 날짜를 입력해주세요.
+        <!-- 입실/퇴실 날짜 -->
+        <div class="date-time-picker-container">
+            <label for="date-range">🐾 입·퇴실 날짜 선택</label>
+            <input type="text" id="date-range" placeholder="예시) 2025-03-01 ~ 2025-04-05 | 입실과 퇴실을 선택해주세요">
+            <input type="hidden" name="check_in_date" id="check-in-date">
+            <input type="hidden" name="check_out_date" id="check-out-date">
+
+            <label for="check-in-time">🕒 입실 예정 시간</label>
+            <input type="text" id="check-in-time" name="check_in_time" placeholder="ex) 10:00">
+
+            <label for="check-out-time">🕒 퇴실 예정 시간</label>
+            <input type="text" id="check-out-time" name="check_out_time" placeholder="ex) 12:00">
         </div>
-      </div>
-      <div class="col-md-6">
-        <label for="checkOut" class="form-label">퇴실 날짜</label>
-        <input
-          type="date"
-          class="form-control"
-          id="checkOut"
-          name="check_out"
-          required
-        >
-        <div class="invalid-feedback">
-          퇴실 날짜를 입력해주세요.
+
+        <!-- 요청사항 -->
+        <div class="mb-4">
+            <label for="notes" class="form-label">추가 요청사항</label>
+            <textarea
+                    class="form-control"
+                    id="notes"
+                    name="notes"
+                    rows="3"
+                    placeholder="예) 알러지 주의, 특별 간식 요청 등"
+            ></textarea>
         </div>
-      </div>
-    </div>
 
-    <!-- 요청사항 -->
-    <div class="mb-4">
-      <label for="notes" class="form-label">추가 요청사항</label>
-      <textarea
-        class="form-control"
-        id="notes"
-        name="notes"
-        rows="3"
-        placeholder="예) 알러지 주의, 특별 간식 요청 등"
-      ></textarea>
-    </div>
-
-    <div class="d-grid">
-      <button type="submit" class="btn btn-primary btn-lg">
-        예약 완료
-      </button>
-    </div>
-  </form>
+        <div class="d-grid">
+            <button type="submit" class="btn btn-primary btn-lg">
+                제출 하기
+            </button>
+        </div>
+    </form>
 </div>
 
 {% endblock %}

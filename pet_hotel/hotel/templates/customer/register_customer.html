@@ -1,54 +1,58 @@
 {% extends "public_base.html" %}
 {% load static %}
 
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'reservation/css/register_customer.css' %}">
+{% endblock %}
+
 {% block content %}
 <div class="container mt-5">
-  <h2>고객 정보 입력</h2>
-  <form method="post" novalidate>
-    {% csrf_token %}
+    <h2>고객 정보 입력</h2>
+    <form method="post" novalidate>
+        {% csrf_token %}
 
-    <!-- 이름 -->
-    <div class="mb-3">
-      <label for="name" class="form-label">성함</label>
-      <input
-        type="text"
-        class="form-control"
-        name="name"
-        id="name"
-        value="{{ customer.name }}"
-        required
-        pattern="^[가-힣a-zA-Z\s]{2,30}$"
-        title="2~30자의 한글 또는 영문(공백 포함)만 입력 가능합니다."
-      >
-      <div class="invalid-feedback">
-        성함은 2~30자의 한글 또는 영문으로 입력 가능합니다..
-      </div>
-    </div>
+        <!-- 이름 -->
+        <div class="mb-3">
+            <label for="name" class="form-label">성함</label>
+            <input
+                    type="text"
+                    class="form-control"
+                    name="name"
+                    id="name"
+                    value="{{ customer.name }}"
+                    required
+                    pattern="^[가-힣a-zA-Z\s]{2,30}$"
+                    title="2~30자의 한글 또는 영문(공백 포함)만 입력 가능합니다."
+            >
+            <div class="invalid-feedback">
+                성함은 2~30자의 한글 또는 영문으로 입력 가능합니다..
+            </div>
+        </div>
 
-    <!-- 전화번호 -->
-    <div class="mb-3">
-      <label for="phone" class="form-label">전화번호</label>
-      <input
-        type="tel"
-        class="form-control"
-        name="phone"
-        id="phone"
-        value="{{ customer.phone }}"
-        required
-        pattern="^(01[016789])-(\d{3,4})-(\d{4})$"
-        title="010-1234-5678 형식으로 입력해주세요."
-      >
-      <div class="invalid-feedback">
-        전화번호는 010-1234-5678 형식이어야 합니다.
-      </div>
-    </div>
+        <!-- 전화번호 -->
+        <div class="mb-3">
+            <label for="phone" class="form-label">전화번호</label>
+            <input
+                    type="tel"
+                    class="form-control"
+                    name="phone"
+                    id="phone"
+                    value="{{ customer.phone }}"
+                    required
+                    pattern="^(01[016789])-(\d{3,4})-(\d{4})$"
+                    title="010-1234-5678 형식으로 입력해주세요."
+            >
+            <div class="invalid-feedback">
+                전화번호는 010-1234-5678 형식이어야 합니다.
+            </div>
+        </div>
 
-    <button type="submit" class="btn btn-primary">다음으로</button>
-  </form>
+        <button type="submit" class="btn btn-primary">다음으로</button>
+    </form>
 </div>
 
 <script>
-// Bootstrap v5 기준: pattern 검사 실패 시 .was-validated 클래스로 스타일링
+    // Bootstrap v5 기준: pattern 검사 실패 시 .was-validated 클래스로 스타일링
 
 </script>
 {% endblock %}

@@ -1,7 +1,6 @@
 {% extends 'public_base.html' %}
 {% load static %}
 {% load widget_tweaks %}
-
 {% block extra_css %}
  <link  href="{% static 'reservation/css/register_dog.css' %}"rel="stylesheet">
 {% endblock %}
@@ -78,17 +77,17 @@
 
                     <!-- 추가 건강 정보 -->
                     <div class="col-12">
-                        <label for="{{ form.allergy.id_for_label }}" class="form-label">알러지 정보</label>
+                        <label for="{{ form.allergy.id_for_label }}" class="form-label">알러지 정보 (없을 시 공란)</label>
                         {{ form.allergy|add_class:"form-control" }}
                     </div>
                     <div class="col-12">
-                        <label for="{{ form.disease_history.id_for_label }}" class="form-label">질병 이력</label>
+                        <label for="{{ form.disease_history.id_for_label }}" class="form-label">질병 이력 (없을 시 공란)</label>
                         {{ form.disease_history|add_class:"form-control" }}
                     </div>
 
                     <!-- 특이사항 -->
                     <div class="col-12">
-                        <label for="{{ form.special_note.id_for_label }}" class="form-label">특이사항</label>
+                        <label for="{{ form.special_note.id_for_label }}" class="form-label">특이사항 (없을 시 공란)</label>
                         {{ form.special_note|add_class:"form-control" }}
                     </div>
 

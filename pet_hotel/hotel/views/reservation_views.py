@@ -112,7 +112,8 @@ def register_dog(request, customer_id=None, token=None):
         'customer': customer,
     })
 
-#강아지 자동 검색
+
+# 강아지 자동 검색
 @require_GET
 def autocomplete_breed(request):
     q = request.GET.get('q', '')
@@ -122,8 +123,8 @@ def autocomplete_breed(request):
     print('강아지 찾기 동작함')
     suggestions = (
         Breed.objects
-             .filter(name__icontains=q)
-             .values_list('name', flat=True)[:10]
+        .filter(name__icontains=q)
+        .values_list('name', flat=True)[:10]
     )
     return JsonResponse(list(suggestions), safe=False)
 
@@ -149,25 +150,6 @@ def reserve(request, token):
         print("동의서 없음")
         return redirect('customer:agreement_write', token=token)
 
-    # 폼 데이터 처리
-    dog_id = request.POST.get('dog_id')
-    check_in = request.POST.get('check_in')
-    check_out = request.POST.get('check_out')
-    notes = request.POST.get('notes', '').strip()
-
-    dog = get_object_or_404(Dog, id=dog_id, customer=customer)
-
-    reservation = Reservation.objects.create(
-        customer=customer,
-        dog=dog,
-        reservation_date=timezone.now(),
-        check_in=make_aware(datetime.strptime(check_in, '%Y-%m-%d')),
-        check_out=make_aware(datetime.strptime(check_out, '%Y-%m-%d')),
-        notes=notes,
-    )
-    # 예약 후 토큰 초기화하여 재사용 방지
-    customer.token = None
-    customer.save()
     return render(request, 'customer/reservation_submit.html', {'customer': customer, 'reservation': reservation})
 
 
@@ -183,8 +165,10 @@ def agreement_write(request, token):
         return render(request, 'customer/expired.html')
 
     print("동의서 작성 페이지")
+    recent_reservations = customer.reservations.order_by('-check_in')[:3]
+
     customer = get_object_or_404(Customer, token=token)
-    return render(request, 'customer/agreement_write.html', {'customer': customer})
+    return render(request, 'customer/agreement_write.html', {'customer': customer,'recent_reservations':recent_reservations})
 
 
 @csrf_exempt
@@ -258,43 +242,53 @@ def reservation_form(request, token):
         'dogs': dogs,
     })
 
-
 @require_POST
 def reservation_submit(request, token):
-    """
-    예약 완료 페이지, POST 요청 처리 후 token 초기화 및 완료 템플릿 렌더링
-    """
-
+    print("제출 페이지")
     customer = Customer.objects.filter(token=token).first()
     if not customer:
         return render(request, 'customer/expired.html')
 
-    customer = get_object_or_404(Customer, token=token)
-    # 이미 예약했다면 중복 방지
-    if not customer:
+    # 이미 예약했는지 중복 확인은 필요 없으니 제거하거나 메시지 출력으로 대체 가능
+
+    # 폼 데이터 처리
+    dog_ids = request.POST.getlist('dog_ids')
+    check_in_date = request.POST.get("check_in_date")  # 예: '2025-05-29'
+    check_in_time = request.POST.get("check_in_time")  # 예: '10:00'
+    check_out_date = request.POST.get("check_out_date")
+    check_out_time = request.POST.get("check_out_time")
+    notes = request.POST.get('notes', '').strip()
+
+    try:
+        check_in = make_aware(datetime.strptime(f"{check_in_date} {check_in_time}", "%Y-%m-%d %H:%M"))
+        check_out = make_aware(datetime.strptime(f"{check_out_date} {check_out_time}", "%Y-%m-%d %H:%M"))
+    except Exception as e:
+        print(f"❌ 날짜 파싱 에러: {e}")
         return render(request, 'customer/expired.html')
 
-    dog_id = request.POST.get('dog_id')
-    check_in = request.POST.get('check_in')
-    check_out = request.POST.get('check_out')
-    notes = request.POST.get('notes', '').strip()
-    dog = get_object_or_404(Dog, id=dog_id, customer=customer)
+    created_reservations = []
 
-    reservation = Reservation.objects.create(
-        customer=customer,
-        dog=dog,
-        reservation_date=timezone.now(),
-        check_in=make_aware(datetime.strptime(check_in, '%Y-%m-%d')),
-        check_out=make_aware(datetime.strptime(check_out, '%Y-%m-%d')),
-        notes=notes,
-    )
+    for dog_id in dog_ids:
+        try:
+            dog = get_object_or_404(Dog, id=dog_id, customer=customer)
+            reservation = Reservation.objects.create(
+                customer=customer,
+                dog=dog,
+                reservation_date=timezone.now(),
+                check_in=check_in,
+                check_out=check_out,
+                notes=notes,
+            )
+            created_reservations.append(reservation)
+        except Exception as e:
+            print(f"❌ 예약 생성 실패: {e}")
+            continue
 
-    # token 초기화 → 재사용 방지
+    # 토큰 무효화
     customer.token = None
     customer.save()
 
     return render(request, 'customer/reservation_submit.html', {
         'customer': customer,
-        'reservation': reservation,
-        'dog': dog
+        'reservations': created_reservations
     })

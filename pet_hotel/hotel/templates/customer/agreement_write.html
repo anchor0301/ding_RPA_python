@@ -2,34 +2,46 @@
 {% load static %}
 
 {% block extra_css %}
-    <link rel="stylesheet" href="{% static 'reservation/css/signature.css' %}">
+<link rel="stylesheet" href="{% static 'reservation/css/signature.css' %}">
 {% endblock %}
 
 
 {% block content %}
-    <div class="agreement-container">
-        <h1>서비스 이용 동의서</h1>
-        <p>안녕하세요 {{ customer.name }}님, 서비스를 이용하시기 위해 아래 내용을 확인하시고 서명해 주세요.</p>
+<div class="agreement-container">
+    <h1>서비스 이용 동의서</h1>
+    <p>안녕하세요 {{ customer.name }}님, 서비스를 이용하시기 위해 아래 내용을 확인하시고 서명해 주세요.</p>
 
-        <div class="agreement-box">
-            <p>📌 본 애견호텔 서비스는 고객님의 소중한 반려견을 안전하고 따뜻하게 보호하기 위해 최선을 다합니다.<br>
-                🐶 고객님의 반려견이 맡겨지는 동안 위급한 상황이 발생할 경우 사전 동의 하에 병원 진료 등을 진행할 수 있으며,<br>
-                이에 대한 책임은 고객님께 있음을 확인합니다.</p>
-        </div>
-
-        <h3 class="mt-4">✍️ 서명해주세요</h3>
-        <canvas id="signature-pad" width="600" height="400" style="border: 1px solid #ccc;"></canvas>
-
-        <form method="POST"  action="{% url 'customer:agreement_submit' %}?token={{ customer.token }}">
-            {% csrf_token %}
-            <input type="hidden" name="signature" id="signature-field">
-            <button type="submit" class="submit-btn">서명 완료하고 예약하러 가기</button>
-        </form>
+    <div class="agreement-box">
+        <p>📌 본 애견호텔 서비스는 고객님의 소중한 반려견을 안전하고 따뜻하게 보호하기 위해 최선을 다합니다.<br>
+            🐶 고객님의 반려견이 맡겨지는 동안 위급한 상황이 발생할 경우 사전 동의 하에 병원 진료 등을 진행할 수 있으며,<br>
+            이에 대한 책임은 고객님께 있음을 확인합니다.</p>
     </div>
+    {% if recent_reservations %}
+    <div class="recent-box">
+        <h4>📌 최근 이용 이력</h4>
+        <ul>
+            {% for r in recent_reservations %}
+            <li>
+                <strong>{{ r.dog.name }}</strong> ({{ r.dog.breed }})<br>
+                🗓 {{ r.check_in|date:"Y년 m월 d일 H:i" }} ~ {{ r.check_out|date:"m월 d일 H:i" }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    {% endif %}
+    <h3 class="mt-4">✍️ 서명해주세요</h3>
+    <canvas id="signature-pad" width="600" height="400" style="border: 1px solid #ccc;"></canvas>
+
+    <form method="POST" action="{% url 'customer:agreement_submit' %}?token={{ customer.token }}">
+        {% csrf_token %}
+        <input type="hidden" name="signature" id="signature-field">
+        <button type="submit" class="submit-btn">서명 완료하고 예약하러 가기</button>
+    </form>
+</div>
 
 {% block extra_js %}
 <script src="https://cdn.jsdelivr.net/npm/signature_pad@4.0.0/dist/signature_pad.umd.min.js"></script>
-    <script src="{% static 'reservation/js/signature.js' %}"></script>
+<script src="{% static 'reservation/js/signature.js' %}"></script>
 {% endblock  %}
 
 

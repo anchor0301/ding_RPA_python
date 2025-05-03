@@ -93,3 +93,100 @@
 .autocomplete-suggestions div:hover {
   background: #f0f0f0;
 }
+
+.dog-form-container {
+  background-color: #fffef5;
+  padding: 30px;
+  border-radius: 16px;
+  border: 2px dashed #d0e6d0;
+}
+
+.dog-form-container label {
+  font-weight: 600;
+  color: #497a54;
+  display: block;
+  margin: 12px 0 4px;
+}
+
+.dog-form-container input[type="text"],
+.dog-form-container select {
+  padding: 10px;
+  border-radius: 8px;
+  border: 1.5px solid #cce0cc;
+  background-color: #fcfffc;
+  width: 100%;
+}
+
+/* 전체 카드 스타일 */
+.card {
+  background-color: #fffdf8;
+  border: 2px solid #e8e3d3;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+/* 헤더 스타일 */
+.card-header {
+  background-color: #faf3e8;
+  border-bottom: 1px solid #e8dcca;
+  padding: 20px;
+}
+
+.card-header h2 {
+  color: #665f56;
+  font-weight: bold;
+}
+
+/* 라벨 */
+label.form-label {
+  font-weight: bold;
+  color: #6d5d4b;
+}
+
+/* 입력창 */
+.form-control,
+.form-select {
+  border: 1.5px solid #dcd3c4;
+  border-radius: 10px;
+  background-color: #fffefb;
+  padding: 12px;
+  font-size: 15px;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.form-control:focus,
+.form-select:focus {
+  border-color: #b7d5bd;
+  box-shadow: 0 0 0 4px rgba(183, 213, 189, 0.2);
+  outline: none;
+}
+
+/* 체크박스 */
+.form-check-input {
+  border: 1.5px solid #bfbfbf;
+  width: 18px;
+  height: 18px;
+  margin-right: 6px;
+}
+
+.form-check-input:checked {
+  background-color: #93c19e;
+  border-color: #93c19e;
+}
+
+/* 버튼 */
+button.btn-primary {
+  background-color: #93c19e;
+  border-color: #93c19e;
+  font-weight: bold;
+  border-radius: 10px;
+  padding: 12px 24px;
+  transition: background-color 0.3s ease;
+}
+
+button.btn-primary:hover {
+  background-color: #81ae8d;
+  border-color: #81ae8d;
+}
+

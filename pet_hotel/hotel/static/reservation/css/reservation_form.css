@@ -1,0 +1,176 @@
+.date-time-picker-container {
+  max-width: 600px;
+  margin: 30px auto;
+  padding: 20px;
+  background-color: #fffaf7;
+  border: 2px solid #f5e3dc;
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+.date-time-picker-container label {
+  font-size: 15px;
+  font-weight: 600;
+  color: #5c4b51;
+  display: block;
+  margin-top: 20px;
+  margin-bottom: 6px;
+}
+
+.date-time-picker-container input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1.8px solid #e4cfc5;
+  border-radius: 10px;
+  background-color: #ffffff;
+  transition: border-color 0.3s ease;
+  box-sizing: border-box;
+}
+
+.date-time-picker-container input[type="text"]:focus {
+  outline: none;
+  border-color: #f2a18a;
+  box-shadow: 0 0 0 3px rgba(242, 161, 138, 0.2);
+}
+
+input[type="text"]:focus {
+  outline: none;
+  border-color: #f0b2a6;
+  box-shadow: 0 0 0 3px rgba(240, 178, 166, 0.2);
+}
+
+label {
+  color: #4e4745;
+  font-weight: 600;
+}
+.container {
+  max-width: 700px;
+  background-color: #fffdf9;
+  padding: 40px 30px;
+  border-radius: 18px;
+  border: 2px solid #f3e7d6;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+  font-family: 'Noto Sans KR', sans-serif;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #5c4b3b;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+/* 라벨 */
+label.form-label {
+  font-weight: bold;
+  color: #6b5b4b;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* 체크박스 목록 */
+input[type="checkbox"] {
+  margin-right: 6px;
+  accent-color: #90b598;
+}
+
+.date-time-picker-container {
+  background-color: #fdf8f1;
+  border: 1.5px solid #eadccd;
+  border-radius: 14px;
+  padding: 20px;
+  margin-bottom: 30px;
+}
+
+.date-time-picker-container label {
+  margin-top: 12px;
+  font-weight: 600;
+  color: #5f4d45;
+}
+
+.date-time-picker-container input[type="text"] {
+  width: 100%;
+  padding: 12px 14px;
+  font-size: 15px;
+  border: 1.5px solid #decfc2;
+  border-radius: 10px;
+  background-color: #ffffff;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 12px;
+  transition: border-color 0.3s ease;
+}
+
+.date-time-picker-container input[type="text"]:focus {
+  outline: none;
+  border-color: #f2b49b;
+  box-shadow: 0 0 0 3px rgba(242, 180, 155, 0.2);
+}
+
+/* textarea */
+textarea.form-control {
+  border-radius: 10px;
+  border: 1.5px solid #decfc2;
+  background-color: #fffefc;
+  padding: 12px;
+  font-size: 15px;
+}
+
+/* 제출 버튼 */
+button.btn-primary {
+  background-color: #f2a88d;
+  border-color: #f2a88d;
+  font-weight: bold;
+  font-size: 16px;
+  padding: 12px;
+  border-radius: 10px;
+  transition: background-color 0.3s ease;
+}
+
+button.btn-primary:hover {
+  background-color: #e4947b;
+  border-color: #e4947b;
+}
+
+.dog-select-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.dog-option {
+  display: flex;
+  align-items: center;
+  background-color: #fffaf5;
+  border: 1.5px solid #e3d5ca;
+  border-radius: 10px;
+  padding: 10px 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-size: 15px;
+  color: #5c4a3e;
+}
+
+.dog-option input[type="checkbox"] {
+  margin-right: 10px;
+  accent-color: #90b598;
+  transform: scale(1.2);
+}
+
+.dog-option:hover {
+  background-color: #fceee7;
+  border-color: #e2b9a4;
+}
+
+.dog-name {
+  font-weight: bold;
+}
+
+.dog-breed {
+  margin-left: 6px;
+  color: #9b8b7a;
+}
+
