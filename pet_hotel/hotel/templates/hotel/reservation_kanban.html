@@ -31,7 +31,7 @@
 
 
   <div class="card-title">
-    {{ r.dog.name }}/전화번호/몸무게{{ r.dog.id }}/{{ r.dog.age }}
+     {{ r.dog.name }}/{{ r.customer.phone|last4 }}/{{ r.dog.weight }}kg/{{ r.dog.id }}
   </div>
 <div>
   <span class="card-tag breed {{ r.dog.breed }}">{{ r.dog.breed }}</span>
