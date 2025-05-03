@@ -31,6 +31,9 @@ class DogForm(forms.ModelForm):
     name = forms.CharField(
         required=True,
         max_length=10,
+        widget=forms.TextInput(attrs={
+            'placeholder': '강아지 이름'
+        }),
         error_messages={'required': '강아지 이름은 필수 입력입니다.'},
         validators=[
             RegexValidator(
@@ -51,10 +54,12 @@ class DogForm(forms.ModelForm):
         error_messages={'required': '견종은 필수 입력입니다.'}
     )
 
-
     weight = forms.FloatField(
         required=True,
         error_messages={'required': '몸무게는 필수 입력입니다.'},
+        widget=forms.TextInput(attrs={
+            'placeholder': '1~30kg'
+        }),
         validators=[
             MinValueValidator(1, message='최소 1kg 이상이어야 합니다.'),
             MaxValueValidator(30, message='최대 30kg 이하여야 합니다.')
@@ -71,7 +76,7 @@ class DogForm(forms.ModelForm):
         widget=forms.Textarea(attrs={'rows': 3}),
         error_messages={'max_length': '최대 200자까지 입력 가능합니다.'}
     )
-    neutered = forms.BooleanField(required=False,label="중성화 완료")
+    neutered = forms.BooleanField(required=False, label="중성화 완료")
     vaccinated = forms.BooleanField(required=False, label="백신 접종 완료")
     bites = forms.BooleanField(required=False, label="입질 있음")
     separation_anxiety = forms.BooleanField(required=False, label="분리 불안 있음")
@@ -96,8 +101,21 @@ class DogForm(forms.ModelForm):
     class Meta:
         model = Dog
         fields = [
-            'name', 'breed', 'weight', 'gender',
+            'name', 'weight', 'gender',
             'special_note', 'neutered', 'vaccinated',
             'bites', 'separation_anxiety', 'timid',
             'allergy', 'disease_history',
         ]
+
+    def save(self, commit=True):
+        print("save 동작함")
+        # 1) 폼에서 받은 문자열 견종 이름
+        breed_name = self.cleaned_data.pop('breed').strip()
+        # 2) DB에서 인스턴스 가져오거나 생성
+        breed_obj, _ = Breed.objects.get_or_create(name=breed_name)
+        # 3) Dog 인스턴스 생성
+        dog = super().save(commit=False)
+        dog.breed = breed_obj
+        if commit:
+            dog.save()
+        return dog

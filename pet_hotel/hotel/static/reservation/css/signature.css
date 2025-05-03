@@ -1,5 +1,4 @@
 /* agreement/css/agreement.css */
-
 #signature-pad {
   /* 화면에 보이는 크기 */
   width: 300px;
@@ -11,5 +10,5 @@
 
 canvas {
     width: 100% !important;
-    height: auto !important;
+    height: auto
 }

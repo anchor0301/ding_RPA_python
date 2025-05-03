@@ -99,7 +99,7 @@ def register_dog(request, customer_id=None, token=None):
     if request.method == 'POST':
         form = DogForm(request.POST)
         if form.is_valid():
-            # commit=False로 여기에 customer 세팅 후 저장
+            # commit=False 로 인스턴스 가져오기
             dog = form.save(commit=False)
             dog.customer = customer
             dog.save()
