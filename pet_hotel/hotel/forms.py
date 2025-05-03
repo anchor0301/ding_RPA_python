@@ -1,6 +1,8 @@
 # hotel/forms.py
 from django import forms
-from django.core.validators import RegexValidator
+from django.core.validators import RegexValidator, MinValueValidator, MaxValueValidator
+from .models import *
+
 
 class CustomerForm(forms.Form):
     name = forms.CharField(
@@ -23,3 +25,79 @@ class CustomerForm(forms.Form):
             )
         ]
     )
+
+
+class DogForm(forms.ModelForm):
+    name = forms.CharField(
+        required=True,
+        max_length=10,
+        error_messages={'required': '강아지 이름은 필수 입력입니다.'},
+        validators=[
+            RegexValidator(
+                regex=r'^[가-힣]{1,10}$',
+                message='한글 1~10자만 입력 가능합니다.'
+            )
+        ]
+    )
+    breed = forms.CharField(
+        required=True,
+        max_length=50,
+        widget=forms.TextInput(attrs={
+            'class': 'form-control',
+            'id': 'id_breed_autocomplete',
+            'autocomplete': 'off',
+            'placeholder': '견종을 입력하세요'
+        }),
+        error_messages={'required': '견종은 필수 입력입니다.'}
+    )
+
+
+    weight = forms.FloatField(
+        required=True,
+        error_messages={'required': '몸무게는 필수 입력입니다.'},
+        validators=[
+            MinValueValidator(1, message='최소 1kg 이상이어야 합니다.'),
+            MaxValueValidator(30, message='최대 30kg 이하여야 합니다.')
+        ]
+    )
+    gender = forms.ChoiceField(
+        choices=Dog.GENDER_CHOICES,
+        required=True,
+        error_messages={'required': '성별을 선택해주세요.'}
+    )
+    special_note = forms.CharField(
+        required=False,
+        max_length=200,
+        widget=forms.Textarea(attrs={'rows': 3}),
+        error_messages={'max_length': '최대 200자까지 입력 가능합니다.'}
+    )
+    neutered = forms.BooleanField(required=False,label="중성화 완료")
+    vaccinated = forms.BooleanField(required=False, label="백신 접종 완료")
+    bites = forms.BooleanField(required=False, label="입질 있음")
+    separation_anxiety = forms.BooleanField(required=False, label="분리 불안 있음")
+    timid = forms.BooleanField(required=False, label="겁 많음")
+    allergy = forms.CharField(
+        required=False,
+        max_length=200,
+        widget=forms.Textarea(attrs={
+            'rows': 2,
+            'placeholder': '알러지(예: 특정 음식, 약물 등)'
+        })
+    )
+    disease_history = forms.CharField(
+        required=False,
+        max_length=200,
+        widget=forms.Textarea(attrs={
+            'rows': 2,
+            'placeholder': '이전 질병 이력 혹은 수술 정보'
+        })
+    )
+
+    class Meta:
+        model = Dog
+        fields = [
+            'name', 'breed', 'weight', 'gender',
+            'special_note', 'neutered', 'vaccinated',
+            'bites', 'separation_anxiety', 'timid',
+            'allergy', 'disease_history',
+        ]

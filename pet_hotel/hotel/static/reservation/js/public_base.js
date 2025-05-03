@@ -14,3 +14,28 @@
     }, false);
   });
 })();
+
+(() => {
+  'use strict';
+  const form = document.querySelector('form');
+  form.addEventListener('submit', e => {
+    if (!form.checkValidity()) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    form.classList.add('was-validated');
+  }, false);
+})();
+
+
+ document.addEventListener('DOMContentLoaded', () => {
+      document.querySelectorAll('form.needs-validation').forEach(form => {
+        form.addEventListener('submit', e => {
+          if (!form.checkValidity()) {
+            e.preventDefault();
+            e.stopPropagation();
+          }
+          form.classList.add('was-validated');
+        });
+      });
+    });

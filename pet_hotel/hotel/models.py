@@ -2,11 +2,6 @@
 from django.db import models
 import uuid
 
-GENDER_CHOICES = (
-    ('수컷', '수컷'),
-    ('암컷', '암컷'),
-)
-
 
 class Customer(models.Model):
     name = models.CharField(max_length=100)
@@ -32,19 +27,35 @@ class Customer(models.Model):
         return f"{self.name} ({self.phone})"
 
 
-class Dog(models.Model):
-    name = models.CharField(max_length=100)
-    gender = models.CharField(max_length=10, choices=GENDER_CHOICES)
-    weight = models.FloatField()
-    breed = models.CharField(max_length=100)
-    customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='dogs')
+class Breed(models.Model):
+    name = models.CharField(max_length=50, unique=True)
 
-    special_note = models.TextField(blank=True, help_text="견종 특이사항")
-    neutered = models.BooleanField(default=False, verbose_name="중성화 여부")
-    vaccinated = models.BooleanField(default=False, verbose_name="접종 완료 여부")
-    bites = models.BooleanField(default=False, verbose_name="입질 있음")
-    separation_anxiety = models.BooleanField(default=False, verbose_name="분리불안")
-    timid = models.BooleanField(default=False, verbose_name="겁이 많음")
+    def __str__(self):
+        return self.name
+
+
+class Dog(models.Model):
+    customer = models.ForeignKey(
+        'Customer', on_delete=models.CASCADE, related_name='dogs'
+    )
+    name = models.CharField(max_length=10)
+
+    breed = models.ForeignKey(Breed, on_delete=models.CASCADE)
+    weight = models.FloatField()
+    GENDER_CHOICES = (
+        ('M', '수컷'),
+        ('F', '암컷'),
+    )
+    gender = models.CharField(max_length=1, choices=GENDER_CHOICES)
+
+    special_note = models.TextField(blank=True, max_length=200)
+    neutered = models.BooleanField('중성화 완료', default=False)
+    vaccinated = models.BooleanField('백신 접종 완료', default=False)
+    bites = models.BooleanField('입질 있음', default=False)
+    separation_anxiety = models.BooleanField('분리불안 있음', default=False)
+    timid = models.BooleanField('소심함 있음', default=False)
+    allergy = models.TextField(blank=True, max_length=200)
+    disease_history = models.TextField(blank=True, max_length=200)
 
     def __str__(self):
         return f"{self.name} ({self.breed})"

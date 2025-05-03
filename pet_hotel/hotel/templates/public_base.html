@@ -13,9 +13,11 @@
     integrity="sha384-..."
     crossorigin="anonymous"
   >
-
+{% block extra_css %}
   <!-- Custom CSS -->
   <link href="{% static 'reservation/css/public_base.css' %}" rel="stylesheet">
+  <link  href="{% static 'reservation/css/register_dog.css' %}"rel="stylesheet">
+{% endblock %}
 </head>
 <body>
   <!-- 네비게이션 바: 홈, 예약, 등록 흐름, 문의 등 링크 추가 -->
@@ -72,6 +74,6 @@
   ></script>
 
   <!-- Custom JS -->
-  <script src="{% static 'reservation/js/public_base.js' %}"></script>
+  <script src="{% static 'reservation/js/public_base.js' %}"></script>{% block extra_js %}{% endblock %}
 </body>
 </html>

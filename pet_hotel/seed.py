@@ -1,41 +1,46 @@
-import uuid
+import os
+import django
 import random
-from datetime import datetime, timedelta
-from django.utils.timezone import make_aware
-from hotel.models import Customer, Dog, Reservation
+from datetime import timedelta
+from django.utils import timezone
+
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pet_hotel.settings")  # ← 수정 필수!
+django.setup()
+
+from hotel.models import Customer, Dog, Reservation, Breed
 
 names = ["김철수", "이영희", "박민수", "최지우", "정다은"]
-dog_names = ["초코", "보리", "해피", "뽀삐", "두리"]
-breeds = ["푸들", "말티즈", "비숑", "포메", "웰시코기"]
-statuses = [("waiting", False, False), ("checked_in", True, False), ("checked_out", True, True)]
+dog_names = ["초코", "보리", "해피", "뽀삐", "콩이"]
+breeds = ["푸들", "말티즈", "비숑", "포메", "믹스"]
+genders = ["수컷", "암컷"]
+breed_objs = [Breed.objects.get_or_create(name=b)[0] for b in breeds]
 
-for i in range(5):
-    customer = Customer.objects.create(
-        name=names[i],
-        phone=f"010-{random.randint(1000,9999)}-{random.randint(1000,9999)}",
-        address="서울시 어디구 어디동",
-        token=uuid.uuid4(),
-        agreement_signed=True
-    )
+for _ in range(5):
+    name = random.choice(names)
+    phone = f"010{random.randint(10000000, 99999999)}"
+    customer, _ = Customer.objects.get_or_create(name=name, phone=phone)
+
+    dog_name = random.choice(dog_names)
+    gender = random.choice(genders)
+    breed = random.choice(breed_objs)
+    weight = round(random.uniform(2.0, 10.0), 1)
 
     dog = Dog.objects.create(
-        name=dog_names[i],
-        breed=random.choice(breeds),
-        gender=random.choice(["M", "F"]),
         customer=customer,
-        weight=4,
+        name=dog_name,
+        gender=gender,
+        breed=breed,
+        weight=weight
     )
 
-    check_in = make_aware(datetime.now() + timedelta(days=i))
-    check_out = check_in + timedelta(days=2)
-    is_checked_in, is_checked_out = statuses[i % 3][1], statuses[i % 3][2]
+    check_in = timezone.now() + timedelta(days=random.randint(0, 5))
+    check_out = check_in + timedelta(days=1)
 
     Reservation.objects.create(
         customer=customer,
         dog=dog,
-        reservation_date=datetime.now().date(),
         check_in=check_in,
-        check_out=check_out,
-        is_checked_in=is_checked_in,
-        is_checked_out=is_checked_out
+        check_out=check_out
     )
+
+print("✅ 더미 데이터 입력 완료")

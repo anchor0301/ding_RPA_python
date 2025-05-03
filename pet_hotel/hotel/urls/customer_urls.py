@@ -19,6 +19,7 @@ urlpatterns = [
     path('agreement/<uuid:token>/register/customer/', views.register_customer, name='register_customer'),
     # 3. 강아지 정보 등록
     path('agreement/<uuid:token>/register/dog/', views.register_dog, name='register_dog'),
+    path('breeds/autocomplete/', views.autocomplete_breed, name='autocomplete_breed'),
 
     # 4. 동의서 페이지
     path('agreement/<uuid:token>/write/', views.agreement_write, name='agreement_write'),

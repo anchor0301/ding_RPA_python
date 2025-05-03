@@ -2,6 +2,7 @@
 {% load static %}
 
 {% block content %}
+<div class="container mt-5">
 <h2>{{ customer.name }} 님의 예약</h2>
 
 <form method="post" action="{% url 'customer:reservation_submit' customer.token %}" novalidate
@@ -71,4 +72,5 @@
     </div>
   </form>
 </div>
+
 {% endblock %}

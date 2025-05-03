@@ -1,5 +1,6 @@
 {% extends "public_base.html" %}
 {% load static %}
+
 {% block content %}
 <div class="container mt-5">
   <h2>고객 정보 입력</h2>
@@ -48,16 +49,6 @@
 
 <script>
 // Bootstrap v5 기준: pattern 검사 실패 시 .was-validated 클래스로 스타일링
-(() => {
-  'use strict';
-  const form = document.querySelector('form');
-  form.addEventListener('submit', e => {
-    if (!form.checkValidity()) {
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    form.classList.add('was-validated');
-  }, false);
-})();
+
 </script>
 {% endblock %}

@@ -1,12 +1,12 @@
 import uuid
 from django.views.decorators.csrf import csrf_exempt
-from ..forms import CustomerForm
+from ..forms import *
+from ..models import Reservation, Dog, Customer, Breed
 from django.utils import timezone
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, HttpResponseForbidden
-from django.views.decorators.http import require_POST
+from django.views.decorators.http import require_POST, require_GET
 from django.urls import reverse
-from ..models import Reservation, Dog, Customer
 from django.utils.timezone import make_aware
 from datetime import datetime
 import base64
@@ -80,34 +80,52 @@ def register_customer(request, token):
 
     return render(request, 'customer/register_customer.html', {
         'form': form,
-        'customer': customer,   # 제대로 된 customer 객체 전달
+        'customer': customer,  # 제대로 된 customer 객체 전달
     })
 
+
 def register_dog(request, customer_id=None, token=None):
+    # 토큰 기반 고객 조회
     customer = Customer.objects.filter(token=token).first()
     if not customer:
         return render(request, 'customer/expired.html')
 
+    # customer_id가 넘어오면 ID로도 조회
     if customer_id:
         customer = get_object_or_404(Customer, id=customer_id)
     else:
         customer = get_object_or_404(Customer, token=token)
+
     if request.method == 'POST':
-        Dog.objects.create(
-            customer=customer,
-            name=request.POST.get('name'),
-            breed=request.POST.get('breed'),
-            weight=request.POST.get('weight'),
-            gender=request.POST.get('gender'),
-            special_note=request.POST.get('special_note'),
-            neutered=bool(request.POST.get('neutered')),
-            vaccinated=bool(request.POST.get('vaccinated')),
-            bites=bool(request.POST.get('bites')),
-            separation_anxiety=bool(request.POST.get('separation_anxiety')),
-            timid=bool(request.POST.get('timid')),
-        )
-        return redirect('customer:agreement_write', token=customer.token)
-    return render(request, 'customer/register_dog.html', {'customer': customer})
+        form = DogForm(request.POST)
+        if form.is_valid():
+            # commit=False로 여기에 customer 세팅 후 저장
+            dog = form.save(commit=False)
+            dog.customer = customer
+            dog.save()
+            return redirect('customer:agreement_write', token=token)
+    else:
+        form = DogForm()
+
+    return render(request, 'customer/register_dog.html', {
+        'form': form,
+        'customer': customer,
+    })
+
+#강아지 자동 검색
+@require_GET
+def autocomplete_breed(request):
+    q = request.GET.get('q', '')
+    # 2글자 이상부터 검색
+    if len(q) < 2:
+        return JsonResponse([], safe=False)
+    print('강아지 찾기 동작함')
+    suggestions = (
+        Breed.objects
+             .filter(name__icontains=q)
+             .values_list('name', flat=True)[:10]
+    )
+    return JsonResponse(list(suggestions), safe=False)
 
 
 def reserve(request, token):
