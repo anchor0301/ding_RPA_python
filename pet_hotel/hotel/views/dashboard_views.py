@@ -63,8 +63,6 @@ def dashboard(request):
     context['occupancy_labels'] = json.dumps(labels)
     context['occupancy_data'] = json.dumps(data)
 
-    customer = Customer.objects.get(name="김성민")
-    print(f"동의서 링크: http://127.0.0.1:8000/hotel/agreement/{customer.token}/")
 
     return render(request, 'admin/dashboard.html', context)
 

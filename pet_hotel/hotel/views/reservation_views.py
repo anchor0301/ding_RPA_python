@@ -1,25 +1,14 @@
 import uuid
-
 from django.views.decorators.csrf import csrf_exempt
-
-import json
+from ..forms import CustomerForm
 from django.utils import timezone
-from datetime import timedelta
 from django.shortcuts import render, get_object_or_404, redirect
 from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.http import require_POST
-from django.db.models import Q
 from django.urls import reverse
-
-from django.template.loader import render_to_string
 from ..models import Reservation, Dog, Customer
-from django.http import HttpResponse
-
-from django.utils.html import format_html
-from django.contrib import admin
 from django.utils.timezone import make_aware
 from datetime import datetime
-
 import base64
 from django.core.files.base import ContentFile
 
@@ -70,19 +59,29 @@ def generate_agreement_link(request):
 
 
 def register_customer(request, token):
+    # 토큰 유효성 검사
     customer = Customer.objects.filter(token=token).first()
     if not customer:
         return render(request, 'customer/expired.html')
 
-    customer = get_object_or_404(Customer, token=token)
-
+    # GET / POST 처리
     if request.method == 'POST':
-        customer.name = request.POST.get('name', '') or '미작성'
-        customer.phone = request.POST.get('phone', '')
-        customer.save()
-        return redirect('customer:agreement', token=token)
-    return render(request, 'customer/register_customer.html', {'customer': customer})
+        form = CustomerForm(request.POST)
+        if form.is_valid():
+            customer.name = form.cleaned_data['name']
+            customer.phone = form.cleaned_data['phone']
+            customer.save()
+            return redirect('customer:agreement', token=token)
+    else:
+        form = CustomerForm(initial={
+            'name': customer.name,
+            'phone': customer.phone,
+        })
 
+    return render(request, 'customer/register_customer.html', {
+        'form': form,
+        'customer': customer,   # 제대로 된 customer 객체 전달
+    })
 
 def register_dog(request, customer_id=None, token=None):
     customer = Customer.objects.filter(token=token).first()
