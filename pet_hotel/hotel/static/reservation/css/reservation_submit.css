@@ -1,58 +1,7 @@
-.submit-container {
-  max-width: 680px;
-  margin: 80px auto;
+.reservation-complete-box {
+  background-color: #fff4ec;
   padding: 30px;
-  background-color: #fffdf7;
-  border: 2px solid #f1e3d2;
   border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.04);
-  font-family: 'Noto Sans KR', sans-serif;
-  color: #5c4a3b;
-}
-
-.submit-box h2 {
-  font-size: 24px;
-  font-weight: bold;
-  color: #4b392d;
+  border: 1px solid #ffd7c2;
   text-align: center;
-  margin-bottom: 20px;
-}
-
-.submit-box p {
-  font-size: 16px;
-  text-align: center;
-  margin-bottom: 30px;
-  color: #6d5b4c;
-}
-
-.reservation-list {
-  background-color: #fff7ed;
-  border: 1.5px solid #eadbcc;
-  border-radius: 12px;
-  padding: 20px;
-}
-
-.reservation-item {
-  padding: 10px 0;
-  border-bottom: 1px dashed #e1cfc2;
-  font-size: 15px;
-}
-
-.reservation-item:last-child {
-  border-bottom: none;
-}
-
-.btn-home {
-  display: inline-block;
-  background-color: #f2a88d;
-  color: white;
-  padding: 12px 24px;
-  border-radius: 10px;
-  font-weight: bold;
-  text-decoration: none;
-  transition: background-color 0.3s ease;
-}
-
-.btn-home:hover {
-  background-color: #e4947b;
 }
