@@ -54,6 +54,26 @@
 
 <script>
     // Bootstrap v5 기준: pattern 검사 실패 시 .was-validated 클래스로 스타일링
+    document.addEventListener("DOMContentLoaded", function () {
+  const phoneInput = document.getElementById("phone");
+
+  phoneInput.addEventListener("input", function (e) {
+    let numbersOnly = this.value.replace(/\D/g, "");
+
+    if (numbersOnly.length < 4) {
+      this.value = numbersOnly;
+    } else if (numbersOnly.length < 8) {
+      this.value = numbersOnly.slice(0, 3) + "-" + numbersOnly.slice(3);
+    } else {
+      this.value =
+        numbersOnly.slice(0, 3) +
+        "-" +
+        numbersOnly.slice(3, 7) +
+        "-" +
+        numbersOnly.slice(7, 11);
+    }
+  });
+});
 
 </script>
 {% endblock %}

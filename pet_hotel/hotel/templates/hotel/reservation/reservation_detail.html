@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>예약 상세 (ID: {{ reservation.id }})</h2>
+  <ul>
+    <li>고객명: {{ reservation.customer.name }}</li>
+    <li>강아지명: {{ reservation.dog.name }}</li>
+    <li>예약일: {{ reservation.reservation_date }}</li>
+    <li>체크인: {{ reservation.check_in }}</li>
+    <li>체크아웃: {{ reservation.check_out }}</li>
+    <li>상태: {{ reservation.get_status_display }}</li>
+    <li>요청사항: {{ reservation.request }}</li>
+  </ul>
+  <a href="{% url 'hotel:reservation_update' reservation.pk %}">수정</a> |
+  <a href="{% url 'hotel:reservation_delete' reservation.pk %}">삭제</a> |
+  <a href="{% url 'hotel:reservation_list' %}">목록으로</a>
+{% endblock %}

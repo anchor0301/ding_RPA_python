@@ -1,0 +1,9 @@
+dinggul.duckdns.org:144 {
+    tls wp2102@kakao.com         # 실제 이메일로 교체
+    reverse_proxy 127.0.0.1:8000   # pet_hotel 백엔드
+
+    @http {
+        protocol http
+    }
+    redir @http https://{host}:144{uri} permanent
+}

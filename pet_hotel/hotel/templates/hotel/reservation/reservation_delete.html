@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% block content %}
+  <h2>이 예약을 삭제하시겠습니까?</h2>
+  <p>강아지명: {{ reservation.dog.name }}, 예약일: {{ reservation.reservation_date }}</p>
+  <form method="post">{% csrf_token %}
+    <button type="submit" class="btn btn-danger">삭제</button>
+    <a href="{% url 'hotel:reservation_list' %}" class="btn btn-secondary">취소</a>
+  </form>
+{% endblock %}

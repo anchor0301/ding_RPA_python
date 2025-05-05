@@ -51,6 +51,28 @@ document.getElementById('generate-link-btn').addEventListener('click', async () 
     alert("링크가 복사되었습니다! 📋");
   }
 });
+
+document.addEventListener('DOMContentLoaded', function () {
+    const phoneInput = document.getElementById("phone");
+
+    phoneInput.addEventListener("input", function (e) {
+        let number = e.target.value.replace(/[^0-9]/g, "");
+        let formatted = "";
+
+        if (number.length < 4) {
+            formatted = number;
+        } else if (number.length < 7) {
+            formatted = number.slice(0, 3) + "-" + number.slice(3);
+        } else if (number.length <= 10) {
+            formatted = number.slice(0, 3) + "-" + number.slice(3, 6) + "-" + number.slice(6);
+        } else {
+            formatted = number.slice(0, 3) + "-" + number.slice(3, 7) + "-" + number.slice(7, 11);
+        }
+
+        e.target.value = formatted;
+    });
+});
+
 </script>
 
 

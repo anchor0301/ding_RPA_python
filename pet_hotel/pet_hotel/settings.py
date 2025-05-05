@@ -39,7 +39,11 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     'widget_tweaks',
     'hotel',
-    'accounts'
+    'accounts',
+    'crispy_forms',
+    'querystring_tag',
+    'crispy_bootstrap5',
+    'django_filters',
 ]
 
 MIDDLEWARE = [
@@ -135,3 +139,6 @@ LOGIN_REDIRECT_URL = '/hotel/dashboard/'
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
+
+CRISPY_ALLOWED_TEMPLATE_PACKS = "bootstrap5"
+CRISPY_TEMPLATE_PACK = 'bootstrap5'     # Bootstrap5 쓰는 경우

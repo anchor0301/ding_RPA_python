@@ -1,7 +1,8 @@
 import uuid
 
 from django.views.decorators.csrf import csrf_exempt
-
+from django_filters.views import FilterView
+from ..filters import ReservationFilter
 import json
 from django.utils import timezone
 from datetime import timedelta
@@ -79,7 +80,7 @@ def generate_link(request):
     customer, created = Customer.objects.get_or_create(
         phone=phone,
         defaults={
-            'name': '',               # 아직 모를 수 있으니 빈 문자열
+            'name': '',  # 아직 모를 수 있으니 빈 문자열
             'agreement_signed': False,
             'token': uuid.uuid4(),
         }
@@ -97,6 +98,7 @@ def generate_link(request):
     )
     return JsonResponse({'url': link})
 
+
 def checkout_list(request):
     today = timezone.localdate()
     reservations = Reservation.objects.filter(check_out__date=today, is_checked_in=True,
@@ -111,6 +113,7 @@ def checkout_list(request):
     return render(request, 'admin/checkout_list.html', {'today': today, 'reservations': reservations})
 
 
+# ReservationListView 으로
 def reservation_list(request):
     today = timezone.localdate()
     q = request.GET.get('q', '').strip()
