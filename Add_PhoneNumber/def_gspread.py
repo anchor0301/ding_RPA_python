@@ -113,4 +113,5 @@ def create_google_contact(dog):
     
 def create_synology_contact(dog):
     add_contact_to_carddav(dog.host_name, dog.to_string(), dog.phoneNumber)
+
 	

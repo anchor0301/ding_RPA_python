@@ -7,14 +7,14 @@ from pyftpdlib.handlers import FTPHandler
 from pyftpdlib.servers import FTPServer
 
 # ftp_server_auth.py
-FTP_HOST = '172.30.1.47'  # TODO 아이피 수정
+FTP_HOST = '172.30.1.17'  # TODO 아이피 수정
 FTP_PORT = 9021
 
 now = datetime.datetime.now()
 
 now_time = now.strftime("%y-%m-%d")
 
-path_dir = "/Users/anchor/Desktop/사진"
+path_dir = "/Users/anchor/Desktop/사진"
 
 file_list = os.listdir(path_dir)
 
@@ -25,7 +25,7 @@ def select_dir():
 
     print("-------------")
 
-    for i in range(3, 8):
+    for i in range(1, 8):
         create_time = os.path.getctime(f'{path_dir}/{file_list[i]}')
         create_time = datetime.datetime.fromtimestamp(create_time)
         create_time = datetime.datetime.strftime(create_time, '%Y-%m-%d %H:%M')
@@ -59,8 +59,8 @@ def select_dir():
 
 
 def main():
-    folder_name = select_dir()
-    ftp_admin_dir = os.path.join(path_dir, folder_name)
+    #folder_name = select_dir()
+    ftp_admin_dir = os.path.join(path_dir, path_dir)
 
     authorizer = DummyAuthorizer()
 

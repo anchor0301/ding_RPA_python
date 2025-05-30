@@ -21,11 +21,11 @@
     <h2>{{ customer.name }} 님의 예약</h2>
 
     <form method="post" action="{% url 'customer:reservation_submit' customer.token %}" novalidate
-          class="needs-validation"
-          id="reservationForm">
+          class="needs-validation" id="reservationForm">
         {% csrf_token %}
         <!-- 반려견 선택 -->
-        <div class="mb-3">
+        <div class="mb-3 form-step visible" id="step-1">
+
             <p id="selectedDogCount" class="text-muted small mb-2">
                 🐶 선택된 반려견: 0마리
             </p>
@@ -50,43 +50,54 @@
                     </div>
                 </label>
                 {% endfor %}
+
+                <label class="dog-option">
+                    <a href="{% url 'customer:register_dog' token=customer.token %}" class="btn">애견 추가</a>
+                </label>
             </div>
 
-            <div class="mt-2">
-                <a href="{% url 'customer:register_dog' token=customer.token %}"
-                   class="btn btn-outline-secondary add-dog-btn">
-                    + 강아지 추가하기
-                </a>
+        </div>
+        <!-- STEP 2: 서비스 선택 -->
+        <div id="step-2" class="form-step">
+            <h4>2단계: 서비스 선택</h4>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="services" value="hotel" id="serviceHotel">
+                <label class="form-check-label" for="serviceHotel">🏨 호텔링</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="services" value="daycare" id="serviceDaycare">
+                <label class="form-check-label" for="serviceDaycare">🐾 유치원</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="services" value="playroom" id="servicePlayroom">
+                <label class="form-check-label" for="servicePlayroom">🎠 놀이방</label>
             </div>
         </div>
+        <div class="form-step" id="step-3">
+            <!-- 입실/퇴실 날짜 -->
+            <div class="date-time-picker-container">
+                <label for="date-range">🐾 입·퇴실 날짜 선택</label>
+                <input type="text" id="date-range" placeholder="예시) 2025-03-01 ~ 2025-04-05 | 입실과 퇴실을 선택해주세요">
+                <input type="hidden" name="check_in_date" id="check-in-date">
+                <input type="hidden" name="check_out_date" id="check-out-date">
 
-        <!-- 입실/퇴실 날짜 -->
-        <div class="date-time-picker-container">
-            <label for="date-range">🐾 입·퇴실 날짜 선택</label>
-            <input type="text" id="date-range" placeholder="예시) 2025-03-01 ~ 2025-04-05 | 입실과 퇴실을 선택해주세요">
-            <input type="hidden" name="check_in_date" id="check-in-date">
-            <input type="hidden" name="check_out_date" id="check-out-date">
+                <label for="check-in-time">🕒 입실 예정 시간</label>
+                <input type="text" id="check-in-time" name="check_in_time" placeholder="ex) 10:00">
 
-            <label for="check-in-time">🕒 입실 예정 시간</label>
-            <input type="text" id="check-in-time" name="check_in_time" placeholder="ex) 10:00">
-
-            <label for="check-out-time">🕒 퇴실 예정 시간</label>
-            <input type="text" id="check-out-time" name="check_out_time" placeholder="ex) 12:00">
+                <label for="check-out-time">🕒 퇴실 예정 시간</label>
+                <input type="text" id="check-out-time" name="check_out_time" placeholder="ex) 12:00">
+            </div>
         </div>
-
         <!-- 요청사항 -->
-        <div class="mb-4">
+        <div class="mb-4 form-step" id="step-4">
             <label for="notes" class="form-label">추가 요청사항</label>
             <textarea
                     class="form-control"
                     id="notes"
                     name="notes"
                     rows="3"
-                    placeholder="예) 알러지 주의, 특별 간식 요청 등"
+                    placeholder="예) 개인룸 등 | 없으면 공란 가능"
             ></textarea>
-        </div>
-
-        <div class="d-grid">
             <button type="submit" class="btn btn-primary btn-lg">
                 제출 하기
             </button>

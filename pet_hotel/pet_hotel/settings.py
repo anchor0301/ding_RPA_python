@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'querystring_tag',
     'crispy_bootstrap5',
     'django_filters',
+    'notifications',
 ]
 
 MIDDLEWARE = [

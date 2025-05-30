@@ -31,7 +31,7 @@
     </div>
     {% endif %}
     <h3 class="mt-4">✍️ 서명해주세요</h3>
-    <canvas id="signature-pad" width="600" height="400" style="border: 1px solid #ccc;"></canvas>
+    <canvas id="signature-pad" width="400" height="400" style="border: 1px solid #ccc;"></canvas>
 
     <form method="POST" action="{% url 'customer:agreement_submit' %}?token={{ customer.token }}">
         {% csrf_token %}

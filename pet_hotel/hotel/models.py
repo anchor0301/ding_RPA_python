@@ -58,7 +58,9 @@ class Dog(models.Model):
     disease_history = models.TextField(blank=True, max_length=200)
 
     def __str__(self):
-        return f"{self.name} ({self.breed})"
+        # 휴대폰 뒷자리 4자리
+        phone_last4 = self.customer.phone[-4:]
+        return str(f"{self.name}/{self.breed.name}/{phone_last4}/{self.weight}")
 
 
 class Reservation(models.Model):
@@ -73,6 +75,22 @@ class Reservation(models.Model):
     status_info = models.TextField(blank=True)  # 기타 특이사항
 
     notes = models.TextField("참고사항", blank=True, null=True)
+
+    def reservationDate(self):
+        """
+        예약 기간을 "MM월 DD일 부터 총X박 Y일" 형식으로 반환합니다.
+        """
+        # 박수 계산: 체크아웃 - 체크인
+        night_delta = self.check_out - self.check_in
+        nights = night_delta.days
+
+        # 일수: 박수 + 1
+        total_days = nights + 1
+
+        # 체크인일 포맷팅
+        start_str = self.check_in.strftime('%m월 %d일')
+
+        return f"{start_str} 부터 총{nights}박 {total_days}일"
 
     def __str__(self):
         return f"{self.dog.name} 예약 ({self.check_in.strftime('%Y-%m-%d')})"

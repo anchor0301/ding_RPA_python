@@ -8,7 +8,8 @@ import requests
 ######라인 시작######
 API_URI = "https://notify-api.line.me/api/notify"
 
-notice = 'http://wp2102.synology.me:144/customers/#note' #최신 버전
+notice = 'http://wp2102.synology.me:144/customers/#note'  # 최신 버전
+
 
 class LineNotify:
     def __init__(self, access_token, name=None):
@@ -67,14 +68,15 @@ class LineNotify:
         if not self.enable:
             return
 
-        files = {}
         params = {"message": self.format(message)}
+        files = {}
+
+        if sticker_id and package_id:
+            params = {**params, "stickerId": sticker_id, "stickerPackageId": package_id}
 
         if image_path and os.path.isfile(image_path):
             files = {"imageFile": open(image_path, "rb")}
 
-        if sticker_id and package_id:
-            params = {**params, "stickerId": sticker_id, "stickerPackageId": package_id}
 
         requests.post(API_URI, headers=self.headers, params=params, files=files)
 
@@ -99,6 +101,7 @@ error_notify = LineNotify(hide_api.ERROR_TOKEN)  # 에러전송 라인 API 토�
 
 class PostKakao:
     headers = hide_api.headers
+
     def __init__(self):
         self.dog = None
         self.start_day = ""
@@ -191,7 +194,7 @@ class PostKakao:
                 "template": template,
                 "buttons": [
                     {"name": "최종 확인", "type": "MD"},
-                    {"name": "가게 위치 보기","url": "http://kko.to/u6p27hhRZ1||http://kko.to/u6p27hhRZ1"},
+                    {"name": "가게 위치 보기", "url": "http://kko.to/u6p27hhRZ1||http://kko.to/u6p27hhRZ1"},
                     {"name": "준비물 및 주의사항", "url": f"{notice}||{notice}"}
                 ]
 
@@ -274,13 +277,12 @@ def post_message_exit(dog):
         print("response body: %s" % resp.text)
         print("---------------------------")
 
-
 # post_message_register_check(dog)
 # create_contact(1, dog)
 
 # post_message_service(dog)
 # PostKakao.send("22")
 #
-#dog = service(17)
-#kakao = PostKakao()
-#kakao.post_message_service(dog)
+# dog = service(17)
+# kakao = PostKakao()
+# kakao.post_message_service(dog)

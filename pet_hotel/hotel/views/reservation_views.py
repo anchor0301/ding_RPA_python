@@ -1,3 +1,4 @@
+import sys
 import uuid
 from django.views.decorators.csrf import csrf_exempt
 from ..forms import *
@@ -11,6 +12,8 @@ from django.utils.timezone import make_aware
 from datetime import datetime
 import base64
 from django.core.files.base import ContentFile
+import notifications
+import sys
 
 
 def flow_view(request, token):
@@ -168,7 +171,8 @@ def agreement_write(request, token):
     recent_reservations = customer.reservations.order_by('-check_in')[:3]
 
     customer = get_object_or_404(Customer, token=token)
-    return render(request, 'customer/agreement_write.html', {'customer': customer,'recent_reservations':recent_reservations})
+    return render(request, 'customer/agreement_write.html',
+                  {'customer': customer, 'recent_reservations': recent_reservations})
 
 
 @csrf_exempt
@@ -180,6 +184,7 @@ def agreement_submit(request):
     token = request.GET.get('token')
     if request.method == 'POST':
         customer = get_object_or_404(Customer, token=token)
+
         raw = request.POST.get('signature')
         header, imgstr = raw.split(';base64,')
         ext = header.split('/')[-1]  # e.g. 'png'
@@ -195,6 +200,7 @@ def agreement_submit(request):
 
         customer.agreement_signed = True
         customer.save()
+
         return redirect('customer:reservation_form', token=token)
     return redirect('customer:agreement', token=token)
 
@@ -242,14 +248,12 @@ def reservation_form(request, token):
         'dogs': dogs,
     })
 
+
 @require_POST
 def reservation_submit(request, token):
-    print("제출 페이지")
     customer = Customer.objects.filter(token=token).first()
     if not customer:
         return render(request, 'customer/expired.html')
-
-    # 이미 예약했는지 중복 확인은 필요 없으니 제거하거나 메시지 출력으로 대체 가능
 
     # 폼 데이터 처리
     dog_ids = request.POST.getlist('dog_ids')
@@ -266,11 +270,17 @@ def reservation_submit(request, token):
         print(f"❌ 날짜 파싱 에러: {e}")
         return render(request, 'customer/expired.html')
 
+    # 연락처 추가
+    clean_phone = customer.phone.replace('-', '')
+    notifications.CardDav.add_contact_to_carddav(owner_name=customer.name, full_name=customer.dogs.first(),
+                                                 phone_number=clean_phone)
+
     created_reservations = []
 
     for dog_id in dog_ids:
         try:
             dog = get_object_or_404(Dog, id=dog_id, customer=customer)
+
             reservation = Reservation.objects.create(
                 customer=customer,
                 dog=dog,
@@ -280,6 +290,24 @@ def reservation_submit(request, token):
                 notes=notes,
             )
             created_reservations.append(reservation)
+
+            kakao_items = []
+
+            print('강아지 정보 : ', reservation)
+            kakao_items.append({
+                'phone_number': clean_phone,
+                'dog_name': reservation.dog.name,
+                'dog_breed': reservation.dog.breed.name,
+                'service_type': '호텔링',  # 혹은 res.service
+                'back_phone': reservation.customer.phone[-4:],  # 뒷자리
+                'reservation_date': reservation.reservationDate(),
+            })
+
+            notifications.notion.create_page(reservation)
+
+            # 카카오톡 예약완료 전송
+            notifications.kakao.kakao_notify.post_message_service_bulk(kakao_items)
+
         except Exception as e:
             print(f"❌ 예약 생성 실패: {e}")
             continue
