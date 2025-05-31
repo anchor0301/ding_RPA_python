@@ -17,7 +17,6 @@ document.getElementById("reservationForm").addEventListener("submit", function (
     // 반려견 선택 여부 검사
     const checkedDogs = document.querySelectorAll('input[name="dog_ids"]:checked');
 
-
     if (checkedDogs.length === 0) {
         e.preventDefault();
         alert("반려견을 최소 1마리 이상 선택해주세요 🐶");
@@ -68,6 +67,15 @@ document.addEventListener("DOMContentLoaded", function () {
         input.addEventListener("change", () => {
             const selectedService = document.querySelector("input[name='service']:checked")?.value;
 
+
+            document.getElementById("check-in-time").value = '';
+            document.getElementById("check-out-time").value = '';
+
+            document.getElementById("playroom-date").value = '';
+            document.getElementById("playroom-start-time").value = '';
+            document.getElementById("playroom-end-time").value = '';
+
+
             if (selectedService) {
                 step3.classList.add("visible");
 
@@ -101,16 +109,13 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
+
     ["check-in-date", "check-out-date", "check-in-time", "check-out-time"].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
             el.addEventListener("input", checkDateInputs);
         }
     });
-});
-
-<!-- 한글 로케일 먼저 로드 -->
-document.addEventListener("DOMContentLoaded", function () {
 
     const checkIn = document.getElementById("check-in-time");
     const checkOut = document.getElementById("check-out-time");
@@ -167,11 +172,9 @@ document.addEventListener("DOMContentLoaded", function () {
         locale: "ko",
         minDate: "today",
         disableMobile: true,
-        dateFormat: "Y-m-d",
-        onChange: function () {
-            console.log("plyroom_date클릭 됨!")
-        }
+        dateFormat: "Y-m-d"
     });
+
 
     // 놀이방 체크인 시간
     flatpickr(playroom_checkIn, {
@@ -186,6 +189,23 @@ document.addEventListener("DOMContentLoaded", function () {
         locale: "ko"
     });
 
+
+    ["playroom-start-time", "playroom-end-time"].forEach(id => {
+        document.getElementById(id).addEventListener("input", checkPlayroomStep4);
+    });
+
+    function checkPlayroomStep4() {
+        const date = document.getElementById("playroom-date").value;
+        const start = document.getElementById("playroom-start-time").value;
+        const end = document.getElementById("playroom-end-time").value;
+
+        if (date && start && end) {
+            step4.classList.add("visible");
+        } else {
+            step4.classList.remove("visible");
+        }
+    }
+
     //놀이방 체크아웃 시간
     flatpickr(playroom_checkOut, {
         enableTime: true,
@@ -196,7 +216,9 @@ document.addEventListener("DOMContentLoaded", function () {
         minTime: "06:00",
         maxTime: "20:00",
         defaultHour: 12,
-        locale: "ko"
+        locale: "ko",
+        onChange: function () {
+            checkPlayroomStep4();
+        }
     });
-
 });
