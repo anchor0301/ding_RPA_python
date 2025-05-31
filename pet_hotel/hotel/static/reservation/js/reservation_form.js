@@ -1,5 +1,3 @@
-
-
 document.getElementById("reservationForm").addEventListener("submit", function (e) {
     // 날짜 유효성 검사 (기존 코드)
     const checkInDate = document.getElementById("check-in-date").value;
@@ -22,7 +20,6 @@ document.getElementById("reservationForm").addEventListener("submit", function (
 
     if (checkedDogs.length === 0) {
         e.preventDefault();
-        console.log("뿌뿌")
         alert("반려견을 최소 1마리 이상 선택해주세요 🐶");
         return;
     }
@@ -46,10 +43,15 @@ document.addEventListener("DOMContentLoaded", function () {
     const step3 = document.getElementById("step-3");
     const step4 = document.getElementById("step-4");
 
+
+    const multiDayPicker = document.getElementById("multi-day-picker");
+    const playroomPicker = document.getElementById("playroom-picker");
+
     // STEP 1: 강아지 선택 → STEP 2 표시
     document.querySelectorAll("input[name='dog_ids']").forEach(input => {
         input.addEventListener("change", () => {
             const selectedDogs = document.querySelectorAll("input[name='dog_ids']:checked");
+
             if (selectedDogs.length > 0) {
                 step2.classList.add("visible");
             } else {
@@ -61,11 +63,23 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 
     // STEP 2: 서비스 선택 → STEP 3 표시
-    document.querySelectorAll("input[name='services']").forEach(input => {
+    const serviceRadios = document.querySelectorAll("input[name='service']");
+    serviceRadios.forEach(input => {
         input.addEventListener("change", () => {
-            const selectedServices = document.querySelectorAll("input[name='services']:checked");
-            if (selectedServices.length > 0) {
+            const selectedService = document.querySelector("input[name='service']:checked")?.value;
+
+            if (selectedService) {
                 step3.classList.add("visible");
+
+                if (selectedService === "playroom") {
+                    playroomPicker.style.display = "block";
+                    multiDayPicker.style.display = "none";
+                    step4.classList.remove("visible");
+                } else {
+                    multiDayPicker.style.display = "block";
+                    playroomPicker.style.display = "none";
+                    step4.classList.remove("visible");
+                }
             } else {
                 step3.classList.remove("visible");
                 step4.classList.remove("visible");
@@ -93,24 +107,20 @@ document.addEventListener("DOMContentLoaded", function () {
             el.addEventListener("input", checkDateInputs);
         }
     });
-
-    // flatpickr 이벤트에서도 확인
-    flatpickr("#date-range", {
-        mode: "range",
-        locale: "ko",
-        dateFormat: "Y-m-d",
-        onChange: function (selectedDates) {
-            if (selectedDates.length === 2) {
-                document.getElementById("check-in-date").value = selectedDates[0].toISOString().slice(0, 10);
-                document.getElementById("check-out-date").value = selectedDates[1].toISOString().slice(0, 10);
-                checkDateInputs();
-            }
-        }
-    });
 });
 
 <!-- 한글 로케일 먼저 로드 -->
 document.addEventListener("DOMContentLoaded", function () {
+
+    const checkIn = document.getElementById("check-in-time");
+    const checkOut = document.getElementById("check-out-time");
+
+    const playroom_date = document.getElementById("playroom-date");
+    const playroom_checkIn = document.getElementById("playroom-start-time");
+    const playroom_checkOut = document.getElementById("playroom-end-time");
+
+    if (checkIn._flatpickr) checkIn._flatpickr.destroy();
+    if (checkOut._flatpickr) checkOut._flatpickr.destroy();
 
     // 날짜 range
     flatpickr("#date-range", {
@@ -125,36 +135,68 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
-
-
-    const checkIn = document.getElementById("check-in-time");
-    const checkOut = document.getElementById("check-out-time");
-
-    if (checkIn._flatpickr) checkIn._flatpickr.destroy();
-    if (checkOut._flatpickr) checkOut._flatpickr.destroy();
-
-    // 시간 선택기
+    // 호텔 체크인
     flatpickr(checkIn, {
         enableTime: true,
         noCalendar: true,
         dateFormat: "H:i",
         time_24hr: true,
-        disableMobile: true, // ⭐ 이게 핵심
+        disableMobile: true,
         minTime: "06:00",
         maxTime: "20:00",
         defaultHour: 10,
         locale: "ko"
     });
 
+    //호텔 체크아웃
     flatpickr(checkOut, {
         enableTime: true,
         noCalendar: true,
         dateFormat: "H:i",
         time_24hr: true,
-        disableMobile: true, // ⭐ 이게 핵심
+        disableMobile: true,
         minTime: "06:00",
         maxTime: "20:00",
         defaultHour: 12,
         locale: "ko"
     });
+
+    //놀이방
+    flatpickr(playroom_date, {
+        mode: "single",
+        locale: "ko",
+        minDate: "today",
+        disableMobile: true,
+        dateFormat: "Y-m-d",
+        onChange: function () {
+            console.log("plyroom_date클릭 됨!")
+        }
+    });
+
+    // 놀이방 체크인 시간
+    flatpickr(playroom_checkIn, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+        disableMobile: true,
+        minTime: "06:00",
+        maxTime: "20:00",
+        defaultHour: 10,
+        locale: "ko"
+    });
+
+    //놀이방 체크아웃 시간
+    flatpickr(playroom_checkOut, {
+        enableTime: true,
+        noCalendar: true,
+        dateFormat: "H:i",
+        time_24hr: true,
+        disableMobile: true,
+        minTime: "06:00",
+        maxTime: "20:00",
+        defaultHour: 12,
+        locale: "ko"
+    });
+
 });
