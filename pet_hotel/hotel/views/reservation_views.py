@@ -290,10 +290,13 @@ def reservation_submit(request, token):
         print(f"❌ 날짜 파싱 에러: {e}")
         return render(request, 'customer/expired.html')
 
-    # 연락처 추가
-    clean_phone = customer.phone.replace('-', '')
-    notifications.CardDav.add_contact_to_carddav(owner_name=customer.name, full_name=customer.dogs.first(),
-                                                 phone_number=clean_phone)
+    reservation_count = Reservation.objects.filter(customer=customer).count()
+
+    # 첫 예약일 때만 연락처 추가
+    if reservation_count == 0:
+        clean_phone = customer.phone.replace('-', '')
+        notifications.CardDav.add_contact_to_carddav(owner_name=customer.name, full_name=customer.dogs.first(),
+                                                     phone_number=clean_phone)
 
     created_reservations = []
 
