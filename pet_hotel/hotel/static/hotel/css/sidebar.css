@@ -1,0 +1,72 @@
+/* 사이드바 전체 */
+.sidebar {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 220px;
+  background-color: #343a40;
+  padding: 1rem;
+  height: 100%;
+  transform: translateX(0);
+  transition: transform 0.7s ease-in-out;
+  z-index: 1000;
+}
+.sidebar-hidden {
+  transform: translateX(-100%);
+}
+
+/* 메뉴 리스트 */
+.sidebar ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+.sidebar ul li {
+  margin-bottom: 1rem;
+}
+.sidebar ul li a {
+  text-decoration: none;
+  color: #ccc;
+  font-size: 1rem;
+  transition: background-color 0.7s ease, color 0.7s ease;
+  display: block;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+}
+
+/* 활성 메뉴 */
+.sidebar li.active {
+  background-color: transparent;
+  border-radius: 8px;
+  transition: background-color 0.7s ease;
+}
+.sidebar li.active.was-active {
+  background-color: #495057;
+}
+
+.sidebar li.active a {
+  color: #fff;
+  font-weight: bold;
+  padding-left: 2rem;
+  position: relative;
+  transition: color 0.7s ease;
+}
+
+/* before 아이콘 */
+.sidebar li.active a::before {
+  content: '>';
+  position: absolute;
+  left: 0.75rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #d59797;
+  font-size: 0.75rem;
+  transition: color 0.3s ease;
+}
+
+/* 뱃지 스타일 */
+.badge {
+    font-size: 0.95rem;
+    padding: 0.7em 0.75em;
+    border-radius: 1em;
+}

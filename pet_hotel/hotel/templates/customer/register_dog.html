@@ -1,0 +1,110 @@
+{% extends 'public_base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block extra_css %}
+ <link  href="{% static 'reservation/css/register_dog.css' %}"rel="stylesheet">
+  <link rel="stylesheet" href="{% static 'reservation/css/public_base.css' %}">
+{% endblock %}
+{% block content %}
+<div class="container py-5">
+    <div class="card mx-auto" style="max-width: 700px;">
+        <div class="card-header text-center">
+            <h2 class="mb-0">강아지 등록</h2>
+        </div>
+        <div class="card-body">
+            <form method="post" novalidate class="needs-validation" autocomplete="off">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+
+                <div class="row g-3">
+                    <!-- 이름 -->
+                    <div class="col-md-6">
+                        <label for="{{ form.name.id_for_label }}" class="form-label">이름</label>
+                        {{ form.name|add_class:"form-control" }}
+                        <div class="invalid-feedback">
+                            {{ form.name.errors.as_text|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- 견종 -->
+                    <div class="col-md-6">
+                        <div class="mb-3 position-relative">
+                        <label for="{{ form.breed.id_for_label }}" class="form-label">견종</label>
+
+                            {{ form.breed|add_class:"form-control" }}
+                            <div class="autocomplete-suggestions"></div>
+                            <div class="invalid-feedback">
+                                {{ form.breed.errors.as_text|striptags }}
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <!-- 몸무게 -->
+                    <div class="col-md-4">
+                        <label for="{{ form.weight.id_for_label }}" class="form-label">몸무게 (kg)</label>
+                        {{ form.weight|add_class:"form-control" }}
+                        <div class="invalid-feedback">
+                            {{ form.weight.errors.as_text|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- 성별 -->
+                    <div class="col-md-4">
+                        <label for="{{ form.gender.id_for_label }}" class="form-label">성별</label>
+                        {{ form.gender|add_class:"form-select" }}
+                        <div class="invalid-feedback">
+                            {{ form.gender.errors.as_text|striptags }}
+                        </div>
+                    </div>
+
+                    <!-- 체크박스들 -->
+                    <div class="col-12">
+                        <div class="row">
+                            {% for cb in form.visible_fields %}
+                            {% if cb.name in 'neutered vaccinated bites separation_anxiety timid' %}
+                            <div class="col-6 col-md-4">
+                                <div class="form-check">
+                                    {{ cb|add_class:"form-check-input" }}
+                                    <label class="form-check-label" for="{{ cb.id_for_label }}">
+                                        {{ cb.label }}
+                                    </label>
+                                </div>
+                            </div>
+                            {% endif %}
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    <!-- 추가 건강 정보 -->
+                    <div class="col-12">
+                        <label for="{{ form.allergy.id_for_label }}" class="form-label">알러지 정보 (없을 시 공란)</label>
+                        {{ form.allergy|add_class:"form-control" }}
+                    </div>
+                    <div class="col-12">
+                        <label for="{{ form.disease_history.id_for_label }}" class="form-label">질병 이력 (없을 시 공란)</label>
+                        {{ form.disease_history|add_class:"form-control" }}
+                    </div>
+
+                    <!-- 특이사항 -->
+                    <div class="col-12">
+                        <label for="{{ form.special_note.id_for_label }}" class="form-label">특이사항 (없을 시 공란)</label>
+                        {{ form.special_note|add_class:"form-control" }}
+                    </div>
+
+                </div>
+
+                <div class="mt-4 text-center">
+                    <button type="submit" class="btn btn-lg btn-primary px-5">
+                        등록하고 서명하러 가기
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+    <script src="{% static 'reservation/js/register_dog.js' %}"></script>
+{% endblock %}

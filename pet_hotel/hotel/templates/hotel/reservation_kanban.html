@@ -1,0 +1,101 @@
+{% extends "base.html" %}
+{% load static %}
+{% load dict_filters %}
+
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center my-4">
+  <h2>예약 상태 보드 (Kanban)</h2>
+</div>
+
+<div class="kanban-board d-flex gap-3">
+  {% for status_key, label in status_labels.items %}
+<div class="kanban-column flex-fill bg-light border rounded p-2" data-status="{{ status_key }}"
+     ondrop="handleDrop(event)"
+     ondragover="allowDrop(event)">
+  <!-- ✅ 제목은 항상 보이도록 유지 -->
+  <h5 class="text-center user-select-none toggle-header" data-target="{{ status_key }}">
+    <span class="toggle-icon" id="icon-{{ status_key }}">▼</span>
+    {{ label }} ({{ reservation_counts|get_item:status_key }})
+  </h5>
+
+  <!-- ✅ 카드 리스트 부분만 id 부여해서 숨길 수 있게 -->
+  <div class="kanban-list d-flex flex-column gap-2 min-vh-25" id="column-{{ status_key }}">
+    {% for r in reservations|get_item:status_key %}
+    <div class="kanban-card"
+     draggable="true"
+     ondragstart="handleDragStart(event)"
+     data-id="{{ r.id }}"
+     id="card-{{ r.id }}"
+     data-status="{{ status_key }}">
+
+
+  <div class="card-title">
+     {{ r.dog.name }}/{{ r.customer.phone|last4 }}/{{ r.dog.weight }}kg/{{ r.dog.id }}
+  </div>
+<div>
+  <span class="card-tag breed {{ r.dog.breed }}">{{ r.dog.breed }}</span>
+
+  {% if r.dog.gender == "male" %}
+    <span class="card-tag male">수컷 </span>
+  {% else %}
+    <span class="card-tag female">암컷 </span>
+  {% endif %}
+</div>
+  {% if r.notes %}
+    <div class="card-description">{{ r.notes }}</div>
+  {% endif %}
+
+  <div class="card-date">
+    {{ r.check_in|date:"m/d H:i" }} → {{ r.check_out|date:"m/d H:i" }}
+  </div>
+
+</div>
+
+    {% empty %}
+    <div class="text-muted text-center small">예약 없음</div>
+    {% endfor %}
+  </div>
+</div>
+
+{% endfor %}
+
+</div>
+<!-- 예약 상세 정보 모달 -->
+<div class="modal fade" id="reservationDetailModal" tabindex="-1" aria-labelledby="reservationDetailLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reservationDetailLabel">예약 상세 정보</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="닫기"></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        로딩 중...
+      </div>
+      <div class="modal-footer justify-content-between">
+  <div class="quick-actions">
+
+ </div>
+  <button class="btn btn-secondary" data-bs-dismiss="modal">닫기</button>
+</div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'hotel/css/kanban.css' %}">
+<link rel="stylesheet" href="{% static 'hotel/css/kanban_card.css' %}">
+<link rel="stylesheet" href="{% static 'hotel/css/kanban_modal.css' %}">
+<link rel="stylesheet" href="{% static 'hotel/css/kanban_mobile.css' %}">
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const csrfToken = "{{ csrf_token }}";
+</script>
+<script src="{% static 'hotel/js/kanban.js' %}"></script>
+{% endblock %}
+

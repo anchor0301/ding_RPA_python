@@ -1,0 +1,114 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'hotel/css/dashboard.css' %}">
+{% endblock %}
+
+{% block content %}
+<h1 class="mb-4 fw-bold">📊 관리자 대시보드 <small class="text-muted fs-5">({{ today }})</small></h1>
+
+{% if upcoming_checkins or upcoming_checkouts %}
+<div class="preview-box shadow-sm rounded p-4 mb-4 bg-white border">
+    <h5 class="mb-3">🐾 <strong>오늘 입·퇴실 예정 강아지</strong></h5>
+    <div class="row gy-2 gx-4">
+        {% if upcoming_checkins %}
+        <div class="col-md-6">
+            <strong class="text-dark">🚪 입실 예정:</strong>
+            <ul class="mb-0 ps-3 small text-dark">
+                {% for r in upcoming_checkins %}
+                <li>{{ r.dog.name }} <span class="text-muted">({{ r.check_in|date:"n월 j일 H:i" }} 입실) {{r.check_in}}</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+        {% if upcoming_checkouts %}
+        <div class="col-md-6">
+            <strong class="text-dark">🏠 퇴실 예정:</strong>
+            <ul class="mb-0 ps-3 small text-dark">
+                {% for r in upcoming_checkouts %}
+                <li>{{ r.dog.name }} <span class="text-muted">({{ r.check_out|date:"n월 j일 H:i" }} 예정)</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+        {% endif %}
+    </div>
+</div>
+{% endif %}
+<div id="dashboard">
+    <div class="row kpi-row gy-4 gx-2">
+        <div class="col-6 col-md-4">
+            <div class="kpi-card" onclick="location.href='{% url 'hotel:current_dogs' %}'">
+                <div class="label">입실 중 강아지</div>
+                <div class="value">{{ current_count }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="kpi-card" onclick="location.href='{% url 'hotel:checkins' %}'">
+                <div class="label">입실 예정</div>
+                <div class="value">{{ checkin_count }}</div>
+            </div>
+        </div>
+        <div class="col-6 col-md-4">
+            <div class="kpi-card" onclick="location.href='{% url 'hotel:checkouts' %}'">
+                <div class="label">퇴실 예정</div>
+                <div class="value">{{ checkout_count }}</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<section class="chart-section">
+    <h2 class="mb-3 fw-semibold">📈 최근 7일 입실현황</h2>
+    <div class="card shadow-sm p-4 bg-white">
+        <canvas id="occupancyChart"></canvas>
+    </div>
+</section>
+
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const ctx = document.getElementById('occupancyChart');
+        if (!ctx) return;
+
+        const labels = JSON.parse('{{ occupancy_labels|safe }}');
+        const data = JSON.parse('{{ occupancy_data|safe }}');
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: '최근 7일 입실 중 강아지 수',
+                    data: data,
+                    borderWidth: 2,
+                    fill: true,
+                    backgroundColor: 'rgba(102, 126, 234, 0.2)',
+                    borderColor: 'rgba(102, 126, 234, 1)',
+                    tension: 0.3
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        display: true
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
+                    }
+                }
+            }
+        });
+    });
+</script>
+{% endblock %}

@@ -1,0 +1,18 @@
+.card {
+  border-radius: 12px;
+  border: 1px solid #f2e5dc;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.03);
+}
+
+.card-header {
+  background-color: #fff5f0;
+}
+
+.autocomplete-suggestions {
+  position: absolute;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  z-index: 1000;
+  max-height: 200px;
+  overflow-y: auto;
+}

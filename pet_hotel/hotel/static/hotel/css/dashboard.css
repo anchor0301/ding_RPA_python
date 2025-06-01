@@ -1,0 +1,62 @@
+/* 대시보드 전체 그리드 */
+#dashboard {
+    padding: 1rem 0;
+}
+
+/* KPI 카드 */
+.kpi-card {
+    background: #f8f9fa;
+    border-radius: 1rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+    padding: 1.5rem;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    height: 100%;
+}
+
+.kpi-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+}
+
+.kpi-card .label {
+    font-size: 1rem;
+    color: #6c757d;
+    font-weight: 500;
+    margin-bottom: 0.5rem;
+}
+
+.kpi-card .value {
+    font-size: 2.5rem;
+    font-weight: bold;
+    color: #212529;
+}
+
+/* 전체 레이아웃 컨테이너 */
+.dashboard-container {
+    display: flex;
+    position: relative;
+}
+
+/* ===== 메인 콘텐츠 ===== */
+.main-content {
+    margin-left: 220px;
+    flex-grow: 1;
+    padding: 2rem;
+    background: #f8f9fa;
+    min-height: 100vh;
+    transition: margin-left 0.3s ease-in-out;
+}
+
+.content-expanded {
+    margin-left: 0 !important;
+}
+
+/* 차트 */
+.chart-container {
+    position: relative;
+    width: 100%;
+    max-width: 100%;
+}
+

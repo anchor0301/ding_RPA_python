@@ -278,3 +278,4 @@ Add_PhoneNumber/.credentials/aaaa.json
 *.json
 hide_api.py
 
+/pet_hotel/hotel/migrations/0001_initial.py

@@ -33,7 +33,7 @@ kakao = PostKakao()
 
 def main():
     notify.send("프로그램 시작")
-    print("2024/08/13 - 노션날짜 이상 고침")
+    print("2025/04/18 - nas 연락처 추가")
 
     existing_end_column = len(worksheet.col_values(6))  # 이미 추가된 전화번호들 중 마지막 번호의 열 번호를 저장한다.   A
 
@@ -67,7 +67,7 @@ def main():
                 # 예전 등록한 기록이 없다면 전화번호를 추가
                 if [dog.phoneNumber] not in existing_end_phone_number:
                     try:
-                        create_google_contact(dog)  # 새로 등록된 번호를 구글주소록에서 추가.
+                        create_google_contact(dog)  # 새로 등록된 번호를 구글 주소록에서 추가.
                         kakao.post_message_service(dog)  # 고객에게 카카오톡 전송.
                         notify.registration_false()  # 이미 등록된 고객인가?
 
@@ -76,7 +76,6 @@ def main():
                         notify.send(f"‼‼‼\n새로운 연락처 추가중 프로그램 정지\n{e}")
                 else:
                     try:
-                        
                         kakao.post_message_service(dog)
                         notify.registration_true()
 

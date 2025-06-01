@@ -1,0 +1,8 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>✅ 고객 등록 완료</h2>
+  <p><strong>{{ customer.name }}</strong> 님이 등록되었습니다.</p>
+  <p>📎 동의서 링크: <code>{{ request.build_absolute_uri }}/hotel/agreement/{{ customer.token }}/</code></p>
+</div>
+{% endblock %}

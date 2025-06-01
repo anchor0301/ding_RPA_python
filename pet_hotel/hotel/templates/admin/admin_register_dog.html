@@ -1,0 +1,64 @@
+
+{% block content %}
+<div class="container mt-5">
+  <h2>🐾 {{ customer.name }} 님의 강아지를 등록해주세요</h2>
+  <form method="post">
+    {% csrf_token %}
+
+    <div class="mb-3">
+      <label>강아지 이름</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label>견종</label>
+      <input type="text" name="breed" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label>몸무게 (Kg)</label>
+      <input type="number" step="0.1" name="weight" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+      <label>성별</label>
+      <select name="gender" class="form-select" required>
+        <option value="M">수컷</option>
+        <option value="F">암컷</option>
+      </select>
+    </div>
+
+    <div class="mb-3">
+      <label>견종 특이사항</label>
+      <textarea name="special_note" class="form-control" rows="3"></textarea>
+    </div>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" name="neutered" id="neutered">
+      <label class="form-check-label" for="neutered">중성화 했어요</label>
+    </div>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" name="vaccinated" id="vaccinated">
+      <label class="form-check-label" for="vaccinated">접종 완료</label>
+    </div>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" name="bites" id="bites">
+      <label class="form-check-label" for="bites">입질 있어요</label>
+    </div>
+
+    <div class="form-check mb-2">
+      <input class="form-check-input" type="checkbox" name="separation_anxiety" id="separation_anxiety">
+      <label class="form-check-label" for="separation_anxiety">분리불안 있어요</label>
+    </div>
+
+    <div class="form-check mb-4">
+      <input class="form-check-input" type="checkbox" name="timid" id="timid">
+      <label class="form-check-label" for="timid">겁이 많아요</label>
+    </div>
+
+    <button type="submit" class="btn btn-primary">등록하고 서명하러 가기 ✍️</button>
+  </form>
+</div>
+{% endblock %}

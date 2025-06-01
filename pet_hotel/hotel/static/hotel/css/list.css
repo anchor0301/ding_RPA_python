@@ -1,0 +1,85 @@
+/* 컨테이너 및 헤더 */
+.list-container {
+  margin: 2rem 1rem;
+  background: #fff;
+  border-radius: 1rem;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: 1.5rem;
+}
+.list-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+.list-header h1 {
+  font-size: 1.5rem;
+  color: #343a40;
+}
+.search-input {
+  padding: 0.5rem 1rem;
+  border: 1px solid #ced4da;
+  border-radius: 0.75rem;
+  width: 250px;
+  transition: border-color 0.2s;
+}
+.search-input:focus {
+  outline: none;
+  border-color: #6c63ff;
+}
+
+/* 테이블 스타일 */
+.table-responsive {
+  overflow-x: auto;
+}
+.custom-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.custom-table thead {
+  background: #f1f3f5;
+}
+.custom-table th,
+.custom-table td {
+  padding: 0.75rem 1rem;
+  text-align: left;
+  border-bottom: 1px solid #e9ecef;
+}
+.custom-table tbody tr:nth-child(even) {
+  background: #f8f9fa;
+}
+
+/* 일반 행 호버 (선택적) */
+.custom-table tbody tr:hover {
+  background-color: #e9ecef;
+}
+
+/* 클릭 가능한 행 커서 & 호버 */
+.custom-table tbody tr.clickable-row {
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.custom-table tbody tr.clickable-row:hover {
+  background-color: #f1f3f5;
+}
+@media (max-width: 768px) {
+  .list-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+  }
+
+  .search-input {
+    width: 100%;
+  }
+
+  .custom-table thead {
+    font-size: 0.9rem;
+  }
+
+  .custom-table td,
+  .custom-table th {
+    font-size: 0.9rem;
+    padding: 0.5rem 0.75rem;
+  }
+}

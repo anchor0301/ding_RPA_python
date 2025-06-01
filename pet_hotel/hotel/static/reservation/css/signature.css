@@ -1,0 +1,25 @@
+.agreement-container {
+  max-width: 700px;
+  margin: 60px auto;
+  padding: 30px;
+  background-color: #fffdfa;
+  border-radius: 16px;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.05);
+}
+
+.agreement-box {
+  background-color: #fff0e6;
+  border-left: 5px solid #f2a88d;
+  padding: 16px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+}
+
+canvas#signature-pad {
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  display: block;
+  margin: 20px 0;
+  width: 100%;
+  height: auto;
+}

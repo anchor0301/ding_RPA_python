@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container mt-5">
+  <h2>👩‍💼 신규 고객 수동 등록</h2>
+  {% if error %}
+    <div class="alert alert-danger">{{ error }}</div>
+  {% endif %}
+  <form method="post">
+    {% csrf_token %}
+    <div class="mb-3">
+      <label>이름</label>
+      <input type="text" name="name" class="form-control" required>
+    </div>
+    <div class="mb-3">
+      <label>전화번호</label>
+      <input type="text" name="phone" class="form-control" required>
+    </div>
+    <button type="submit" class="btn btn-success">고객 등록 및 링크 생성</button>
+  </form>
+</div>
+{% endblock %}
