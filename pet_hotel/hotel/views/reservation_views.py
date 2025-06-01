@@ -251,21 +251,41 @@ def reservation_form(request, token):
 
 @require_POST
 def reservation_submit(request, token):
+    """
+    POST 요청시 예약 정보를 제출
+    """
     customer = Customer.objects.filter(token=token).first()
     if not customer:
         return render(request, 'customer/expired.html')
 
+    print(request.POST)
+
     # 폼 데이터 처리
     dog_ids = request.POST.getlist('dog_ids')
+    service = request.POST.get("service")  # 예: '2025-05-29'
     check_in_date = request.POST.get("check_in_date")  # 예: '2025-05-29'
     check_in_time = request.POST.get("check_in_time")  # 예: '10:00'
     check_out_date = request.POST.get("check_out_date")
     check_out_time = request.POST.get("check_out_time")
-    notes = request.POST.get('notes', '').strip()
+    notes = request.POST.get('notes', ' ').strip()
+
+    daycare_pass = None
+    if request.POST.get('service') == 'PLAYROOM':
+        check_in_date = request.POST.get("playroom_date")  # 예: '2025-05-29'
+        check_in_time = request.POST.get("playroom_start_time")  # 예: '10:00'
+        check_out_date = request.POST.get("playroom_date")
+        check_out_time = request.POST.get("playroom_start_time")
+
+    elif request.POST.get('service') == 'DAYCARE':
+        daycare_pass = request.POST.get("daycare_pass")
+        check_in = make_aware(datetime.strptime(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S'))
+        check_out = make_aware(datetime.strptime(datetime.now().strftime('%Y-%m-%d %H:%M:%S'), '%Y-%m-%d %H:%M:%S'))
 
     try:
-        check_in = make_aware(datetime.strptime(f"{check_in_date} {check_in_time}", "%Y-%m-%d %H:%M"))
-        check_out = make_aware(datetime.strptime(f"{check_out_date} {check_out_time}", "%Y-%m-%d %H:%M"))
+        if request.POST.get('service') != 'DAYCARE':
+            check_in = make_aware(datetime.strptime(f"{check_in_date} {check_in_time}", "%Y-%m-%d %H:%M"))
+            check_out = make_aware(datetime.strptime(f"{check_out_date} {check_out_time}", "%Y-%m-%d %H:%M"))
+
     except Exception as e:
         print(f"❌ 날짜 파싱 에러: {e}")
         return render(request, 'customer/expired.html')
@@ -284,6 +304,8 @@ def reservation_submit(request, token):
             reservation = Reservation.objects.create(
                 customer=customer,
                 dog=dog,
+                service=service,
+                daycare_pass=daycare_pass,
                 reservation_date=timezone.now(),
                 check_in=check_in,
                 check_out=check_out,
@@ -298,7 +320,7 @@ def reservation_submit(request, token):
                 'phone_number': clean_phone,
                 'dog_name': reservation.dog.name,
                 'dog_breed': reservation.dog.breed.name,
-                'service_type': '호텔링',  # 혹은 res.service
+                'service_type': service,  # 혹은 res.service
                 'back_phone': reservation.customer.phone[-4:],  # 뒷자리
                 'reservation_date': reservation.reservationDate(),
             })

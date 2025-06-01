@@ -81,39 +81,39 @@ class KakaoNotify:
         :param back_phone: 전화번호 뒷자리
         :param reservation_date: 예약 날짜/시간 문자열
         """
-
-
-
         title = dog_name[0]
-        if '호텔링' in service_type:
+        if 'HOTEL' in service_type:
             body = (
                 f"{reservation_date}\n\n"
                 f"이름: {title}\n"
                 f"견종: {dog_breed[0]}\n"
-                f"서비스: {service_type}\n"
+                f"서비스: 호텔링\n"
                 f"전화번호 뒷자리: {back_phone}\n\n"
                 "■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다.\n\n"
                 "■  『최종 확인』 버튼을 눌러주세요"
             )
             template = "10005"
-        elif '놀이방' in service_type:
+        elif 'PLAYROOM' in service_type:
             body = (
                 f"{reservation_date}\n\n"
                 f"이름: {title}\n"
-                f"견종: {dog_breed}\n"
-                f"서비스: {service_type}\n"
+                f"견종: {dog_breed[0]}\n"
+                f"서비스: 놀이방\n"
                 f"전화번호 뒷자리: {back_phone}\n\n"
                 "■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다.\n\n"
                 "■ 『최종 확인』 버튼을 눌러주세요"
             )
             template = "10007"
-        elif '유치원' in service_type:
+        elif 'DAYCARE' in service_type:
             body = (
-                f"서비스 횟수: {reservation_date}\n\n"
+                f"서비스 횟수:{reservation_date}\n\n"
                 f"이름: {title}\n"
-                f"서비스: {service_type}\n"
+                f"견종: {dog_breed[0]}\n"
+                f"서비스: 유치원\n"
                 f"전화번호 뒷자리: {back_phone}\n\n"
-                "■ 준비물 및 주의사항 확인 부탁드립니다."
+                
+                "■ 아래 준비물 및 주의사항 꼭 확인 부탁드립니다.\n\n"
+                "■ 『최종 확인』 버튼을 눌러주세요"
             )
             template = "10010"
         else:

@@ -12,6 +12,9 @@ app_name = 'customer'
 
 urlpatterns = [
 
+    path("customer", views.customer_page, name="customerPage"),
+    path("customer/terms", views.terms_page, name="Terms"),
+
     # 1. Flow 허브 (여기서 register → dog → agreement → reservation 로 분기)
     path('agreement/<uuid:token>/', views.flow_view, name='agreement'),
 

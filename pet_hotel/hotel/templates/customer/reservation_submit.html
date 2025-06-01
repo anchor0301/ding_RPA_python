@@ -3,7 +3,7 @@
 
 
 {% block extra_css %}
-  <link rel="stylesheet" href="{% static 'reservation/css/public_base.css' %}">
+<link rel="stylesheet" href="{% static 'reservation/css/public_base.css' %}">
 <link rel="stylesheet" href="{% static 'reservation/css/reservation_submit.css' %}">
 {% endblock %}
 
@@ -11,9 +11,16 @@
 
 <h2>{{ customer.name }}님의 예약이 완료되었습니다!</h2>
 <ul>
-  {% for reservation in reservations %}
-    <li>{{ reservation.dog.name }} - {{ reservation.check_in|date:"Y-m-d" }} ~ {{ reservation.check_out|date:"Y-m-d" }}</li>
-  {% endfor %}
+
+    {% for reservation in reservations %}
+    {% if reservation.daycare_pass%}
+    <li>{{ reservation.dog.name }} - {{ reservation.daycare_pass}} 회</li>
+    {% else %}
+    <li>{{ reservation.dog.name }} - {{ reservation.check_in|date:"Y-m-d" }} ~
+        {{ reservation.check_out|date:"Y-m-d" }}
+    </li>
+    {% endif %}
+    {% endfor %}
 </ul>
 <a href="/customer">홈으로 가기</a>
 

@@ -55,29 +55,27 @@
                     <a href="{% url 'customer:register_dog' token=customer.token %}" class="btn">애견 추가</a>
                 </label>
             </div>
+        </div>
 
-        </div>
-        <!-- STEP 2: 서비스 선택 -->
-        <div id="step-2" class="form-step">
-            <h4>2단계: 서비스 선택</h4>
-            <div class="form-check">
-                <input class="form-check-input service-option" type="radio" name="service" value="hotel"
-                       id="serviceHotel">
-                <label class="form-check-label" for="serviceHotel">🏨 호텔링</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input service-option" type="radio" name="service" value="daycare"
-                       id="serviceDaycare">
-                <label class="form-check-label" for="serviceDaycare">🐾 유치원</label>
-            </div>
-            <div class="form-check">
-                <input class="form-check-input service-option" type="radio" name="service" value="playroom"
-                       id="servicePlayroom">
-                <label class="form-check-label" for="servicePlayroom">🎠 놀이방</label>
+        <div id="step-2" class="form-step mt-4">
+            <label class="form-label d-block ">2단계: 원하는 서비스를 선택해주세요</label>
+
+            <div class="btn-group gap-1 " role="group" aria-label="Service selection">
+                <input type="radio" class="btn-check" name="service" id="serviceHotel" value="HOTEL" autocomplete="off">
+                <label class="btn btn-outline-primary" for="serviceHotel">🏨 호텔링</label>
+
+                <input type="radio" class="btn-check" name="service" id="serviceDaycare" value="DAYCARE"
+                       autocomplete="off">
+                <label class="btn btn-outline-primary" for="serviceDaycare">🐾 유치원</label>
+
+                <input type="radio" class="btn-check" name="service" id="servicePlayroom" value="PLAYROOM"
+                       autocomplete="off">
+                <label class="btn btn-outline-primary" for="servicePlayroom">🎠 놀이방</label>
             </div>
         </div>
+
         <div class="form-step" id="step-3">
-            <!-- 입실/퇴실 날짜 -->
+            <!-- 입실/퇴실 -->
             <div class="date-time-picker-container" id="multi-day-picker" style="display: none;">
                 <label for="date-range">🐾 호텔 입·퇴실 날짜 선택</label>
                 <input type="text" id="date-range" placeholder="예시) 2025-03-01 ~ 2025-04-05 | 입실과 퇴실을 선택해주세요">
@@ -91,7 +89,25 @@
                 <input type="text" id="check-out-time" name="check_out_time" placeholder="ex) 12:00">
             </div>
 
-            <!-- 놀이방 전용 -->
+            <!-- 유치원 -->
+            <div class="date-time-picker-container" id="daycare-picker" style="display: none;">
+                <label class="form-label d-block mb-2">유치원 이용권 선택</label>
+                <div class="btn-group d-flex  gap-1" role="group" aria-label="Daycare pass selection">
+                    <input type="radio" class="btn-check" name="daycare_pass" id="pass5" value="5" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="pass5">5회권</label>
+
+                    <input type="radio" class="btn-check" name="daycare_pass" id="pass10" value="10" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="pass10">10회권</label>
+
+                    <input type="radio" class="btn-check" name="daycare_pass" id="pass20" value="20" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="pass20">20회권</label>
+
+                    <input type="radio" class="btn-check" name="daycare_pass" id="pass40" value="40" autocomplete="off">
+                    <label class="btn btn-outline-primary" for="pass40">40회권</label>
+                </div>
+            </div>
+
+            <!-- 놀이방 -->
             <div class="date-time-picker-container" id="playroom-picker" style="display: none;">
                 <label for="playroom-date">🎠 놀이방 이용일</label>
                 <input type="text" id="playroom-date" name="playroom_date" placeholder="예시) 2025-03-01">

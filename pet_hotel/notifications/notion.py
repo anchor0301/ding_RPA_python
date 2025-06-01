@@ -47,6 +47,14 @@ def create_page(res) -> dict:
     else:
         gender = '암컷'
 
+    service=''
+    if res.service == 'DAYCARE':
+        service = '유치원'
+    elif res.service == 'HOTEL':
+        service = '호텔링'
+    elif res.service == 'PLAYROOM':
+        service = '놀이방'
+
     body = {
         "parent": {"database_id": DATABASE_ID},
         "properties": {
@@ -55,7 +63,7 @@ def create_page(res) -> dict:
             },
             "서비스": {
                 "type": "select",
-                "select": {"name": '호텔링'}
+                "select": {"name": service}
             },
             "날짜": {
                 "type": "date",

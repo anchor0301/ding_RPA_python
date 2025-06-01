@@ -64,11 +64,32 @@ class Dog(models.Model):
 
 
 class Reservation(models.Model):
+    SERVICE_CHOICES = (
+        ('HOTEL', '호텔'),
+        ('DAYCARE', '유치원'),
+        ('PLAYROOM', '놀이방'),
+    )
+
+    DAYCARE_PASS_CHOICES = [
+        (5, '5회권'),
+        (10, '10회권'),
+        (20, '20회권'),
+        (40, '40회권'),
+    ]
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE, related_name='reservations')
     dog = models.ForeignKey(Dog, on_delete=models.CASCADE, related_name='reservations')
+
+    service = models.CharField(max_length=10, choices=SERVICE_CHOICES)
+    daycare_pass = models.IntegerField(
+        choices=DAYCARE_PASS_CHOICES,
+        blank=True,
+        null=True,
+        verbose_name="유치원 이용권"
+    )
+
     reservation_date = models.DateField(auto_now_add=True)
-    check_in = models.DateTimeField()
-    check_out = models.DateTimeField()
+    check_in = models.DateTimeField(null=True)
+    check_out = models.DateTimeField(null=True)
     is_checked_in = models.BooleanField(default=False)
     is_checked_out = models.BooleanField(default=False)
     is_canceled = models.BooleanField(default=False)
@@ -81,16 +102,26 @@ class Reservation(models.Model):
         예약 기간을 "MM월 DD일 부터 총X박 Y일" 형식으로 반환합니다.
         """
         # 박수 계산: 체크아웃 - 체크인
-        night_delta = self.check_out - self.check_in
-        nights = night_delta.days
+        if self.service == "HOTEL":
+            night_delta = self.check_out - self.check_in
+            nights = night_delta.days
 
-        # 일수: 박수 + 1
-        total_days = nights + 1
+            # 일수: 박수 + 1
+            total_days = nights + 1
 
-        # 체크인일 포맷팅
-        start_str = self.check_in.strftime('%m월 %d일')
+            # 체크인일 포맷팅
+            start_str = self.check_in.strftime('%m월 %d일')
 
-        return f"{start_str} 부터 총{nights}박 {total_days}일"
+            return f"{start_str} 부터 총{nights}박 {total_days}일"
+        elif self.service == "DAYCARE":
+            return f"{self.daycare_pass} 회"
+
+        elif self.service == "PLAYROOM":
+            start_str = self.check_in.strftime('%m월 %d일 %H:%M')
+            end_str = self.check_in.strftime('%H:%M')
+
+            return f"{start_str}부터 {end_str}까지\n"
+        return f"넌 뭐야!"
 
     def __str__(self):
         return f"{self.dog.name} 예약 ({self.check_in.strftime('%Y-%m-%d')})"

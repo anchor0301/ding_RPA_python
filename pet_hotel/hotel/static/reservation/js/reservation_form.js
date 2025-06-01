@@ -45,6 +45,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     const multiDayPicker = document.getElementById("multi-day-picker");
     const playroomPicker = document.getElementById("playroom-picker");
+    const daycarePicker = document.getElementById("daycare-picker");
 
     // STEP 1: 강아지 선택 → STEP 2 표시
     document.querySelectorAll("input[name='dog_ids']").forEach(input => {
@@ -66,35 +67,55 @@ document.addEventListener("DOMContentLoaded", function () {
     serviceRadios.forEach(input => {
         input.addEventListener("change", () => {
             const selectedService = document.querySelector("input[name='service']:checked")?.value;
+            checkInit();
 
+            step3.classList.add("visible");
 
+            if (selectedService === "PLAYROOM") {
+                multiDayPicker.style.display = "none";
+                playroomPicker.style.display = "block";
+                daycarePicker.style.display = "none";
+            } else if (selectedService === "HOTEL") {
+                multiDayPicker.style.display = "block";
+                playroomPicker.style.display = "none";
+                daycarePicker.style.display = "none";
+            } else if (selectedService === "DAYCARE") {
+                multiDayPicker.style.display = "none";
+                playroomPicker.style.display = "none";
+                daycarePicker.style.display = "block";
+            }
+
+        });
+    });
+
+    const daycareRadios = document.querySelectorAll('input[name="daycare_pass"]');
+
+    daycareRadios.forEach(radio => {
+        radio.addEventListener('change', function () {
+            if (this.checked) {
+                step4.classList.add('visible');
+            }
+        });
+    });
+    function checkInit() {
+            step3.classList.remove("visible");
+            step4.classList.remove("visible");
+            //다른 서비스 클릭시 하위 값 초기화
+            document.getElementById("date-range").value = '';
             document.getElementById("check-in-time").value = '';
             document.getElementById("check-out-time").value = '';
+            let obj = document.getElementsByName('daycare_pass');
+            console.log(obj)
+            for (var i = 0; i < obj.length; i++) {
+                console.log(obj)
+                obj[i].checked = false;
+            }
 
             document.getElementById("playroom-date").value = '';
             document.getElementById("playroom-start-time").value = '';
             document.getElementById("playroom-end-time").value = '';
 
-
-            if (selectedService) {
-                step3.classList.add("visible");
-
-                if (selectedService === "playroom") {
-                    playroomPicker.style.display = "block";
-                    multiDayPicker.style.display = "none";
-                    step4.classList.remove("visible");
-                } else {
-                    multiDayPicker.style.display = "block";
-                    playroomPicker.style.display = "none";
-                    step4.classList.remove("visible");
-                }
-            } else {
-                step3.classList.remove("visible");
-                step4.classList.remove("visible");
-            }
-        });
-    });
-
+    }
     // STEP 3: 날짜/시간 → STEP 4 표시
     function checkDateInputs() {
         const checkInDate = document.getElementById("check-in-date").value;
@@ -109,7 +130,6 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     }
 
-
     ["check-in-date", "check-out-date", "check-in-time", "check-out-time"].forEach(id => {
         const el = document.getElementById(id);
         if (el) {
@@ -117,6 +137,7 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
+    const date_range = document.getElementById("date-range");
     const checkIn = document.getElementById("check-in-time");
     const checkOut = document.getElementById("check-out-time");
 
@@ -128,7 +149,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (checkOut._flatpickr) checkOut._flatpickr.destroy();
 
     // 날짜 range
-    flatpickr("#date-range", {
+    flatpickr(date_range, {
         mode: "range",
         dateFormat: "Y-m-d",
         locale: "ko",
@@ -140,6 +161,7 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         }
     });
+
     // 호텔 체크인
     flatpickr(checkIn, {
         enableTime: true,
@@ -175,7 +197,6 @@ document.addEventListener("DOMContentLoaded", function () {
         dateFormat: "Y-m-d"
     });
 
-
     // 놀이방 체크인 시간
     flatpickr(playroom_checkIn, {
         enableTime: true,
@@ -188,23 +209,6 @@ document.addEventListener("DOMContentLoaded", function () {
         defaultHour: 10,
         locale: "ko"
     });
-
-
-    ["playroom-start-time", "playroom-end-time"].forEach(id => {
-        document.getElementById(id).addEventListener("input", checkPlayroomStep4);
-    });
-
-    function checkPlayroomStep4() {
-        const date = document.getElementById("playroom-date").value;
-        const start = document.getElementById("playroom-start-time").value;
-        const end = document.getElementById("playroom-end-time").value;
-
-        if (date && start && end) {
-            step4.classList.add("visible");
-        } else {
-            step4.classList.remove("visible");
-        }
-    }
 
     //놀이방 체크아웃 시간
     flatpickr(playroom_checkOut, {
@@ -221,4 +225,20 @@ document.addEventListener("DOMContentLoaded", function () {
             checkPlayroomStep4();
         }
     });
+
+    ["playroom-start-time", "playroom-end-time"].forEach(id => {
+        document.getElementById(id).addEventListener("input", checkPlayroomStep4);
+    });
+
+    function checkPlayroomStep4() {
+        const date = document.getElementById("playroom-date").value;
+        const start = document.getElementById("playroom-start-time").value;
+        const end = document.getElementById("playroom-end-time").value;
+
+        if (date && start && end) {
+            step4.classList.add("visible");
+        } else {
+            step4.classList.remove("visible");
+        }
+    }
 });

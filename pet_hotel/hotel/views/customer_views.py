@@ -21,6 +21,14 @@ from django.utils.timezone import make_aware
 from datetime import datetime
 
 
+
+def customer_page(request):
+    return render(request, "customer/homepage/index.html")
+
+
+def terms_page(request):
+    return render(request, "customer/homepage/Terms.html")
+
 def customer_start(request):
     if request.method == 'POST':
         name = request.POST.get('name')
