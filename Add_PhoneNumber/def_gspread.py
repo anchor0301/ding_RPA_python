@@ -111,6 +111,5 @@ def create_google_contact(dog):
     add_contact_to_carddav(dog.host_name, dog.to_string(), dog.phoneNumber)
     print("전화 번호 등록 완료")
     
-def create_synology_contact(dog):
-    add_contact_to_carddav(dog.host_name, dog.to_string(), dog.phoneNumber)
+
 	
