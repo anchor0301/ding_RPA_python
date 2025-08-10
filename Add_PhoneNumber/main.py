@@ -25,15 +25,12 @@ import hide_api
 # python3 main.py >> text.log 2>&1
 # test.log 파일 삭제
 
-
-notify = LineNotify(hide_api.ACCESS_TOKEN)  # 라인 API토큰
-error_notify = LineNotify(hide_api.ERROR_TOKEN)  # 에러전송 라인 API 토큰
 kakao = PostKakao()
 
 
 def main():
-    notify.send("프로그램 시작")
-    print("2025/04/18 - nas 연락처 추가")
+
+    print("2025/08/10 - 예외처리 추가")
 
     existing_end_column = len(worksheet.col_values(6))  # 이미 추가된 전화번호들 중 마지막 번호의 열 번호를 저장한다.   A
 
@@ -44,7 +41,7 @@ def main():
 
     try:
         while True:
-            time.sleep(30)  # 3분마다 실행
+            time.sleep(60)  # 3분마다 실행
 
             # 503 에러 방지
             try:
@@ -69,22 +66,17 @@ def main():
                     try:
                         create_google_contact(dog)  # 새로 등록된 번호를 구글 주소록에서 추가.
                         kakao.post_message_service(dog)  # 고객에게 카카오톡 전송.
-                        notify.registration_false()  # 이미 등록된 고객인가?
 
                     except Exception as e:
                         print(datetime.now(), "새로운 연락처 추가중 프로그램 정지\n")
-                        notify.send(f"‼‼‼\n새로운 연락처 추가중 프로그램 정지\n{e}")
                 else:
                     try:
                         create_synology_contact(dog) # 새로 등록된 번호를 시놀로지 주소록에 추가
                         kakao.post_message_service(dog)
-                        notify.registration_true()
 
                     except Exception as e:
                         print(datetime.now(), "중복된 연락처 추가중 프로그램 정지")
-                        notify.send(f"‼‼‼\n중복된 연락처 추가중 프로그램 정지\n{e}")
 
-                notify.post_dog_info(dog)  # 라인 강아지 정보 전송
                 create_page(dog)  # 노션 정보 추가
                 existing_end_phone_number = worksheet.get(
                     "f1:f" + str(add_number_column))  # 마지막 휴대폰 번호 정보를 등록 ( 중복 연락처 감지 )
@@ -96,8 +88,6 @@ def main():
         print(datetime.now(), "실시간 감지중 프로그램 정지")
         print(e)
 
-        notify.send(f"‼‼‼\n 실시간 감지중 프로그램 정지\n{e}")
-
 
 if __name__ == "__main__":
     try:
@@ -105,5 +95,3 @@ if __name__ == "__main__":
 
     except KeyboardInterrupt:
         print(datetime.now(), "키보드로 종료됨")
-        error_notify.send("error code : 5\n"
-                          "키보드로 강제 중지됨.\n")

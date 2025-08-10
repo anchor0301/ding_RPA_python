@@ -13,6 +13,32 @@ from datetime import timedelta
     """
 
 
+def fix_hour_if_midnight(date_time_str):
+    """
+    주어진 'DD-Mon-YYYY HH:MM:SS' 형식의 문자열에서
+    시간이 00시이면 12시로 변경하여 반환합니다.
+    """
+    # 데이터 형식에 맞는 포맷을 지정합니다.
+    date_format = "%d-%b-%Y %H:%M:%S"
+
+    try:
+        # 문자열을 datetime 객체로 변환합니다.
+        dt_object = datetime.strptime(date_time_str, date_format)
+
+        # 시간이 00시인지 확인합니다.
+        if dt_object.hour == 0:
+            # 12시로 변경하고, 새로운 datetime 객체를 만듭니다.
+            corrected_dt_object = dt_object.replace(hour=12)
+            # 변경된 객체를 원래의 문자열 형식으로 다시 변환하여 반환합니다.
+            return corrected_dt_object.strftime(date_format)
+
+        # 00시가 아니면 원본 문자열을 그대로 반환합니다.
+        return date_time_str
+
+    except ValueError:
+        # 형식 오류가 발생하면 원본 문자열을 반환하거나 오류 처리를 할 수 있습니다.
+        return date_time_str
+
 class Service:
     def __init__(self, dog_info):
         self.row_number = dog_info[0]  # 몇번쨰 행인가
@@ -66,17 +92,18 @@ class Hotel(Service):
     def __init__(self, dog_info):
         super().__init__(dog_info)
 
-        self.start_day_time = parse(dog_info[1][6])  # 입실일
-        self.end_day_time = parse(dog_info[1][7])  # 퇴실일
-        self.start_day = parse((dog_info[1][6])[:12])
-        self.end_day = parse((dog_info[1][7])[:12])
+        start_day_str = fix_hour_if_midnight(dog_info[1][6])
+        end_day_str = fix_hour_if_midnight(dog_info[1][7])
+
+        self.start_day_time = datetime.strptime(start_day_str, "%d-%b-%Y %H:%M:%S")
+        self.end_day_time = datetime.strptime(end_day_str, "%d-%b-%Y %H:%M:%S")
+
+        self.start_day = self.start_day_time.replace(hour=0, minute=0, second=0, microsecond=0)
+        self.end_day = self.end_day_time.replace(hour=0, minute=0, second=0, microsecond=0)
         self.useTime = "0"
 
     def reservationDate(self):
-        # 박 계산
         night = self.end_day - self.start_day
-
-        # 일계산
         day = self.end_day - (self.start_day + dt.timedelta(days=-1))
 
         return f"{self.start_day.strftime('%m월 %d일')} 부터 총{night.days}박 {day.days}일"
@@ -121,3 +148,5 @@ def service(dog_row_number):
 # playroom
 # dog = service(17)
 # print(dog.over_night())
+dog=service(4601)
+print(dog.info())
