@@ -148,5 +148,4 @@ def service(dog_row_number):
 # playroom
 # dog = service(17)
 # print(dog.over_night())
-dog=service(4601)
-print(dog.info())
+

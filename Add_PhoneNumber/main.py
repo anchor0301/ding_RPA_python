@@ -59,7 +59,7 @@ def main():
                 add_number_column = new_phone_number_length - add_number
 
                 dog = service(add_number_column)  # 강아지 정보를 가져온다.
-                print("---------------- 응답 결과 ----------------")
+                print("[Main][start]--------------------------------")
 
                 # 예전 등록한 기록이 없다면 전화번호를 추가
                 if [dog.phoneNumber] not in existing_end_phone_number:
@@ -81,6 +81,7 @@ def main():
                 existing_end_phone_number = worksheet.get(
                     "f1:f" + str(add_number_column))  # 마지막 휴대폰 번호 정보를 등록 ( 중복 연락처 감지 )
 
+                print("[Main][end]--------------------------------")
             existing_end_column = new_phone_number_length  # 끝 번호는 새로 등록된 번호로 바꾼다
 
 

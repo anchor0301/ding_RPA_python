@@ -119,6 +119,8 @@ class PostKakao:
         print("카카오톡 응답 코드 : %d" % self.resp.status_code)
         print("response body: %s" % self.resp.text)
 
+        print("[kakao][end]----------------------------")
+
     def register_check(self, dog):
         """예약 확인 메시지를 생성하고 전송하는 함수"""
 
@@ -142,6 +144,7 @@ class PostKakao:
 
     def post_message_service(self, dog):
         """서비스별 메시지를 생성하고 전송하는 함수"""
+        print("[kakao][start]----------------------------")
         title = dog.dog_name
         if '호텔링' in dog.service:
             message_body = (

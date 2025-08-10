@@ -92,6 +92,7 @@ def read_database(notion_database_id):
 def create_page(dog):
     create_url = 'https://api.notion.com/v1/pages'
 
+    print("[notion][start]----------------------------")
     import pytz
     def convert_kst_to_utc(input_time_str):
         # KST 시간대 설정
@@ -170,6 +171,7 @@ def create_page(dog):
 
     dog.info()
 
+    print("[notion][end]----------------------------")
 
 # 오늘 퇴실한 강아지 출력 및
 def rest_exit_database():
