@@ -6,7 +6,7 @@ import os.path
 import requests
 
 ######라인 시작######
-API_URI = "https://notify-api.line.me/api/notify"
+#API_URI = "https://notify-api.line.me/api/notify"
 
 notice = 'http://wp2102.synology.me:144/customers/#note'  # 최신 버전
 
@@ -78,7 +78,7 @@ class LineNotify:
             files = {"imageFile": open(image_path, "rb")}
 
 
-        requests.post(API_URI, headers=self.headers, params=params, files=files)
+        #requests.post(API_URI, headers=self.headers, params=params, files=files)
 
     def post_dog_info(self, dog):
         params = {"message": self.format(self.registration_status() +
@@ -88,7 +88,7 @@ class LineNotify:
                                          f"\n시작일 : {str(dog.start_day_time)[5:-3]}"
                                          f"\n종료일 : {str(dog.end_day_time)[5:-3]}")}
 
-        requests.post(API_URI, headers=self.headers, params=params)
+        #requests.post(API_URI, headers=self.headers, params=params)
 
 
 notify = LineNotify(hide_api.ACCESS_TOKEN)  # 라인 API토큰

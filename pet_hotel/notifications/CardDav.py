@@ -55,4 +55,4 @@ def add_contact_to_carddav(owner_name, full_name, phone_number):
         print(f"❌ 오류 발생: {response.status_code}, {response.text}")
 
 # 연락처 추가 실행
-# add_contact_to_carddav("김성민","가을/포메/3/0137", "01089000137")
+#add_contact_to_carddav("김성민","가을/포메/3/0137", "01089000137")
