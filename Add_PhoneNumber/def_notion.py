@@ -163,14 +163,10 @@ def create_page(dog):
     }
 
     data = json.dumps(new_page_data)
-
     res = requests.request("POST", create_url, headers=notion_headers, data=data)
 
     print("노션 응답 코드 :  %s \n" % res.status_code)
-    print(res.json())
-
     dog.info()
-
     print("[notion][end]----------------------------")
 
 # 오늘 퇴실한 강아지 출력 및

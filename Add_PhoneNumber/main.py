@@ -41,7 +41,7 @@ def main():
 
     try:
         while True:
-            time.sleep(60)  # 3분마다 실행
+            time.sleep(30)  # 3분마다 실행
 
             # 503 에러 방지
             try:

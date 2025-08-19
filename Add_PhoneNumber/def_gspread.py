@@ -92,6 +92,7 @@ def create_google_contact(dog):
     :return:
     """
 
+    print("[google_contact][start]--------------------------------")
     print(dog.row_number, "번 행의 연락처를 등록합니다.")
 
     service = discovery.build('people', 'v1', http=http,
@@ -109,7 +110,9 @@ def create_google_contact(dog):
         ]
     }).execute()
     add_contact_to_carddav(dog.host_name, dog.to_string(), dog.phoneNumber)
-    print("전화 번호 등록 완료")
-    
+    print("전화 번호 등록 종료")
+    print("[google_contact][end]--------------------------------")
 def create_synology_contact(dog):
+    print("[synology_contact][start]--------------------------------")
     add_contact_to_carddav(dog.host_name, dog.to_string(), dog.phoneNumber)
+    print("[synology_contact][end]--------------------------------")
