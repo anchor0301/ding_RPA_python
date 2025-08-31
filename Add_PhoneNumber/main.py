@@ -30,7 +30,7 @@ kakao = PostKakao()
 
 def main():
 
-    print("2025/08/10 - 예외처리 추가")
+    print("2025/08/31 - 예약 시간 예외처리 추가")
 
     existing_end_column = len(worksheet.col_values(6))  # 이미 추가된 전화번호들 중 마지막 번호의 열 번호를 저장한다.   A
 
@@ -41,7 +41,7 @@ def main():
 
     try:
         while True:
-            time.sleep(30)  # 3분마다 실행
+            time.sleep(180)  # 3분마다 실행
 
             # 503 에러 방지
             try:

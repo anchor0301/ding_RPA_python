@@ -22,21 +22,15 @@ def fix_hour_if_midnight(date_time_str):
     date_format = "%d-%b-%Y %H:%M:%S"
 
     try:
-        # 문자열을 datetime 객체로 변환합니다.
         dt_object = datetime.strptime(date_time_str, date_format)
 
-        # 시간이 00시인지 확인합니다.
-        if dt_object.hour == 0:
-            # 12시로 변경하고, 새로운 datetime 객체를 만듭니다.
-            corrected_dt_object = dt_object.replace(hour=12)
-            # 변경된 객체를 원래의 문자열 형식으로 다시 변환하여 반환합니다.
+        if 0 <= dt_object.hour <= 5:
+            corrected_dt_object = dt_object.replace(hour=dt_object.hour + 12)
             return corrected_dt_object.strftime(date_format)
 
-        # 00시가 아니면 원본 문자열을 그대로 반환합니다.
         return date_time_str
 
     except ValueError:
-        # 형식 오류가 발생하면 원본 문자열을 반환하거나 오류 처리를 할 수 있습니다.
         return date_time_str
 
 class Service:
