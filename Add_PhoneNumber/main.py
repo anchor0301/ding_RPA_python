@@ -54,12 +54,13 @@ def main():
             if existing_end_column == new_phone_number_length:  # 이미 추가된 전화번호 A 와 새로 등록된 번호 B가 다르면 주소 추가 실행
                 continue
 
+            print("[Main][start]--------------------------------")
+            time.sleep(5)
             for add_number in reversed(range(0, new_phone_number_length - existing_end_column)):  # 프로그램 실행중 번호 추가 방지
-
+                print("[Dog][start]----------------------------------")
                 add_number_column = new_phone_number_length - add_number
 
                 dog = service(add_number_column)  # 강아지 정보를 가져온다.
-                print("[Main][start]--------------------------------")
 
                 # 예전 등록한 기록이 없다면 전화번호를 추가
                 if [dog.phoneNumber] not in existing_end_phone_number:
@@ -80,8 +81,8 @@ def main():
                 create_page(dog)  # 노션 정보 추가
                 existing_end_phone_number = worksheet.get(
                     "f1:f" + str(add_number_column))  # 마지막 휴대폰 번호 정보를 등록 ( 중복 연락처 감지 )
-
-                print("[Main][end]--------------------------------")
+                print("[Dog][end]----------------------------------")
+            print("[Main][end]--------------------------------")
             existing_end_column = new_phone_number_length  # 끝 번호는 새로 등록된 번호로 바꾼다
 
 

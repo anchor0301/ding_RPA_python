@@ -101,6 +101,7 @@ class Hotel(Service):
         print('[Hotel][end]')
 
     def reservationDate(self):
+
         night = self.end_day - self.start_day
         day = self.end_day - (self.start_day + dt.timedelta(days=-1))
 
@@ -110,11 +111,12 @@ class Hotel(Service):
 class kindSchool(Service):
     def __init__(self, dog_info):
         super().__init__(dog_info)
-
+        print('[kindSchool][start]')
         now = datetime.now()
         self.start_day_time = str(now.strftime("%Y-%m-%d %H:%M:%S"))
         self.end_day_time = str((now + timedelta(days=1)).strftime("%Y-%m-%d %H:%M:%S"))
         self.useTime = re.sub(r'[^0-9]', '', dog_info[1][19])  # 횟수
+        print('[kindSchool][end]')
 
     def info(self):
         super().info()
@@ -130,6 +132,7 @@ class Playroom(Hotel):
 
 
 def service(dog_row_number):
+    print("[service][start]")
     services = {
         "유치원": kindSchool,
         "호텔링": Hotel,
@@ -137,6 +140,7 @@ def service(dog_row_number):
     }
     dog_info = [dog_row_number, worksheet.row_values(dog_row_number)]
     if dog_info[1][3] in services:
+        print("[service][end]")
         return services[dog_info[1][3]](dog_info)
 
 
