@@ -20,7 +20,6 @@ def fix_hour_if_midnight(date_time_str):
     """
     # 데이터 형식에 맞는 포맷을 지정합니다.
     date_format = "%d-%b-%Y %H:%M:%S"
-
     try:
         dt_object = datetime.strptime(date_time_str, date_format)
 
@@ -85,9 +84,12 @@ class Service:
 class Hotel(Service):
     def __init__(self, dog_info):
         super().__init__(dog_info)
+        print('[Hotel][start]')
 
+        print('[fix_hour_if_midnight][start]')
         start_day_str = fix_hour_if_midnight(dog_info[1][6])
         end_day_str = fix_hour_if_midnight(dog_info[1][7])
+        print('[fix_hour_if_midnight][end]')
 
         self.start_day_time = datetime.strptime(start_day_str, "%d-%b-%Y %H:%M:%S")
         self.end_day_time = datetime.strptime(end_day_str, "%d-%b-%Y %H:%M:%S")
@@ -95,6 +97,8 @@ class Hotel(Service):
         self.start_day = self.start_day_time.replace(hour=0, minute=0, second=0, microsecond=0)
         self.end_day = self.end_day_time.replace(hour=0, minute=0, second=0, microsecond=0)
         self.useTime = "0"
+
+        print('[Hotel][end]')
 
     def reservationDate(self):
         night = self.end_day - self.start_day
